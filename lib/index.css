@@ -1,0 +1,219 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background-primary: 0 0% 100%;
+    --background-primary-hover: 0 0% 98%;
+    --background-primary-selected: 0 0% 88%;
+    --background-secondary: 210 22% 96%;
+    --background-secondary-hover: 0 0% 98%;
+    --background-tertiary: 0 0% 90%;
+    --background-theme: 241 55% 50%;
+    --background-theme-hover: 241 55% 45%;
+    --background-theme-fade: 244 54% 95%;
+    --background-contrast: 234 15% 25%;
+    --background-contrast-hover: 236 15% 23%;
+    --background-contrast-disabled: 234 12% 30%;
+    --background-contrast-selected: 234 24% 23%;
+    --background-contrast-fade: 225 9% 83%;
+    --background-contrast-fade-hover: 222 10% 74%;
+    --background-contrast-fade-selected: 223 11% 67%;
+    --background-contrast-fade-disabled: 228 22% 91%;
+    --background-error: 354 93% 65%;
+    --background-error-hover: 354 71% 59%;
+    --background-error-fade: 356 89% 96%;
+    --background-error-fade-hover: 353 93% 95%;
+    --background-error-gradient: linear-gradient(116.49deg, #ffeae5 -7.58%, #ffc4b7 76.73%);
+    --background-warning: 38 98% 48%;
+    --background-warning-hover: 55 70% 58%;
+    --background-warning-fade: 56 89% 96%;
+    --background-warning-fade-hover: 55 93% 95%;
+    --background-success: 133 84% 37%;
+    --background-success-hover: 132 83% 34%;
+    --background-success-tertiary: 133 50% 75%;
+    --background-success-fade: 136 45% 94%;
+    --background-success-fade-hover: 132 83% 34%;
+    --background-success-gradient: linear-gradient(116.49deg, #e5ffeb -7.58%, #b7ffc7 76.73%);
+    --background-overlay: 226 21% 12%;
+    --background-progress-gradient: linear-gradient(90deg, #9fdfad 0%, #0faf32 100%);
+
+    --foreground-primary: 224 27% 11%;
+    --foreground-primary-disabled: 222 8% 42%;
+    --foreground-secondary: 0 0% 55%;
+    --foreground-tertiary: 0 0% 66%;
+    --foreground-theme: 241 58% 47%;
+    --foreground-on-contrast: var(--background-primary);
+    --foreground-on-contrast-disabled: 233 5% 70%;
+    --foreground-error: 355 88% 51%;
+    --foreground-warning: 38 89% 47%;
+    --foreground-success: 133 87% 34%;
+
+    --line-primary: var(--background-contrast-fade);
+    --line-primary-hover: var(--background-contrast-fade);
+    --line-primary-disabled: 229 19% 88%;
+    --line-secondary: 224 9% 75%;
+    --line-error: var(--foreground-error);
+    --line-warning: var(--foreground-warning);
+    --line-success: var(--foreground-success);
+    --line-theme: 241 76% 39%;
+    --line-contrast: 234 15% 25%;
+    --line-focused: 241 76% 39%;
+
+    --icon-contrast: var(--foreground-primary);
+    --icon-contrast-disabled: 222 8% 42%;
+    --icon-fade-contrast: 225 14% 67%;
+    --icon-on-contrast: var(--background-primary);
+    --icon-on-contrast-selected: var(--background-primary);
+    --icon-on-contrast-disabled: var(--foreground-on-contrast-disabled);
+    --icon-theme: var(--foreground-theme);
+    --icon-error: var(--foreground-error);
+    --icon-warning: var(--foreground-warning);
+    --icon-success: var(--foreground-success);
+
+    --purple: 241 98% 69%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background-primary: 224 19% 15%;
+    --background-primary-hover: 224 18% 20%;
+    --background-primary-selected: 224 22% 23%;
+    --background-secondary: 226 21% 12%;
+    --background-secondary-hover: 224 26% 13%;
+    --background-tertiary: 224 27% 11%;
+    --background-theme: 242 80% 71%;
+    --background-theme-hover: 241 43% 58%;
+    --background-theme-fade: 241 30% 48%;
+    --background-contrast: 224 38% 71%;
+    --background-contrast-hover: 224 68% 80%;
+    --background-contrast-disabled: 224 28% 60%;
+    --background-contrast-selected: 224 90% 80%;
+    --background-contrast-fade: 223 13% 27%;
+    --background-contrast-fade-hover: 224 13% 34%;
+    --background-contrast-fade-selected: 222 12% 37%;
+    --background-contrast-fade-disabled: 222 15% 23%;
+    --background-error: 355 66% 50%;
+    --background-error-hover: 355 65% 45%;
+    --background-error-fade: 0 36% 21%;
+    --background-error-fade-hover: 355 66% 30%;
+    --background-error-gradient: linear-gradient(116deg, #947061 -7.58%, #7b392b 76.73%);
+    --background-warning: 58 87% 52%;
+    --background-warning-hover: 58 81% 47%;
+    --background-warning-fade: 57 48% 24%;
+    --background-warning-fade-hover: 58 82% 31%;
+    --background-success: 133 51% 51%;
+    --background-success-tertiary: 126 26% 49%;
+    --background-success-hover: 132 83% 34%;
+    --background-success-fade: 133 82% 28%;
+    --background-success-fade-hover: 133 83% 23%;
+    --background-success-gradient: linear-gradient(116deg, #61946c -7.58%, #2b7b3c 76.73%);
+    --background-overlay: var(--background-secondary);
+    --background-progress-gradient: linear-gradient(90deg, #296536 0%, #0faf32 100%);
+
+    --foreground-primary: 0 0% 96%;
+    --foreground-primary-disabled: 0 0% 52%;
+    --foreground-secondary: 0 0% 83%;
+    --foreground-tertiary: 0 0% 58%;
+    --foreground-theme: 241 100% 82%;
+    --foreground-on-contrast: var(--background-primary);
+    --foreground-on-contrast-disabled: 224 18% 30%;
+    --foreground-error: 354 93% 65%;
+    --foreground-warning: 54 93% 52%;
+    --foreground-success: 133 95% 49%;
+
+    --line-primary: var(--background-contrast-fade);
+    --line-primary-hover: var(--background-contrast-fade);
+    --line-primary-disabled: 224 18% 21%;
+    --line-secondary: var(--background-primary-hover);
+    --line-error: var(--foreground-error);
+    --line-warning: var(--foreground-warning);
+    --line-success: var(--foreground-success);
+    --line-theme: 241 56% 64%;
+    --line-contrast: 223 12% 58%;
+    --line-focused: 241 56% 65%;
+
+    --icon-contrast: var(--foreground-primary);
+    --icon-contrast-disabled: var(--foreground-secondary);
+    --icon-fade-contrast: var(--background-contrast-fade);
+    --icon-on-contrast: var(--background-primary);
+    --icon-on-contrast-selected: var(--background-primary);
+    --icon-on-contrast-disabled: var(--foreground-on-contrast-disabled);
+    --icon-theme: var(--foreground-theme);
+    --icon-error: var(--foreground-error);
+    --icon-warning: var(--foreground-warning);
+    --icon-success: var(--foreground-success);
+
+    --purple: 241 98% 69%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-line-primary;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .dialog-scrollbar::-webkit-scrollbar {
+    width: 16px;
+    background-color: transparent;
+  }
+
+  .dialog-scrollbar::-webkit-scrollbar-track {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+
+  .dialog-scrollbar::-webkit-scrollbar-thumb {
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+  }
+}
+
+::-webkit-scrollbar {
+  background-color: hsl(var(--background-primary));
+  width: 16px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: hsl(var(--background-primary));
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0);
+  border-radius: 20px;
+  border: 5px solid hsl(var(--background-primary));
+}
+
+*:hover::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--line-primary));
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: hsl(var(--line-secondary));
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: hsl(var(--foreground-primary));
+  caret-color: hsl(var(--foreground-primary));
+  transition: background-color 0.3s ease-in-out 0s;
+  box-shadow: inset 0 0 20px 20px hsl(var(--background-contrast-fade));
+}
