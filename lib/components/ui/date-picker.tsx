@@ -80,7 +80,7 @@ export function DatePicker({ className, ...props }: DatePickerProps) {
       <PopoverContent className="w-auto p-0 rounded-lg">
         <Calendar
           className="bg-background rounded-lg"
-          locale={i18n.language.includes('ru') ? ru : enUS}
+          locale={i18n.language?.includes('ru') ? ru : enUS}
           {...modifiedProps}
           initialFocus
         />
