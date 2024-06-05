@@ -8,8 +8,9 @@
   ],
   "main": "./dist/krit-ui.umd.cjs",
   "module": "./dist/krit-ui.js",
+  "types": "./dist/krit-ui.d.ts",
   "scripts": {
-    "postinstall": "npm run build",
+    "pack": "npm run build && npm pack",
     "dev": "vite",
     "watch": "tsc --watch",
     "build": "tsc && vite build",
@@ -74,6 +75,7 @@
     "tailwindcss": "^3.4.3",
     "typescript": "^5.4.5",
     "vite": "^5.2.12",
+    "vite-plugin-dts": "^3.9.1",
     "vite-plugin-svgr": "^4.2.0"
   },
   "peerDependencies": {

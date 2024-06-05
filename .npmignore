@@ -1,0 +1,4 @@
+.storybook
+.idea
+node_modules
+lib/stories
