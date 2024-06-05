@@ -2,7 +2,7 @@
 module.exports = {
   darkMode: ['selector'], // https://ui.shadcn.com/docs/dark-mode/vite
   safelist: ['dark'], // https://github.com/shadcn-ui/ui/issues/313#issuecomment-1929054475
-  content: ['./pages/**/*.{ts,tsx}', './components/**/*.{ts,tsx}', './app/**/*.{ts,tsx}', './src/**/*.{ts,tsx}'],
+  content: ['./lib/**/*.{ts,tsx}'],
   theme: {
     fontFamily: {
       sans: ['Roboto', 'ui-sans-serif', 'system-ui'],
