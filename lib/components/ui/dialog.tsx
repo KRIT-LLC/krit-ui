@@ -20,7 +20,7 @@ const DialogOverlay = React.forwardRef<
     ref={ref}
     className={cn(
       'fixed inset-0 z-50 bg-background/80 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
-      className
+      className,
     )}
     {...props}
   />
@@ -44,7 +44,7 @@ const DialogContent = React.forwardRef<
           ref={ref}
           className={cn(
             'flex flex-col gap-[1px] bg-line-primary shadow-lg rounded-lg scroll-smooth overflow-y-auto overflow-x-hidden dialog-scrollbar min-w-[460px] max-w-[80vw] max-h-[90vh]',
-            className
+            className,
           )}
         >
           {children}
@@ -59,12 +59,13 @@ const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
   <div
     className={cn(
       'flex flex-col bg-background p-5 relative text-xl font-medium space-y-4 text-center sm:text-left',
-      className
+      className,
     )}
     {...props}
   >
     {props.children}
-    <DialogPrimitive.Close className="absolute right-3 top-0 p-1 w-8 h-8 pointer-events-auto text-foreground transition-all hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-foreground-secondary">
+    <DialogPrimitive.Close
+      className="absolute right-3 top-0 p-1 w-8 h-8 pointer-events-auto text-foreground transition-all hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-foreground-secondary">
       <X className="h-6 w-6" />
       <span className="sr-only">Close</span>
     </DialogPrimitive.Close>
@@ -76,7 +77,7 @@ const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
   <div
     className={cn(
       'flex flex-col-reverse bg-background py-4 px-5 sm:flex-row sm:justify-start sm:space-x-4 sticky bottom-0',
-      className
+      className,
     )}
     {...props}
   />

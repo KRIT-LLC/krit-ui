@@ -1,5 +1,5 @@
-import type {Meta, StoryObj} from '@storybook/react';
-import {Table} from '@/components/ui/table';
+import type { Meta, StoryObj } from '@storybook/react';
+import { Table } from '@/components/ui/table';
 
 const meta = {
   title: 'Table',
@@ -8,7 +8,7 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
-  argTypes: {}
+  argTypes: {},
 } satisfies Meta<typeof Table>;
 
 export default meta;

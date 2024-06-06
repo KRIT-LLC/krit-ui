@@ -1,13 +1,13 @@
 import {
   ColumnDef,
-  OnChangeFn,
-  PaginationState,
   flexRender,
   getCoreRowModel,
-  useReactTable,
-  Table as TanTable,
-  RowSelectionState,
+  OnChangeFn,
+  PaginationState,
   Row,
+  RowSelectionState,
+  Table as TanTable,
+  useReactTable,
 } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next'; // TODO: Решить вопрос с локализацией
 import ChevronLeft from '@/assets/chevron_left.svg?react';
@@ -35,20 +35,20 @@ interface DataTableProps<TData, TValue> {
 }
 
 export function DataTable<TData, TValue>({
-  columns,
-  data,
-  horizontalPadding = 'medium',
-  rowCount,
-  noResultsText = 'No results.',
-  enableRowSelection = false,
-  enableMultiRowSelection = false,
-  selection = {},
-  pagination,
-  getRowId,
-  onPaginationChange,
-  onRowSelectionChange,
-  onRowClick,
-}: DataTableProps<TData, TValue>) {
+                                           columns,
+                                           data,
+                                           horizontalPadding = 'medium',
+                                           rowCount,
+                                           noResultsText = 'No results.',
+                                           enableRowSelection = false,
+                                           enableMultiRowSelection = false,
+                                           selection = {},
+                                           pagination,
+                                           getRowId,
+                                           onPaginationChange,
+                                           onRowSelectionChange,
+                                           onRowClick,
+                                         }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     getRowId,
     data,
@@ -143,21 +143,21 @@ interface PaginationProps {
 }
 
 export function Pagination({
-  horizontalPadding,
-  className,
-  pageSize,
-  pageCount = 0,
-  pageIndex = 0,
-  canPreviousPage,
-  canNextPage,
-  selectedCount,
-  totalCount,
-  compact,
-  previousPage,
-  nextPage,
-  setPageSize,
-  setPageIndex,
-}: PaginationProps) {
+                             horizontalPadding,
+                             className,
+                             pageSize,
+                             pageCount = 0,
+                             pageIndex = 0,
+                             canPreviousPage,
+                             canNextPage,
+                             selectedCount,
+                             totalCount,
+                             compact,
+                             previousPage,
+                             nextPage,
+                             setPageSize,
+                             setPageIndex,
+                           }: PaginationProps) {
   const { t } = useTranslation();
   const getCellPadding = () => {
     switch (horizontalPadding) {
@@ -176,7 +176,7 @@ export function Pagination({
       className={cn(
         'mt-auto sticky bottom-0 bg-background flex items-center justify-between min-h-[52px] h-[52px] rounded-bl-3xl rounded-br-3xl border-t border-line-primary',
         getCellPadding(),
-        className
+        className,
       )}
     >
       <div className="flex items-center space-x-2">

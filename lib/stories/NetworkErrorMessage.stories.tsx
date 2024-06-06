@@ -1,5 +1,5 @@
-import type {Meta, StoryObj} from '@storybook/react';
-import {NetworkErrorMessage} from '@/components/ui/network-error-message';
+import type { Meta, StoryObj } from '@storybook/react';
+import { NetworkErrorMessage } from '@/components/ui/network-error-message';
 
 const meta = {
   title: 'NetworkErrorMessage',
@@ -8,7 +8,7 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
-  argTypes: {}
+  argTypes: {},
 } satisfies Meta<typeof NetworkErrorMessage>;
 
 export default meta;

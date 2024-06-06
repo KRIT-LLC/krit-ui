@@ -1,5 +1,5 @@
-import type {Meta, StoryObj} from '@storybook/react';
-import {CollapsibleSection} from '@/components/ui/collapsible-section';
+import type { Meta, StoryObj } from '@storybook/react';
+import { CollapsibleSection } from '@/components/ui/collapsible-section';
 
 const meta = {
   title: 'CollapsibleSection',
@@ -8,7 +8,7 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
-  argTypes: {}
+  argTypes: {},
 } satisfies Meta<typeof CollapsibleSection>;
 
 export default meta;
@@ -17,6 +17,6 @@ type Story = StoryObj<typeof meta>;
 export const Demo: Story = {
   args: {
     title: 'Title',
-    count: 12
+    count: 12,
   },
 };

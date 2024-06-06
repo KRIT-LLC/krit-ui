@@ -23,7 +23,7 @@ function Badge({ className, variant, size, icon, iconRight, iconVariant, layout,
       className={cn(
         badgeVariants({ variant, size, iconVariant: variant === 'secondary' ? iconVariant : undefined, layout }),
         props.onClick ? 'cursor-pointer' : 'cursor-default pointer-events-none',
-        className
+        className,
       )}
       title={typeof props.children === 'string' ? props.children : undefined}
       {...props}

@@ -1,5 +1,5 @@
-import type {Meta, StoryObj} from '@storybook/react';
-import {DropdownMenu} from '@/components/ui/dropdown-menu';
+import type { Meta, StoryObj } from '@storybook/react';
+import { DropdownMenu } from '@/components/ui/dropdown-menu';
 
 const meta = {
   title: 'DropdownMenu',
@@ -8,7 +8,7 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
-  argTypes: {}
+  argTypes: {},
 } satisfies Meta<typeof DropdownMenu>;
 
 export default meta;

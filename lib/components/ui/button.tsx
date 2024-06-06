@@ -30,6 +30,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {asDropdown && <ArrowDropDown />}
       </Comp>
     );
-  }
+  },
 );
 Button.displayName = 'Button';

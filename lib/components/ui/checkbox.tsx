@@ -13,7 +13,7 @@ const Checkbox = React.forwardRef<
       ref={ref}
       className={cn(
         'peer h-[14px] w-[14px] shrink-0 rounded-sm border border-line-theme ring-offset-background transition-colors hover:border-line-theme/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-background-theme data-[state=checked]:text-foreground-on-contrast data-[state=checked]:hover:bg-background-theme/80',
-        className
+        className,
       )}
       {...props}
     >
@@ -42,7 +42,7 @@ const CheckboxWithLabel = React.forwardRef<
     <label
       className={cn(
         'text-primary font-medium text-base -ml-1',
-        props.disabled ? 'cursor-default opacity-50 pointer-events-none' : 'cursor-pointer'
+        props.disabled ? 'cursor-default opacity-50 pointer-events-none' : 'cursor-pointer',
       )}
       onClick={() => props.onCheckedChange?.(!props.checked)}
     >

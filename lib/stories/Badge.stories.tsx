@@ -1,10 +1,14 @@
-import type {Meta, StoryFn} from '@storybook/react';
-import {fn} from '@storybook/test';
-import {Check, Plus} from 'lucide-react';
-import DocumentListOutline from '../assets/document_list_outline.svg?react';
-import {Badge} from '@/components/ui/badge';
+import type { Meta, StoryFn } from '@storybook/react';
+import { fn } from '@storybook/test';
+import { Check, Plus } from 'lucide-react';
+import DocumentListOutline from '@/assets/document_list_outline.svg?react';
+import { Badge } from '@/components/ui/badge';
 
-const IconMap = {Check: <Check/>, Plus: <Plus/>, DocumentListOutline: <DocumentListOutline/>};
+const IconMap = {
+  Check: <Check />,
+  Plus: <Plus />,
+  DocumentListOutline: <DocumentListOutline />,
+};
 
 export default {
   title: 'Badge',
@@ -33,27 +37,27 @@ export default {
       options: ['none', ...Object.keys(IconMap)],
       mapping: {
         none: null,
-        ...IconMap
+        ...IconMap,
       },
       control: {
         labels: {
           none: 'No Icon',
-          ...Object.keys(IconMap)
-        }
-      }
+          ...Object.keys(IconMap),
+        },
+      },
     },
     iconRight: {
       options: ['none', ...Object.keys(IconMap)],
       mapping: {
         none: null,
-        ...IconMap
+        ...IconMap,
       },
       control: {
         labels: {
           none: 'No Icon',
-          ...Object.keys(IconMap)
-        }
-      }
+          ...Object.keys(IconMap),
+        },
+      },
     },
     iconVariant: {
       control: 'inline-radio',
@@ -76,7 +80,7 @@ export default {
     iconVariant: 'default',
     layout: 'default',
     children: 'Badge',
-  }
+  },
 } satisfies Meta<typeof Badge>;
 
 export const Demo: StoryFn = (args) => {
@@ -90,8 +94,8 @@ export const Demo: StoryFn = (args) => {
     variant={args.variant}
     size={args.size}
     layout={args.layout}
-    icon={<Icon/>}
-    iconRight={<IconRight/>}>
+    icon={<Icon />}
+    iconRight={<IconRight />}>
     {args.children}
   </Badge>;
 };

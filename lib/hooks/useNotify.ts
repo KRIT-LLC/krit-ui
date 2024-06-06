@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
 import { useTranslation } from 'react-i18next';
-import {useToast} from '@/hooks/useToast.ts';
+import { useToast } from '@/hooks/useToast.ts';
 
 export interface ErrorResponse {
   error: string;
@@ -10,11 +10,12 @@ export interface ErrorResponse {
   status: number;
   timestamp: string;
 }
+
 export const getErrorData = (error: Error) => (error as unknown as AxiosError<ErrorResponse>).response?.data;
 export const parseValueFromError = (key: string, error: string) =>
   error
-    .split(key + "='")[1]
-    ?.split("'")[0]
+    .split(key + '=\'')[1]
+    ?.split('\'')[0]
     ?.trim();
 
 export type MessageFromServer = string;

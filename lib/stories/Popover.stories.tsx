@@ -1,5 +1,5 @@
-import type {Meta, StoryObj} from '@storybook/react';
-import {Popover} from '@/components/ui/popover';
+import type { Meta, StoryObj } from '@storybook/react';
+import { Popover } from '@/components/ui/popover';
 
 const meta = {
   title: 'Popover',
@@ -8,7 +8,7 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
-  argTypes: {}
+  argTypes: {},
 } satisfies Meta<typeof Popover>;
 
 export default meta;

@@ -1,5 +1,5 @@
-import type {Meta, StoryObj} from '@storybook/react';
-import {Preloader} from '@/components/ui/preloader';
+import type { Meta, StoryObj } from '@storybook/react';
+import { Preloader } from '@/components/ui/preloader';
 
 const meta = {
   title: 'Preloader',
@@ -8,7 +8,7 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
-  argTypes: {}
+  argTypes: {},
 } satisfies Meta<typeof Preloader>;
 
 export default meta;
