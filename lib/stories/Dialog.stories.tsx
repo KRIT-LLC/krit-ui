@@ -1,5 +1,5 @@
-import type {Meta, StoryObj} from '@storybook/react';
-import {Dialog} from '@/components/ui/dialog';
+import type { Meta, StoryObj } from '@storybook/react';
+import { Dialog } from '@/components/ui/dialog';
 
 const meta = {
   title: 'Dialog',
@@ -8,7 +8,7 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
-  argTypes: {}
+  argTypes: {},
 } satisfies Meta<typeof Dialog>;
 
 export default meta;

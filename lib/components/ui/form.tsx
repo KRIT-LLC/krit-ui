@@ -12,8 +12,8 @@ const FormField = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({
-  ...props
-}: ControllerProps<TFieldValues, TName>) => {
+    ...props
+  }: ControllerProps<TFieldValues, TName>) => {
   return (
     <FormFieldContext.Provider value={{ name: props.name }}>
       <Controller {...props} />
@@ -70,7 +70,7 @@ const FormControl = React.forwardRef<React.ElementRef<typeof Slot>, React.Compon
         {...props}
       />
     );
-  }
+  },
 );
 FormControl.displayName = 'FormControl';
 
@@ -86,7 +86,7 @@ const FormDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttribu
         {...props}
       />
     );
-  }
+  },
 );
 FormDescription.displayName = 'FormDescription';
 
@@ -104,7 +104,7 @@ const FormMessage = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<
         {body}
       </p>
     );
-  }
+  },
 );
 FormMessage.displayName = 'FormMessage';
 

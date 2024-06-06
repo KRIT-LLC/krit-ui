@@ -1,10 +1,14 @@
-import type {Meta, StoryObj} from '@storybook/react';
-import {fn} from '@storybook/test';
-import {Button} from '@/components/ui/button';
-import {Check, Plus} from 'lucide-react';
-import DocumentListOutline from '../assets/document_list_outline.svg?react';
+import type { Meta, StoryObj } from '@storybook/react';
+import { fn } from '@storybook/test';
+import { Button } from '@/components/ui/button';
+import { Check, Plus } from 'lucide-react';
+import DocumentListOutline from '@/assets/document_list_outline.svg?react';
 
-const IconMap = {Check: <Check/>, Plus: <Plus/>, DocumentListOutline: <DocumentListOutline/>};
+const IconMap = {
+  Check: <Check />,
+  Plus: <Plus />,
+  DocumentListOutline: <DocumentListOutline />,
+};
 
 const meta = {
   title: 'Button',
@@ -38,14 +42,14 @@ const meta = {
       options: ['none', ...Object.keys(IconMap)],
       mapping: {
         none: null,
-        ...IconMap
+        ...IconMap,
       },
       control: {
         labels: {
           none: 'No Icon',
-          ...Object.keys(IconMap)
-        }
-      }
+          ...Object.keys(IconMap),
+        },
+      },
     },
     size: {
       control: 'select',
@@ -57,7 +61,7 @@ const meta = {
     asDropdown: {
       control: false,
     },
-  }
+  },
 } satisfies Meta<typeof Button>;
 
 export default meta;

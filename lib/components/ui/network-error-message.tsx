@@ -13,14 +13,14 @@ interface NetworkErrorMessageProps {
 }
 
 export const NetworkErrorMessage = ({
-  className,
-  textSize = 'base',
-  isLoading,
-  isError,
-  center,
-  inline,
-  onRefetch,
-}: NetworkErrorMessageProps) => {
+                                      className,
+                                      textSize = 'base',
+                                      isLoading,
+                                      isError,
+                                      center,
+                                      inline,
+                                      onRefetch,
+                                    }: NetworkErrorMessageProps) => {
   const { t } = useTranslation();
 
   if (!isLoading && !isError) return null;
@@ -32,7 +32,7 @@ export const NetworkErrorMessage = ({
         `text-${textSize}`,
         center && 'items-center',
         inline ? 'ml-2 inline-flex' : 'mt-3 flex-col',
-        className
+        className,
       )}
     >
       {isLoading && <Preloader className={textSize === 'base' ? 'w-7' : 'w-5'} />}

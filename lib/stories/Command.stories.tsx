@@ -1,5 +1,5 @@
-import type {Meta, StoryObj} from '@storybook/react';
-import {Command} from '@/components/ui/command';
+import type { Meta, StoryObj } from '@storybook/react';
+import { Command } from '@/components/ui/command';
 
 const meta = {
   title: 'Command',
@@ -8,7 +8,7 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
-  argTypes: {}
+  argTypes: {},
 } satisfies Meta<typeof Command>;
 
 export default meta;

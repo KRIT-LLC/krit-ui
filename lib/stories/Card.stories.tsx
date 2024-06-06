@@ -1,6 +1,6 @@
-import type {Meta, StoryObj} from '@storybook/react';
-import {Card} from '@/components/ui/card';
-import {fn} from '@storybook/test';
+import type { Meta, StoryObj } from '@storybook/react';
+import { Card } from '@/components/ui/card';
+import { fn } from '@storybook/test';
 
 const meta = {
   title: 'Card',
@@ -23,8 +23,8 @@ const meta = {
     },
     showArrow: {
       control: 'boolean',
-    }
-  }
+    },
+  },
 } satisfies Meta<typeof Card>;
 
 export default meta;

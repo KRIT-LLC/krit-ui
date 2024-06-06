@@ -1,0 +1,28 @@
+{
+  "printWidth": 100,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": true,
+  "quoteProps": "as-needed",
+  "jsxSingleQuote": true,
+  "trailingComma": "all",
+  "bracketSpacing": true,
+  "jsxBracketSameLine": false,
+  "arrowParens": "avoid",
+  "importOrder": [
+    "^react*",
+    "^classnames|date-fns",
+    "^@vtbhome*",
+    "^widgets/*",
+    "^features/*",
+    "^entities/*",
+    "^pages/*",
+    "^shared/*",
+    "^[../].*(?<!\\.(c|le|sc)ss)$",
+    "^[./].*(?<!\\.(c|le|sc)ss)$",
+    "\\.(c|le|sc)ss$"
+  ],
+  "importOrderSeparation": false,
+  "importOrderSortSpecifiers": true
+}

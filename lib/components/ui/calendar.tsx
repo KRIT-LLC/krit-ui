@@ -28,7 +28,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         nav: 'space-x-1 flex items-center',
         nav_button: cn(
           buttonVariants({ variant: 'outline' }),
-          'h-7 w-7 bg-[transparent] border-none text-primary p-0 hover:bg-[transparent] hover:text-primary/80'
+          'h-7 w-7 bg-[transparent] border-none text-primary p-0 hover:bg-[transparent] hover:text-primary/80',
         ),
         nav_button_previous: 'absolute -left-1',
         nav_button_next: 'absolute -right-1',
@@ -39,7 +39,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         cell: 'h-9 w-9 text-center p-0 relative [&:has([aria-selected].day-range-start)]:rounded-l-md [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-muted [&:has([aria-selected])]:bg-muted first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
         day: cn(
           buttonVariants({ variant: 'ghost' }),
-          'h-9 w-9 p-0 text-sm font-normal transition-all hover:bg-background-secondary hover:text-foreground aria-selected:opacity-100'
+          'h-9 w-9 p-0 text-sm font-normal transition-all hover:bg-background-secondary hover:text-foreground aria-selected:opacity-100',
         ),
         day_range_start: 'day-range-start',
         day_range_end: 'day-range-end',
@@ -68,7 +68,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
               <SelectTrigger
                 className={cn(
                   props.className,
-                  'bg-[transparent] border-none p-0 gap-0 h-auto hover:bg-[transparent] capitalize font-bold [&>svg]:ml-1 [&>span]:pr-1'
+                  'bg-[transparent] border-none p-0 gap-0 h-auto hover:bg-[transparent] capitalize font-bold [&>svg]:ml-1 [&>span]:pr-1',
                 )}
               >
                 <SelectValue placeholder={props.caption} />
@@ -91,6 +91,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
     />
   );
 }
+
 Calendar.displayName = 'Calendar';
 
 export { Calendar };

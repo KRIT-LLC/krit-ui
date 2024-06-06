@@ -24,20 +24,20 @@ interface CollapsibleSectionProps {
 }
 
 export const CollapsibleSection = ({
-  title,
-  icon,
-  defaultExpanded,
-  showExpanderButton,
-  expandOnAdd = true,
-  count,
-  placeholder,
-  right,
-  children,
-  isLoading,
-  isError,
-  onRefetch,
-  onAdd,
-}: CollapsibleSectionProps) => {
+                                     title,
+                                     icon,
+                                     defaultExpanded,
+                                     showExpanderButton,
+                                     expandOnAdd = true,
+                                     count,
+                                     placeholder,
+                                     right,
+                                     children,
+                                     isLoading,
+                                     isError,
+                                     onRefetch,
+                                     onAdd,
+                                   }: CollapsibleSectionProps) => {
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(defaultExpanded ?? false);
 
@@ -51,7 +51,8 @@ export const CollapsibleSection = ({
         {icon && <span className="text-primary">{icon}</span>}
         <span>{title}</span>
         {count ? (
-          <div className="h-6 px-2 rounded-full bg-icon-tertiary flex justify-center items-center text-background text-[15px] font-medium pb-[1px]">
+          <div
+            className="h-6 px-2 rounded-full bg-icon-tertiary flex justify-center items-center text-background text-[15px] font-medium pb-[1px]">
             <span>{count}</span>
           </div>
         ) : null}

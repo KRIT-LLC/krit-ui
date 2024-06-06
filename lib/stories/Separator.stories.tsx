@@ -1,5 +1,5 @@
-import type {Meta, StoryFn} from '@storybook/react';
-import {Separator} from '@/components/ui/separator.tsx';
+import type { Meta, StoryFn } from '@storybook/react';
+import { Separator } from '@/components/ui/separator.tsx';
 
 
 export default {
@@ -12,18 +12,18 @@ export default {
       options: ['horizontal', 'vertical'],
       mapping: {
         horizontal: 'horizontal',
-        vertical: 'vertical'
+        vertical: 'vertical',
       },
     },
     decorative: {
       control: false,
     },
   },
-  args: {}
+  args: {},
 } satisfies Meta<typeof Separator>;
 
 export const Demo: StoryFn = (args) => {
-  return <div style={{width: '100%', height: 300}}>
+  return <div style={{ width: '100%', height: 300 }}>
     <Separator className="bg-line-error" {...args} />
-  </div>
+  </div>;
 };

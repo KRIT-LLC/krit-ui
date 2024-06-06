@@ -70,7 +70,7 @@ export function DatePicker({ className, ...props }: DatePickerProps) {
           className={cn(
             'w-full justify-start text-left px-4 font-normal pr-1.5 text-sm',
             !props.value && 'text-foreground-secondary',
-            className
+            className,
           )}
         >
           {formatValue()}

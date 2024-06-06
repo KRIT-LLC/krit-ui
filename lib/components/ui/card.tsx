@@ -25,7 +25,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           'relative rounded-lg border border-line-primary transition duration-100 ease-in-out',
           onClick && 'cursor-pointer',
           checked && 'ring-[3px] ring-primary bg-background-primary-selected border-b-line-secondary',
-          className
+          className,
         )}
         onClick={checked ? () => onSelect?.(false) : onClick}
         {...props}
@@ -36,7 +36,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         </div>
       </div>
     );
-  }
+  },
 );
 Card.displayName = 'Card';
 
@@ -80,7 +80,7 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
         </div>
       </div>
     );
-  }
+  },
 );
 CardHeader.displayName = 'CardHeader';
 
@@ -101,7 +101,7 @@ const CardTitle = React.forwardRef<HTMLParagraphElement, CardTitleProps>(
         <div className="text-foreground/50">{showArrow && <ChevronRight />}</div>
       </div>
     </h3>
-  )
+  ),
 );
 CardTitle.displayName = 'CardTitle';
 
@@ -122,7 +122,7 @@ const CardDescription = React.forwardRef<HTMLParagraphElement, CardDescriptionPr
         <div className="text-foreground/50">{showArrow && <ChevronRight />}</div>
       </div>
     </div>
-  )
+  ),
 );
 CardDescription.displayName = 'CardDescription';
 
@@ -139,7 +139,7 @@ const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
         <div className="text-foreground/50">{showArrow && <ChevronRight />}</div>
       </div>
     </div>
-  )
+  ),
 );
 CardContent.displayName = 'CardContent';
 
@@ -161,7 +161,7 @@ const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
           ))}
       </div>
     </div>
-  )
+  ),
 );
 CardFooter.displayName = 'CardFooter';
 
@@ -206,7 +206,7 @@ const CardEditActions = ({ onSave, onRemove }: CardEditActionsProps) => {
         <Delete
           className={cn(
             'text-destructive-foreground',
-            isRemoving ? 'opacity-20 pointer-events-none' : 'cursor-pointer'
+            isRemoving ? 'opacity-20 pointer-events-none' : 'cursor-pointer',
           )}
           onClick={handleRemoveClick}
         />

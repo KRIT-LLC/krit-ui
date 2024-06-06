@@ -1,5 +1,5 @@
-import type {Meta, StoryObj} from '@storybook/react';
-import {DataTable} from '@/components/ui/data-table';
+import type { Meta, StoryObj } from '@storybook/react';
+import { DataTable } from '@/components/ui/data-table';
 
 const meta = {
   title: 'DataTable',
@@ -8,7 +8,7 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
-  argTypes: {}
+  argTypes: {},
 } satisfies Meta<typeof DataTable>;
 
 export default meta;
