@@ -30,6 +30,5 @@
     "declarationMap": true
   },
   "include": ["lib"],
-  "exclude": ["lib/**/*.stories.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
