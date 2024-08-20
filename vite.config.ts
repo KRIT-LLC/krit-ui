@@ -5,16 +5,17 @@ import svgr from 'vite-plugin-svgr';
 import dts from 'vite-plugin-dts';
 
 export default defineConfig({
-  plugins: [react(), svgr(), dts({ rollupTypes: true })],
+  plugins: [react(), svgr(), dts({ include: ['lib'], insertTypesEntry: true })],
   resolve: { alias: { '@': resolve(__dirname, './lib') } },
   build: {
     lib: {
       entry: resolve(__dirname, 'lib/main.ts'),
       name: 'krit-ui',
       fileName: 'krit-ui',
+      formats: ["es", "umd"],
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'react/jsx-runtime'],
+      external: ['react', 'react-dom', 'react/jsx-runtime', 'tailwindcss'],
       output: {
         globals: {
           react: 'React',
