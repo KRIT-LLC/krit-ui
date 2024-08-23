@@ -14,9 +14,9 @@ import { useTranslation } from 'react-i18next';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './table';
 import { Button } from './button';
 import { Select } from './select';
-import ChevronLeft from '@/shared/assets/chevron_left.svg?react';
-import ChevronRight from '@/shared/assets/chevron_right.svg?react';
-import LastPage from '@/shared/assets/last_page.svg?react';
+import ChevronLeft from '@/assets/chevron_left.svg?react';
+import ChevronRight from '@/assets/chevron_right.svg?react';
+import LastPage from '@/assets/last_page.svg?react';
 import { cn } from '@/utils';
 
 interface DataTableProps<TData, TValue> {
