@@ -1,22 +1,23 @@
 import {
   ColumnDef,
-  flexRender,
-  getCoreRowModel,
   OnChangeFn,
   PaginationState,
-  Row,
-  RowSelectionState,
-  Table as TanTable,
+  flexRender,
+  getCoreRowModel,
   useReactTable,
+  Table as TanTable,
+  RowSelectionState,
+  Row,
+  SortingState,
 } from '@tanstack/react-table';
-import { useTranslation } from 'react-i18next'; // TODO: Решить вопрос с локализацией
-import ChevronLeft from '@/assets/chevron_left.svg?react';
-import ChevronRight from '@/assets/chevron_right.svg?react';
-import LastPage from '@/assets/last_page.svg?react';
-import { cn } from '@/utils';
+import { useTranslation } from 'react-i18next';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './table';
 import { Button } from './button';
 import { Select } from './select';
+import ChevronLeft from '@/shared/assets/chevron_left.svg?react';
+import ChevronRight from '@/shared/assets/chevron_right.svg?react';
+import LastPage from '@/shared/assets/last_page.svg?react';
+import { cn } from '@/utils';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -28,6 +29,9 @@ interface DataTableProps<TData, TValue> {
   enableMultiRowSelection?: boolean;
   selection?: RowSelectionState;
   pagination?: PaginationState;
+  sorting?: SortingState;
+  manualSorting?: boolean;
+  onSortingChange?: OnChangeFn<SortingState>;
   getRowId?: (originalRow: TData, index: number, parent?: Row<TData> | undefined) => string;
   onPaginationChange?: OnChangeFn<PaginationState>;
   onRowSelectionChange?: OnChangeFn<RowSelectionState>;
@@ -35,20 +39,23 @@ interface DataTableProps<TData, TValue> {
 }
 
 export function DataTable<TData, TValue>({
-                                           columns,
-                                           data,
-                                           horizontalPadding = 'medium',
-                                           rowCount,
-                                           noResultsText = 'No results.',
-                                           enableRowSelection = false,
-                                           enableMultiRowSelection = false,
-                                           selection = {},
-                                           pagination,
-                                           getRowId,
-                                           onPaginationChange,
-                                           onRowSelectionChange,
-                                           onRowClick,
-                                         }: DataTableProps<TData, TValue>) {
+  columns,
+  data,
+  horizontalPadding = 'medium',
+  rowCount,
+  noResultsText = 'No results.',
+  enableRowSelection = false,
+  enableMultiRowSelection = false,
+  selection = {},
+  pagination,
+  sorting,
+  manualSorting = true,
+  onSortingChange,
+  getRowId,
+  onPaginationChange,
+  onRowSelectionChange,
+  onRowClick,
+}: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     getRowId,
     data,
@@ -56,11 +63,13 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     rowCount: rowCount,
-    state: { pagination, rowSelection: selection },
+    state: { pagination, rowSelection: selection, sorting },
+    manualSorting,
     enableRowSelection,
     enableMultiRowSelection,
     onPaginationChange,
     onRowSelectionChange,
+    onSortingChange,
   });
 
   const getCellPadding = () => {
@@ -76,12 +85,12 @@ export function DataTable<TData, TValue>({
   };
 
   return (
-    <div className="relative flex flex-1 flex-col h-full overflow-auto">
+    <div className='relative flex flex-1 flex-col h-full overflow-auto'>
       <Table>
         <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
+          {table.getHeaderGroups().map(headerGroup => (
             <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
+              {headerGroup.headers.map(header => {
                 return (
                   <TableHead
                     key={header.id}
@@ -89,7 +98,9 @@ export function DataTable<TData, TValue>({
                     style={{ width: header.getSize() }}
                     className={getCellPadding()}
                   >
-                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 );
               })}
@@ -98,14 +109,18 @@ export function DataTable<TData, TValue>({
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
+            table.getRowModel().rows.map(row => (
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && 'selected'}
                 onClick={() => onRowClick?.(row.original)}
               >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} style={{ width: cell.column.getSize() }} className={getCellPadding()}>
+                {row.getVisibleCells().map(cell => (
+                  <TableCell
+                    key={cell.id}
+                    style={{ width: cell.column.getSize() }}
+                    className={getCellPadding()}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -113,7 +128,7 @@ export function DataTable<TData, TValue>({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
+              <TableCell colSpan={columns.length} className='h-24 text-center'>
                 {noResultsText}
               </TableCell>
             </TableRow>
@@ -122,6 +137,27 @@ export function DataTable<TData, TValue>({
       </Table>
       {pagination && <DataTablePagination table={table} horizontalPadding={horizontalPadding} />}
     </div>
+  );
+}
+
+function PaginationButton({
+  active,
+  children,
+  onClick,
+}: {
+  active: boolean;
+  children: React.ReactNode;
+  onClick: () => void;
+}) {
+  return (
+    <Button
+      variant='ghost'
+      className={cn('h-6 w-6 p-0 lg:flex rounded-full', { 'bg-background-theme-fade': active })}
+      disabled={active}
+      onClick={onClick}
+    >
+      {children}
+    </Button>
   );
 }
 
@@ -143,21 +179,21 @@ interface PaginationProps {
 }
 
 export function Pagination({
-                             horizontalPadding,
-                             className,
-                             pageSize,
-                             pageCount = 0,
-                             pageIndex = 0,
-                             canPreviousPage,
-                             canNextPage,
-                             selectedCount,
-                             totalCount,
-                             compact,
-                             previousPage,
-                             nextPage,
-                             setPageSize,
-                             setPageIndex,
-                           }: PaginationProps) {
+  horizontalPadding,
+  className,
+  pageSize,
+  pageCount = 0,
+  pageIndex = 0,
+  canPreviousPage,
+  canNextPage,
+  selectedCount,
+  totalCount,
+  compact,
+  previousPage,
+  nextPage,
+  setPageSize,
+  setPageIndex,
+}: PaginationProps) {
   const { t } = useTranslation();
   const getCellPadding = () => {
     switch (horizontalPadding) {
@@ -171,6 +207,28 @@ export function Pagination({
     }
   };
 
+  const isFirstPageActive = pageCount <= 3 ? pageIndex === 0 : pageIndex < pageCount - 3;
+  const getFirstPageNumber = () => {
+    if (pageCount <= 3) return 1;
+    if (pageIndex < pageCount - 3) return pageIndex + 1;
+    else pageCount - 3;
+  };
+  const onFirstPageClick = () => {
+    if (pageCount <= 3) return setPageIndex?.(0);
+    setPageIndex?.(pageIndex < pageCount - 3 ? pageIndex : pageCount - 4);
+  };
+
+  const isAfterFirstPageActive = pageCount <= 3 ? pageIndex === 1 : pageIndex === pageCount - 3;
+  const getAfterFirstPageNumber = () => {
+    if (pageCount <= 3) return 2;
+    if (pageIndex < pageCount - 3) return pageIndex + 2;
+    else pageCount - 2;
+  };
+  const onAfterFirstPageClick = () => {
+    if (pageCount <= 3) return setPageIndex?.(1);
+    setPageIndex?.(pageIndex < pageCount - 3 ? pageIndex + 1 : pageCount - 3);
+  };
+
   return (
     <div
       className={cn(
@@ -179,7 +237,7 @@ export function Pagination({
         className,
       )}
     >
-      <div className="flex items-center space-x-2">
+      <div className='flex items-center space-x-2'>
         <Select
           options={[
             { value: '10', label: `${t('displayBy')} 10` },
@@ -188,52 +246,84 @@ export function Pagination({
             { value: '40', label: `${t('displayBy')} 40` },
             { value: '50', label: `${t('displayBy')} 50` },
           ]}
-          triggerClassName="h-8 text-sm text-foreground-secondary border-none hover:bg-[transparent] px-0"
+          triggerClassName='h-8 text-sm text-foreground-secondary border-none hover:bg-[transparent] px-0'
           placeholder={`${t('displayBy')} ${pageSize}`}
           value={`${pageSize}`}
           onValueChange={(value: string) => setPageSize?.(Number(value))}
         />
         {!!selectedCount && (
-          <div className="flex-1 text-sm text-foreground-secondary">
+          <div className='flex-1 text-sm text-foreground-secondary'>
             {`${t('selected')} ${selectedCount} ${t('of')} ${totalCount}`}
           </div>
         )}
       </div>
-      <div className="flex items-center space-x-6 lg:space-x-8">
-        {!compact && (
-          <div className="flex w-[140px] items-center justify-center text-sm text-foreground-secondary">
-            {`${t('page')} ${pageIndex + 1} ${t('of')} ${pageCount || 1}`}
-          </div>
-        )}
-        <div className="flex items-center space-x-2 text-foreground-secondary">
+      <div className='flex items-center space-x-6 lg:space-x-8'>
+        <div className='flex items-center text-foreground-secondary'>
           {!compact && (
             <Button
-              variant="ghost"
-              className="hidden h-8 w-8 p-0 lg:flex"
+              variant='ghost'
+              className='h-6 w-6 p-0 lg:flex rounded-full'
               onClick={() => setPageIndex?.(0)}
               disabled={!canPreviousPage}
             >
-              <span className="sr-only">Go to first page</span>
-              <LastPage className="h-6 w-6 rotate-180" />
+              <span className='sr-only'>Go to first page</span>
+              <LastPage className='h-6 w-6 rotate-180' />
             </Button>
           )}
-          <Button variant="ghost" className="h-8 w-8 p-0" onClick={() => previousPage()} disabled={!canPreviousPage}>
-            <span className="sr-only">Go to previous page</span>
-            <ChevronLeft className="h-6 w-6" />
+          <Button
+            variant='ghost'
+            className='h-6 w-6 p-0 rounded-full'
+            onClick={() => previousPage()}
+            disabled={!canPreviousPage}
+          >
+            <span className='sr-only'>Go to previous page</span>
+            <ChevronLeft className='h-6 w-6' />
           </Button>
-          <Button variant="ghost" className="h-8 w-8 p-0" onClick={() => nextPage()} disabled={!canNextPage}>
-            <span className="sr-only">Go to next page</span>
-            <ChevronRight className="h-6 w-6" />
+          <PaginationButton active={isFirstPageActive} onClick={onFirstPageClick}>
+            {getFirstPageNumber()}
+          </PaginationButton>
+          {pageCount > 1 && (
+            <PaginationButton active={isAfterFirstPageActive} onClick={onAfterFirstPageClick}>
+              {getAfterFirstPageNumber()}
+            </PaginationButton>
+          )}
+          {pageCount > 2 && (
+            <>
+              {pageCount > 3 && <span className='cursor-default'>...</span>}
+              {pageCount > 3 && (
+                <PaginationButton
+                  active={pageIndex === pageCount - 2}
+                  onClick={() => setPageIndex?.(pageCount - 2)}
+                >
+                  {pageCount - 1}
+                </PaginationButton>
+              )}
+              <PaginationButton
+                active={pageIndex === pageCount - 1}
+                onClick={() => setPageIndex?.(pageCount - 1)}
+              >
+                {pageCount}
+              </PaginationButton>
+            </>
+          )}
+          <Button
+            variant='ghost'
+            className='h-6 w-6 p-0 rounded-full'
+            onClick={() => nextPage()}
+            disabled={!canNextPage}
+          >
+            <span className='sr-only'>Go to next page</span>
+            <ChevronRight className='h-6 w-6' />
           </Button>
           {!compact && (
             <Button
-              variant="ghost"
-              className="hidden h-8 w-8 p-0 lg:flex"
+              variant='ghost'
+              className='hidden h-6 w-6 p-0 lg:flex rounded-full'
               onClick={() => setPageIndex?.(pageCount - 1)}
               disabled={!canNextPage}
             >
-              <span className="sr-only">Go to last page</span>
-              <LastPage className="h-6 w-6" />
+              <span className='sr-only'>Go to last page</span>
+              <LastPage className='h-6 w-6' />
             </Button>
           )}
         </div>
@@ -247,7 +337,10 @@ interface DataTablePaginationProps<TData> {
   horizontalPadding?: 'small' | 'medium' | 'large';
 }
 
-export function DataTablePagination<TData>({ table, horizontalPadding = 'medium' }: DataTablePaginationProps<TData>) {
+export function DataTablePagination<TData>({
+  table,
+  horizontalPadding = 'medium',
+}: DataTablePaginationProps<TData>) {
   return (
     <Pagination
       horizontalPadding={horizontalPadding}
@@ -273,7 +366,7 @@ interface TruncatedCellProps {
 
 export function TruncatedCell({ width, children }: TruncatedCellProps) {
   return (
-    <div className="truncate" style={{ width }} title={children}>
+    <div className='truncate' style={{ width }} title={children}>
       {children}
     </div>
   );
