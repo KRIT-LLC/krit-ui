@@ -9,6 +9,7 @@ import {
   RowSelectionState,
   Row,
   SortingState,
+  ExpandedState,
 } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './table';
@@ -18,6 +19,7 @@ import ChevronLeft from '@/assets/chevron_left.svg?react';
 import ChevronRight from '@/assets/chevron_right.svg?react';
 import LastPage from '@/assets/last_page.svg?react';
 import { cn } from '@/utils';
+import React from 'react';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -30,12 +32,17 @@ interface DataTableProps<TData, TValue> {
   selection?: RowSelectionState;
   pagination?: PaginationState;
   sorting?: SortingState;
+  expanded?: ExpandedState;
   manualSorting?: boolean;
+  paginationProps?: PaginationProps;
+  className?: string;
+  selectedRowClassName?: string;
   onSortingChange?: OnChangeFn<SortingState>;
   getRowId?: (originalRow: TData, index: number, parent?: Row<TData> | undefined) => string;
   onPaginationChange?: OnChangeFn<PaginationState>;
   onRowSelectionChange?: OnChangeFn<RowSelectionState>;
   onRowClick?: (row: TData) => void;
+  onExpandedChange?: OnChangeFn<ExpandedState>;
 }
 
 export function DataTable<TData, TValue>({
@@ -49,12 +56,17 @@ export function DataTable<TData, TValue>({
   selection = {},
   pagination,
   sorting,
+  expanded,
   manualSorting = true,
+  paginationProps,
+  className,
+  selectedRowClassName,
   onSortingChange,
   getRowId,
   onPaginationChange,
   onRowSelectionChange,
   onRowClick,
+  onExpandedChange,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     getRowId,
@@ -63,13 +75,16 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     rowCount: rowCount,
-    state: { pagination, rowSelection: selection, sorting },
+    state: { pagination, rowSelection: selection, sorting, expanded },
     manualSorting,
     enableRowSelection,
     enableMultiRowSelection,
     onPaginationChange,
     onRowSelectionChange,
     onSortingChange,
+    onExpandedChange,
+    // @ts-ignore
+    getSubRows: row => row.subRows,
   });
 
   const getCellPadding = () => {
@@ -85,7 +100,9 @@ export function DataTable<TData, TValue>({
   };
 
   return (
-    <div className='relative flex flex-1 flex-col h-full overflow-auto'>
+    <div
+      className={`${className && className} 'relative flex flex-1 flex-col h-full overflow-auto'`}
+    >
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map(headerGroup => (
@@ -110,21 +127,33 @@ export function DataTable<TData, TValue>({
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map(row => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && 'selected'}
-                onClick={() => onRowClick?.(row.original)}
-              >
-                {row.getVisibleCells().map(cell => (
-                  <TableCell
-                    key={cell.id}
-                    style={{ width: cell.column.getSize() }}
-                    className={getCellPadding()}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
+              <React.Fragment key={row.id}>
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && !selectedRowClassName && 'selected'}
+                  className={cn(row.getIsSelected() ? selectedRowClassName : '')}
+                  onClick={() => onRowClick?.(row.original)}
+                >
+                  {row.getVisibleCells().map(cell => (
+                    <TableCell
+                      style={{ width: cell.column.getSize() }}
+                      className={getCellPadding()}
+                    >
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
+                </TableRow>
+                {row.getIsExpanded() && (
+                  <TableRow>
+                    <td colSpan={row.getVisibleCells().length}>
+                      {
+                        // @ts-ignore
+                        row.original.customExpandedContent
+                      }
+                    </td>
+                  </TableRow>
+                )}
+              </React.Fragment>
             ))
           ) : (
             <TableRow>
@@ -135,7 +164,13 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
-      {pagination && <DataTablePagination table={table} horizontalPadding={horizontalPadding} />}
+      {pagination && (
+        <DataTablePagination
+          paginationProps={paginationProps}
+          table={table}
+          horizontalPadding={horizontalPadding}
+        />
+      )}
     </div>
   );
 }
@@ -172,8 +207,9 @@ interface PaginationProps {
   selectedCount?: number;
   totalCount?: number;
   compact?: boolean;
-  previousPage: () => void;
-  nextPage: () => void;
+  hideDisplayBy?: boolean;
+  previousPage?: () => void;
+  nextPage?: () => void;
   setPageSize?: (value: number) => void;
   setPageIndex?: (value: number) => void;
 }
@@ -189,6 +225,7 @@ export function Pagination({
   selectedCount,
   totalCount,
   compact,
+  hideDisplayBy,
   previousPage,
   nextPage,
   setPageSize,
@@ -237,26 +274,28 @@ export function Pagination({
         className,
       )}
     >
-      <div className='flex items-center space-x-2'>
-        <Select
-          options={[
-            { value: '10', label: `${t('displayBy')} 10` },
-            { value: '20', label: `${t('displayBy')} 20` },
-            { value: '30', label: `${t('displayBy')} 30` },
-            { value: '40', label: `${t('displayBy')} 40` },
-            { value: '50', label: `${t('displayBy')} 50` },
-          ]}
-          triggerClassName='h-8 text-sm text-foreground-secondary border-none hover:bg-[transparent] px-0'
-          placeholder={`${t('displayBy')} ${pageSize}`}
-          value={`${pageSize}`}
-          onValueChange={(value: string) => setPageSize?.(Number(value))}
-        />
-        {!!selectedCount && (
-          <div className='flex-1 text-sm text-foreground-secondary'>
-            {`${t('selected')} ${selectedCount} ${t('of')} ${totalCount}`}
-          </div>
-        )}
-      </div>
+      {!hideDisplayBy && (
+        <div className='flex items-center space-x-2'>
+          <Select
+            options={[
+              { value: '10', label: `${t('displayBy')} 10` },
+              { value: '20', label: `${t('displayBy')} 20` },
+              { value: '30', label: `${t('displayBy')} 30` },
+              { value: '40', label: `${t('displayBy')} 40` },
+              { value: '50', label: `${t('displayBy')} 50` },
+            ]}
+            triggerClassName='h-8 text-sm text-foreground-secondary border-none hover:bg-[transparent] px-0'
+            placeholder={`${t('displayBy')} ${pageSize}`}
+            value={`${pageSize}`}
+            onValueChange={(value: string) => setPageSize?.(Number(value))}
+          />
+          {!!selectedCount && (
+            <div className='flex-1 text-sm text-foreground-secondary'>
+              {`${t('selected')} ${selectedCount} ${t('of')} ${totalCount}`}
+            </div>
+          )}
+        </div>
+      )}
       <div className='flex items-center space-x-6 lg:space-x-8'>
         <div className='flex items-center text-foreground-secondary'>
           {!compact && (
@@ -273,7 +312,7 @@ export function Pagination({
           <Button
             variant='ghost'
             className='h-6 w-6 p-0 rounded-full'
-            onClick={() => previousPage()}
+            onClick={() => previousPage && previousPage()}
             disabled={!canPreviousPage}
           >
             <span className='sr-only'>Go to previous page</span>
@@ -309,7 +348,7 @@ export function Pagination({
           <Button
             variant='ghost'
             className='h-6 w-6 p-0 rounded-full'
-            onClick={() => nextPage()}
+            onClick={() => nextPage && nextPage()}
             disabled={!canNextPage}
           >
             <span className='sr-only'>Go to next page</span>
@@ -335,14 +374,17 @@ export function Pagination({
 interface DataTablePaginationProps<TData> {
   table: TanTable<TData>;
   horizontalPadding?: 'small' | 'medium' | 'large';
+  paginationProps?: PaginationProps;
 }
 
 export function DataTablePagination<TData>({
   table,
   horizontalPadding = 'medium',
+  paginationProps,
 }: DataTablePaginationProps<TData>) {
   return (
     <Pagination
+      {...paginationProps}
       horizontalPadding={horizontalPadding}
       pageSize={table.getState().pagination.pageSize}
       pageCount={table.getPageCount()}
