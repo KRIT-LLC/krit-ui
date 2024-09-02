@@ -33,7 +33,7 @@ const DialogContent = React.forwardRef<
 >(({ className, children, ...props }, ref) => {
   return (
     <DialogPortal>
-      <DialogOverlay className="bg-background-overlay/80" />
+      <DialogOverlay className='bg-background-overlay/80' />
       <DialogPrimitive.Content
         className={
           'fixed left-[50%] top-[8%] z-50 translate-x-[-50%] w-full max-w-fit max-h-[90vh] duration-200 focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]'
@@ -55,7 +55,11 @@ const DialogContent = React.forwardRef<
 });
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
-const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+const DialogHeader = ({
+  className,
+  hideCloseButton,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement> & { hideCloseButton?: boolean }) => (
   <div
     className={cn(
       'flex flex-col bg-background p-5 relative text-xl font-medium space-y-4 text-center sm:text-left',
@@ -64,11 +68,12 @@ const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
     {...props}
   >
     {props.children}
-    <DialogPrimitive.Close
-      className="absolute right-3 top-0 p-1 w-8 h-8 pointer-events-auto text-foreground transition-all hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-foreground-secondary">
-      <X className="h-6 w-6" />
-      <span className="sr-only">Close</span>
-    </DialogPrimitive.Close>
+    {!hideCloseButton && (
+      <DialogPrimitive.Close className='absolute right-3 top-0 p-1 w-8 h-8 pointer-events-auto text-foreground transition-all hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-foreground-secondary'>
+        <X className='h-6 w-6' />
+        <span className='sr-only'>Close</span>
+      </DialogPrimitive.Close>
+    )}
   </div>
 );
 DialogHeader.displayName = 'DialogHeader';
