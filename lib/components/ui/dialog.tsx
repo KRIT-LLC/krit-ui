@@ -29,21 +29,25 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & { aside?: boolean }
+>(({ className, children, aside, ...props }, ref) => {
   return (
     <DialogPortal>
       <DialogOverlay className='bg-background-overlay/80' />
       <DialogPrimitive.Content
-        className={
-          'fixed left-[50%] top-[8%] z-50 translate-x-[-50%] w-full max-w-fit max-h-[90vh] duration-200 focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]'
-        }
+        className={cn(
+          'fixed z-50 duration-200 focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]',
+          !aside && 'max-h-[90vh] left-[50%] translate-x-[-50%] top-[8%] max-w-fit w-full',
+          aside && 'right-[0] top-0 translate-x-0, h-[100vh]',
+        )}
         {...props}
       >
         <div
           ref={ref}
           className={cn(
-            'flex flex-col gap-[1px] bg-line-primary shadow-lg rounded-lg scroll-smooth overflow-y-auto overflow-x-hidden dialog-scrollbar min-w-[460px] max-w-[80vw] max-h-[90vh]',
+            'flex flex-col gap-[1px] bg-line-primary shadow-lg  scroll-smooth overflow-y-auto overflow-x-hidden dialog-scrollbar min-w-[460px] max-w-[80vw]',
+            !aside && 'max-h-[90vh] rounded-lg',
+            aside && 'h-[100vh]',
             className,
           )}
         >
