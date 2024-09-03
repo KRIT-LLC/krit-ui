@@ -36,7 +36,7 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
             className='absolute right-2 bottom-2.5 
             text-foreground-tertiary text-xs'
           >
-            {valueLength}/{props.maxLength} символов
+            {valueLength}/{props.maxLength}
           </span>
         )}
       </>
