@@ -30,6 +30,7 @@ export * from '@/components/ui/separator';
 export * from '@/components/ui/sortable-header';
 export * from '@/components/ui/file-input';
 export * from '@/components/ui/text-area';
+export * from '@/components/ui/switch';
 
 export * from '@/utils';
 
