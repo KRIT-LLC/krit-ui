@@ -1,4 +1,4 @@
-import { enUS, ru } from 'date-fns/locale';
+import { enUS, Locale, ru } from 'date-fns/locale';
 import {
   DayPickerMultipleProps,
   DayPickerRangeProps,
@@ -38,13 +38,26 @@ interface DatePickerRangeProps extends DayPickerRangeProps {
   onChange?: SelectRangeEventHandler;
 }
 
-export type DatePickerProps = DatePickerSingleProps | DatePickerMultipleProps | DatePickerRangeProps;
+export type DatePickerProps =
+  | DatePickerSingleProps
+  | DatePickerMultipleProps
+  | (DatePickerRangeProps & {
+      locale?: Locale;
+    });
 
-export function DatePicker({ className, ...props }: DatePickerProps) {
+export function DatePicker({ className, locale, ...props }: DatePickerProps) {
   const { t, i18n } = useTranslation();
   const placeholder = (
-    <span className="text-foreground-secondary font-normal">{props.placeholder || t('selectDate')}</span>
+    <span className='text-foreground-secondary font-normal'>
+      {props.placeholder || t('selectDate')}
+    </span>
   );
+  const getInputLocale = () => {
+    if (locale) {
+      return locale;
+    }
+    return i18n.language?.includes('ru') ? ru : enUS;
+  };
 
   const formatValue = () => {
     switch (props.mode) {
@@ -59,7 +72,11 @@ export function DatePicker({ className, ...props }: DatePickerProps) {
     }
   };
 
-  const modifiedProps = { ...props, selected: props.value, onSelect: props.onChange } as DatePickerProps;
+  const modifiedProps = {
+    ...props,
+    selected: props.value,
+    onSelect: props.onChange,
+  } as DatePickerProps;
 
   return (
     <Popover>
@@ -74,13 +91,13 @@ export function DatePicker({ className, ...props }: DatePickerProps) {
           )}
         >
           {formatValue()}
-          <CalendarOutline className="ml-auto text-foreground-secondary" />
+          <CalendarOutline className='ml-auto text-foreground-secondary' />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0 rounded-lg">
+      <PopoverContent className='w-auto p-0 rounded-lg'>
         <Calendar
-          className="bg-background rounded-lg"
-          locale={i18n.language?.includes('ru') ? ru : enUS}
+          className='bg-background rounded-lg'
+          locale={getInputLocale()}
           {...modifiedProps}
           initialFocus
         />
