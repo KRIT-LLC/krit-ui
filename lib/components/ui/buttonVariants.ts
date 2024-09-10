@@ -35,7 +35,7 @@ export const buttonVariants = cva(
         ghost: 'hover:bg-background-contrast-fade-selected/30',
         link: 'text-primary underline-offset-4',
         purple: 'bg-purple text-[white] hover:bg-purple/80',
-        light: 'bg-background-light hover:bg-background-light-hover shadow-lg hover:shadow-xl',
+        light: 'bg-background-primary hover:bg-background-primary-hover shadow-lg hover:shadow-xl',
       },
       size: {
         default: 'h-9 px-4 py-2',
@@ -44,7 +44,7 @@ export const buttonVariants = cva(
         lg: 'h-10 px-8',
         xl: 'h-12 px-8',
         xxl: 'h-16 px-8',
-        xxxl: 'h-20 px-8',
+        xxxl: 'h-20 px-8 font-medium',
         icon: 'h-10 w-10',
       },
     },

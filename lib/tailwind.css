@@ -114,8 +114,6 @@
     --background-success-gradient: linear-gradient(116deg, #61946c -7.58%, #2b7b3c 76.73%);
     --background-overlay: var(--background-secondary);
     --background-progress-gradient: linear-gradient(90deg, #296536 0%, #0faf32 100%);
-    --background-light: 0 0% 100%;
-    --background-light-hover: 0 0% 96%;
 
     --foreground-primary: 0 0% 96%;
     --foreground-primary-disabled: 0 0% 52%;
