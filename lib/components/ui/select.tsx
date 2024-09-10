@@ -12,7 +12,7 @@ interface OptionType {
   value: string;
 }
 
-interface SelectProps extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Root> {
+export interface SelectProps extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Root> {
   placeholder?: React.ReactNode;
   options: OptionType[];
   triggerClassName?: string;
@@ -27,41 +27,54 @@ interface SelectProps extends React.ComponentPropsWithoutRef<typeof SelectPrimit
 }
 
 const Select = ({
-                  triggerClassName,
-                  clearable,
-                  borderless,
-                  isLoading,
-                  isError,
-                  renderOption = (option) => option.label,
-                  onRefetch,
-                  onChange,
-                  onValueChange,
-                  onClick,
-                  onOpenChange,
-                  ...props
-                }: SelectProps) => {
+  triggerClassName,
+  clearable,
+  borderless,
+  isLoading,
+  isError,
+  renderOption = option => option.label,
+  onRefetch,
+  onChange,
+  onValueChange,
+  onClick,
+  onOpenChange,
+  ...props
+}: SelectProps) => {
   const handleChange = (value: string) =>
     onValueChange
       ? onValueChange(value)
-      : onChange?.(value, props.options.find((option) => option.value === value)?.label || '');
+      : onChange?.(value, props.options.find(option => option.value === value)?.label || '');
   return (
-    <SelectPrimitive.Root {...props} onValueChange={handleChange} onOpenChange={onClick || onOpenChange}>
+    <SelectPrimitive.Root
+      {...props}
+      onValueChange={handleChange}
+      onOpenChange={onClick || onOpenChange}
+    >
       <SelectTrigger
-        className={cn(borderless && 'bg-background-secondary border-line-primary text-base', triggerClassName)}
+        className={cn(
+          borderless && 'bg-background-secondary border-line-primary text-base',
+          triggerClassName,
+        )}
       >
         <SelectValue placeholder={props.placeholder} />
         {clearable && props.value && (
           <CancelOutline
             width={18}
             height={18}
-            className="text-icon-fade-contrast pointer-events-auto absolute z-50 right-9"
+            className='text-icon-fade-contrast pointer-events-auto absolute z-50 right-9'
             onClick={() => handleChange?.('')}
           />
         )}
       </SelectTrigger>
       <SelectContent className={cn(isLoading && 'min-h-16', isError && 'min-h-20')}>
-        <NetworkErrorMessage isLoading={isLoading} isError={isError} textSize="sm" center onRefetch={onRefetch} />
-        {props.options.map((option) => (
+        <NetworkErrorMessage
+          isLoading={isLoading}
+          isError={isError}
+          textSize='sm'
+          center
+          onRefetch={onRefetch}
+        />
+        {props.options.map(option => (
           <SelectItem key={option.value} value={option.value}>
             {renderOption(option)}
           </SelectItem>
@@ -96,7 +109,7 @@ const SelectTrigger = React.forwardRef<
   >
     {children}
     <SelectPrimitive.Icon asChild>
-      <ArrowDropDown className="min-h-6 min-w-6 text-icon-fade-contrast" />
+      <ArrowDropDown className='min-h-6 min-w-6 text-icon-fade-contrast' />
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 ));
@@ -111,7 +124,7 @@ const SelectScrollUpButton = React.forwardRef<
     className={cn('flex cursor-default items-center justify-center py-1', className)}
     {...props}
   >
-    <ChevronUp className="h-4 w-4" />
+    <ChevronUp className='h-4 w-4' />
   </SelectPrimitive.ScrollUpButton>
 ));
 SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName;
@@ -125,7 +138,7 @@ const SelectScrollDownButton = React.forwardRef<
     className={cn('flex cursor-default items-center justify-center py-1', className)}
     {...props}
   >
-    <ArrowDropDown className="h-4 w-4" />
+    <ArrowDropDown className='h-4 w-4' />
   </SelectPrimitive.ScrollDownButton>
 ));
 SelectScrollDownButton.displayName = SelectPrimitive.ScrollDownButton.displayName;
@@ -140,7 +153,7 @@ const SelectContent = React.forwardRef<
       className={cn(
         'relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-lg border border-line-primary bg-background text-popover-foreground shadow-base data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
         position === 'popper' &&
-        'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1',
+          'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1',
         className,
       )}
       position={position}
@@ -151,7 +164,7 @@ const SelectContent = React.forwardRef<
         className={cn(
           'py-1',
           position === 'popper' &&
-          'h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]',
+            'h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]',
         )}
       >
         {children}
@@ -166,7 +179,11 @@ const SelectLabel = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Label>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Label>
 >(({ className, ...props }, ref) => (
-  <SelectPrimitive.Label ref={ref} className={cn('py-1.5 pl-8 pr-2 text-sm font-semibold', className)} {...props} />
+  <SelectPrimitive.Label
+    ref={ref}
+    className={cn('py-1.5 pl-8 pr-2 text-sm font-semibold', className)}
+    {...props}
+  />
 ));
 SelectLabel.displayName = SelectPrimitive.Label.displayName;
 
@@ -183,9 +200,9 @@ const SelectItem = React.forwardRef<
     {...props}
   >
     <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
-    <span className="absolute right-4 flex h-3.5 w-3.5 items-center justify-center text-foreground-secondary">
+    <span className='absolute right-4 flex h-3.5 w-3.5 items-center justify-center text-foreground-secondary'>
       <SelectPrimitive.ItemIndicator>
-        <Check className="h-4 w-4" />
+        <Check className='h-4 w-4' />
       </SelectPrimitive.ItemIndicator>
     </span>
   </SelectPrimitive.Item>
@@ -196,7 +213,11 @@ const SelectSeparator = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Separator>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Separator>
 >(({ className, ...props }, ref) => (
-  <SelectPrimitive.Separator ref={ref} className={cn('-mx-1 my-1 h-px bg-muted', className)} {...props} />
+  <SelectPrimitive.Separator
+    ref={ref}
+    className={cn('-mx-1 my-1 h-px bg-muted', className)}
+    {...props}
+  />
 ));
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 
