@@ -31,8 +31,10 @@ export * from '@/components/ui/sortable-header';
 export * from '@/components/ui/file-input';
 export * from '@/components/ui/text-area';
 export * from '@/components/ui/switch';
+export * from '@/components/ui/previews';
 
 export * from '@/utils';
 
 export * from '@/hooks/useToast';
 export * from '@/hooks/useNotify';
+export * from '@/lib/file';

@@ -13,14 +13,14 @@ interface NetworkErrorMessageProps {
 }
 
 export const NetworkErrorMessage = ({
-                                      className,
-                                      textSize = 'base',
-                                      isLoading,
-                                      isError,
-                                      center,
-                                      inline,
-                                      onRefetch,
-                                    }: NetworkErrorMessageProps) => {
+  className,
+  textSize = 'base',
+  isLoading,
+  isError,
+  center,
+  inline,
+  onRefetch,
+}: NetworkErrorMessageProps) => {
   const { t } = useTranslation();
 
   if (!isLoading && !isError) return null;
@@ -38,9 +38,9 @@ export const NetworkErrorMessage = ({
       {isLoading && <Preloader className={textSize === 'base' ? 'w-7' : 'w-5'} />}
       {isError && (
         <>
-          <span className="text-icon">{t('networkError')}</span>
+          <span className='text-icon'>{t('networkError')}</span>
           {onRefetch && (
-            <span className="text-primary cursor-pointer" onClick={onRefetch}>
+            <span className='text-primary cursor-pointer' onClick={onRefetch}>
               {t('refetch')}
             </span>
           )}
