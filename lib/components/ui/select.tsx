@@ -7,7 +7,7 @@ import ArrowDropDown from '@/assets/arrow_drop_down.svg?react';
 import CancelOutline from '@/assets/cancel_outline.svg?react';
 import { NetworkErrorMessage } from './network-error-message';
 
-interface OptionType {
+export interface OptionType {
   label: string;
   value: string;
 }
