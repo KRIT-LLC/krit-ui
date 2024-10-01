@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { cn } from '@/utils';
 import { Preloader } from './preloader';
 
-interface NetworkErrorMessageProps {
+export interface NetworkErrorMessageProps {
   className?: string;
   textSize?: 'base' | 'sm';
   isLoading?: boolean;

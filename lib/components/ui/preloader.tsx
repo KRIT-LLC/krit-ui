@@ -1,8 +1,9 @@
+import { CSSProperties } from 'react';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/utils';
 
-interface PreloaderProps {
-  style?: React.CSSProperties;
+export interface PreloaderProps {
+  style?: CSSProperties;
   className?: string;
 }
 
