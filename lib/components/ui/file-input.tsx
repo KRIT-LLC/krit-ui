@@ -18,7 +18,7 @@ const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(
       onAdd(files[0]);
     };
 
-    const getRightIconGroup = (onFileRemove?: () => void) => (
+    const renderRightIconGroup = () => (
       <div className={cn('flex flex-row gap-1')}>
         {
           onFileRemove && (
