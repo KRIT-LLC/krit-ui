@@ -52,7 +52,7 @@ const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(
             style={{ pointerEvents: 'none' }}
             placeholder={props.placeholder}
             error={error}
-            rightIcon={getRightIconGroup(onFileRemove)}
+            rightIcon={renderRightIconGroup()}
           />
         </label>
       </>
