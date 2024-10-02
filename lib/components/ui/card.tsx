@@ -7,7 +7,7 @@ import Delete from '@/assets/delete.svg?react';
 import { Checkbox } from './checkbox';
 import { Dot } from './dot';
 
-interface CardProps {
+export interface CardProps {
   className?: string;
   children?: React.ReactNode;
   showArrow?: boolean;
