@@ -1,19 +1,42 @@
 import * as React from 'react';
+import { cn } from '@/utils';
 import ImageBoxFull from '@/assets/img_box_fill.svg?react';
+import CloseIcon from '@/assets/close.svg?react';
 import { Input } from './input';
 
 export interface FileInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   onAdd: (file: File) => void;
+  onFileRemove?: () => void;
   error?: string | boolean;
 }
 
 const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(
-  ({ className, onAdd, error, ...props }, ref) => {
+  ({ className, onAdd, onFileRemove, error, ...props }, ref) => {
     const [fileName, setFileName] = React.useState('');
     const handleInputChange = (files: FileList) => {
       setFileName(files[0].name);
       onAdd(files[0]);
     };
+
+    const renderRightIconGroup = () => (
+      <div className={cn('flex flex-row gap-1')}>
+        {
+          onFileRemove && (
+            <div
+              className="cursor-pointer"
+              onClick={e => {
+                e.preventDefault();
+                onFileRemove();
+              }}
+            >
+              <CloseIcon />
+            </div>
+          )
+        }
+        <ImageBoxFull />
+      </div>
+    );
+
     const input = (
       <>
         <label className={className}>
@@ -29,7 +52,7 @@ const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(
             style={{ pointerEvents: 'none' }}
             placeholder={props.placeholder}
             error={error}
-            rightIcon={<ImageBoxFull />}
+            rightIcon={renderRightIconGroup()}
           />
         </label>
       </>
