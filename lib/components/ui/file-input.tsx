@@ -45,7 +45,7 @@ const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(
 
     const input = (
       <>
-        <label className={cn(className, 'bg-background-primary')} onClick={handleClick}>
+        <label className={cn( 'bg-background-primary', className)} onClick={handleClick}>
           <input
             key={fileName}
             type={'file'}
