@@ -6,42 +6,48 @@ import { Input } from './input';
 
 export interface FileInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   onAdd: (file: File) => void;
-  onFileRemove?: () => void;
+  onFileRemove?: (onConfirmCallback?: () => void) => void;
+  onClick?: () => void;
   error?: string | boolean;
 }
 
 const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(
-  ({ className, onAdd, onFileRemove, error, ...props }, ref) => {
+  ({ className, onAdd, onClick, onFileRemove, error, ...props }, ref) => {
     const [fileName, setFileName] = React.useState('');
     const handleInputChange = (files: FileList) => {
       setFileName(files[0].name);
       onAdd(files[0]);
     };
 
+    function handleClick(e: React.MouseEvent) {
+      if (onClick) {
+        e.preventDefault();
+        onClick();
+      }
+    }
+
     const renderRightIconGroup = () => (
       <div className={cn('flex flex-row gap-1')}>
-        {
-          onFileRemove && (
-            <div
-              className="cursor-pointer"
-              onClick={e => {
-                e.preventDefault();
-                setFileName('');
-                onFileRemove();
-              }}
-            >
-              <CloseIcon />
-            </div>
-          )
-        }
+        {onFileRemove && (
+          <div
+            className='cursor-pointer'
+            onClick={e => {
+              e.preventDefault();
+              onFileRemove(() => setFileName(''));
+            }}
+          >
+            <CloseIcon />
+          </div>
+        )}
         <ImageBoxFull />
       </div>
     );
 
     const input = (
       <>
-        <label className={className}>
+        <label className={className} onClick={handleClick}>
           <input
+            key={fileName}
             type={'file'}
             style={{ display: 'none' }}
             {...props}
@@ -50,7 +56,7 @@ const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(
           />
           <Input
             defaultValue={fileName}
-            style={{ pointerEvents: 'none' }}
+            style={{ pointerEvents: 'none', background: 'white' }}
             placeholder={props.placeholder}
             error={error}
             rightIcon={renderRightIconGroup()}
