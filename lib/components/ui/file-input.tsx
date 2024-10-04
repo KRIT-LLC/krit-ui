@@ -45,7 +45,7 @@ const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(
 
     const input = (
       <>
-        <label className={className} onClick={handleClick}>
+        <label className={cn(className, 'bg-background-primary')} onClick={handleClick}>
           <input
             key={fileName}
             type={'file'}
@@ -56,7 +56,7 @@ const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(
           />
           <Input
             defaultValue={fileName}
-            style={{ pointerEvents: 'none', background: 'white' }}
+            style={{ pointerEvents: 'none' }}
             placeholder={props.placeholder}
             error={error}
             rightIcon={renderRightIconGroup()}
