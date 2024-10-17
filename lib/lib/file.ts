@@ -104,7 +104,7 @@ export const validateFileSize = (file: File, maxFileSize: number): ValidateFileR
 export const validateFileType = async (file: File, validTypes: string) => {
   return new Promise<ValidateFileResult>((resolve, reject) => {
     if (!validTypes.includes(file.type)) {
-      reject({ ok: false, error: 'Тип файла не поддерживается' });
+      reject({ ok: false, fileTypeError: 'Тип файла не поддерживается' });
       return;
     }
     const reader = new FileReader();
