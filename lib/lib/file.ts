@@ -91,3 +91,54 @@ export const compressFile = async (file: File, { quality = 1, type = file.type }
   if (type.includes('image')) return compressImage(file, { quality, type });
   else return file;
 };
+
+export type ValidateFileResult = { ok: true } | { ok: false; fileTypeError?: string; fileSizeError?: string };
+
+export const validateFileSize = (file: File, maxFileSize: number): ValidateFileResult => {
+  const ok = file.size < maxFileSize * 1024 * 1024;
+  const error = `Размер файла должен быть не более ${maxFileSize} МБ`;
+  if (ok) return { ok: true };
+  return { ok: false, fileSizeError: error };
+};
+
+export const validateFileType = async (file: File, validTypes: string) => {
+  return new Promise<ValidateFileResult>((resolve, reject) => {
+    if (!validTypes.includes(file.type)) {
+      reject({ ok: false, error: 'Тип файла не поддерживается' });
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const data = e.target?.result as ArrayBuffer | null;
+      if (!data) return;
+      const arr = new Uint8Array(data).subarray(0, 12);
+      let header = '';
+      for (let i = 0; i < arr.length; i++) header += arr[i].toString(16);
+
+      let isValid = false;
+      if (header.startsWith('89504e47')) {
+        isValid = file.type === 'image/png';
+      } else if (header.startsWith('ffd8ff')) {
+        isValid = file.type === 'image/jpeg' || file.type === 'image/jpg';
+      } else if (
+        header.startsWith('000') &&
+        (header.includes('66747970') || header.toLowerCase().includes('6d703432'))
+      ) {
+        isValid = file.type === 'video/mp4';
+      }
+      if (isValid) {
+        resolve({ ok: true });
+      } else {
+        reject({ ok: false, fileTypeError: 'Тип файла не поддерживается' });
+      }
+    };
+    if (file) reader.readAsArrayBuffer(file);
+    else reject({ ok: false, fileTypeError: 'Файл не выбран' });
+  });
+};
+
+export const validateFile = async (file: File, validTypes: string, maxFileSize = 10): Promise<ValidateFileResult> => {
+  const result = await validateFileType(file, validTypes).catch(error => error);
+  if (!result.ok) return result;
+  return validateFileSize(file, maxFileSize);
+};
