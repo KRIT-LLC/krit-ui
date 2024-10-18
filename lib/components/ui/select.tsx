@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as SelectPrimitive from '@radix-ui/react-select';
-import { Check, ChevronUp } from 'lucide-react';
+import { Check } from 'lucide-react';
+import { FixedSizeList } from 'react-window';
 
 import { cn } from '@/utils';
 import ArrowDropDown from '@/assets/arrow_drop_down.svg?react';
@@ -44,6 +45,7 @@ const Select = ({
     onValueChange
       ? onValueChange(value)
       : onChange?.(value, props.options.find(option => option.value === value)?.label || '');
+
   return (
     <SelectPrimitive.Root
       {...props}
@@ -74,18 +76,28 @@ const Select = ({
           center
           onRefetch={onRefetch}
         />
-        {props.options.map(option => (
-          <SelectItem key={option.value} value={option.value}>
-            {renderOption(option)}
-          </SelectItem>
-        ))}
+        {props.options.length > 100 ? (
+          <FixedSizeList height={384} itemCount={props.options.length} itemSize={36} width={'100%'}>
+            {({ index, style }) => {
+              return (
+                <SelectItem value={props.options[index].value} style={style}>
+                  {renderOption(props.options[index])}
+                </SelectItem>
+              );
+            }}
+          </FixedSizeList>
+        ) : (
+          props.options.map(option => (
+            <SelectItem key={option.value} value={option.value}>
+              {renderOption(option)}
+            </SelectItem>
+          ))
+        )}
       </SelectContent>
     </SelectPrimitive.Root>
   );
 };
-Select.displayName = SelectPrimitive.Value.displayName;
-
-const SelectGroup = SelectPrimitive.Group;
+Select.displayName = 'Select';
 
 const SelectValue = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Value>,
@@ -93,7 +105,7 @@ const SelectValue = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.Value ref={ref} className={cn('text-sm', className)} {...props} />
 ));
-SelectValue.displayName = SelectPrimitive.Value.displayName;
+SelectValue.displayName = 'SelectValue';
 
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
@@ -113,35 +125,7 @@ const SelectTrigger = React.forwardRef<
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 ));
-SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
-
-const SelectScrollUpButton = React.forwardRef<
-  React.ElementRef<typeof SelectPrimitive.ScrollUpButton>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollUpButton>
->(({ className, ...props }, ref) => (
-  <SelectPrimitive.ScrollUpButton
-    ref={ref}
-    className={cn('flex cursor-default items-center justify-center py-1', className)}
-    {...props}
-  >
-    <ChevronUp className='h-4 w-4' />
-  </SelectPrimitive.ScrollUpButton>
-));
-SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName;
-
-const SelectScrollDownButton = React.forwardRef<
-  React.ElementRef<typeof SelectPrimitive.ScrollDownButton>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollDownButton>
->(({ className, ...props }, ref) => (
-  <SelectPrimitive.ScrollDownButton
-    ref={ref}
-    className={cn('flex cursor-default items-center justify-center py-1', className)}
-    {...props}
-  >
-    <ArrowDropDown className='h-4 w-4' />
-  </SelectPrimitive.ScrollDownButton>
-));
-SelectScrollDownButton.displayName = SelectPrimitive.ScrollDownButton.displayName;
+SelectTrigger.displayName = 'SelectTrigger';
 
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
@@ -159,7 +143,6 @@ const SelectContent = React.forwardRef<
       position={position}
       {...props}
     >
-      <SelectScrollUpButton />
       <SelectPrimitive.Viewport
         className={cn(
           'py-1',
@@ -169,11 +152,10 @@ const SelectContent = React.forwardRef<
       >
         {children}
       </SelectPrimitive.Viewport>
-      <SelectScrollDownButton />
     </SelectPrimitive.Content>
   </SelectPrimitive.Portal>
 ));
-SelectContent.displayName = SelectPrimitive.Content.displayName;
+SelectContent.displayName = 'SelectContent';
 
 const SelectLabel = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Label>,
@@ -185,7 +167,7 @@ const SelectLabel = React.forwardRef<
     {...props}
   />
 ));
-SelectLabel.displayName = SelectPrimitive.Label.displayName;
+SelectLabel.displayName = 'SelectLabel';
 
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
@@ -207,7 +189,7 @@ const SelectItem = React.forwardRef<
     </span>
   </SelectPrimitive.Item>
 ));
-SelectItem.displayName = SelectPrimitive.Item.displayName;
+SelectItem.displayName = 'SelectItem';
 
 const SelectSeparator = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Separator>,
@@ -219,17 +201,14 @@ const SelectSeparator = React.forwardRef<
     {...props}
   />
 ));
-SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
+SelectSeparator.displayName = 'SelectSeparator';
 
 export {
   Select,
-  SelectGroup,
   SelectValue,
   SelectTrigger,
   SelectContent,
   SelectLabel,
   SelectItem,
   SelectSeparator,
-  SelectScrollUpButton,
-  SelectScrollDownButton,
 };
