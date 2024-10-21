@@ -136,6 +136,7 @@ export function DataTable<TData, TValue>({
                 >
                   {row.getVisibleCells().map(cell => (
                     <TableCell
+                      key={cell.id}
                       style={{ width: cell.column.getSize() }}
                       className={getCellPadding()}
                     >
@@ -144,7 +145,7 @@ export function DataTable<TData, TValue>({
                   ))}
                 </TableRow>
                 {row.getIsExpanded() && (
-                  <TableRow>
+                  <TableRow key={`${row.id}-expanded`}>
                     <td colSpan={row.getVisibleCells().length}>
                       {
                         // @ts-ignore
