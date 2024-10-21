@@ -46,7 +46,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         day_selected:
           'bg-background-theme text-foreground-on-contrast hover:bg-background-theme/80 hover:text-foreground-on-contrast focus:bg-background-theme focus:text-foreground-on-contrast',
         day_today:
-          'transition-none bg-muted !font-normal text-transparent bg-clip-text bg-background-theme hover:bg-none  hover:text-primary hover:bg-clip-content',
+          'transition-none bg-muted !font-normal text-transparent bg-background-theme hover:bg-none  hover:text-primary hover:bg-clip-content',
         day_outside:
           'day-outside text-foreground-secondary opacity-50 hover:text-foreground/90 aria-selected:bg-muted aria-selected:text-foreground-secondary aria-selected:opacity-30',
         day_disabled: 'text-foreground-secondary opacity-50',
