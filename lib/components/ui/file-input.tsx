@@ -41,6 +41,7 @@ const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(
           <div
             className='cursor-pointer'
             onClick={e => {
+              e.stopPropagation();
               e.preventDefault();
               onFileRemove(() => setFileName(''));
             }}
