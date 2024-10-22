@@ -1,25 +1,26 @@
+import React from 'react';
 import {
   ColumnDef,
-  OnChangeFn,
-  PaginationState,
+  ExpandedState,
   flexRender,
   getCoreRowModel,
-  useReactTable,
-  Table as TanTable,
-  RowSelectionState,
+  OnChangeFn,
+  PaginationState,
   Row,
+  RowSelectionState,
   SortingState,
-  ExpandedState,
+  Table as TanTable,
+  useReactTable,
 } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './table';
 import { Button } from './button';
 import { Select } from './select';
+import { Skeleton } from './skeleton';
+import { cn } from '@/utils';
 import ChevronLeft from '@/assets/chevron_left.svg?react';
 import ChevronRight from '@/assets/chevron_right.svg?react';
 import LastPage from '@/assets/last_page.svg?react';
-import { cn } from '@/utils';
-import React from 'react';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -43,6 +44,8 @@ interface DataTableProps<TData, TValue> {
   onRowSelectionChange?: OnChangeFn<RowSelectionState>;
   onRowClick?: (row: TData) => void;
   onExpandedChange?: OnChangeFn<ExpandedState>;
+  loading?: boolean;
+  skeletonClassName?: string;
 }
 
 export function DataTable<TData, TValue>({
@@ -67,6 +70,8 @@ export function DataTable<TData, TValue>({
   onRowSelectionChange,
   onRowClick,
   onExpandedChange,
+  loading,
+  skeletonClassName = 'h-5',
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     getRowId,
@@ -125,7 +130,27 @@ export function DataTable<TData, TValue>({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+          {loading
+            ? table.getHeaderGroups().map(headerGroup =>
+              Array.from({ length: 5 }).map((_, key) => (
+                <TableRow key={key}>
+                  {headerGroup.headers.map(header => {
+                    return (
+                      <TableCell
+                        key={header.id}
+                        colSpan={header.colSpan}
+                        style={{ width: header.column.getSize() }}
+                        className={getCellPadding()}
+                      >
+                        <Skeleton className={cn('w-full', skeletonClassName)} />
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              )),
+            )
+            : null}
+          {loading ? null : table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map(row => (
               <React.Fragment key={row.id}>
                 <TableRow

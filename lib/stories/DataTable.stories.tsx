@@ -8,7 +8,18 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
-  argTypes: {},
+  argTypes: {
+    loading: {
+      control: {
+        type: 'boolean',
+      },
+    },
+    skeletonClassName: {
+      control: {
+        type: 'text',
+      },
+    }
+  },
 } satisfies Meta<typeof DataTable>;
 
 export default meta;
