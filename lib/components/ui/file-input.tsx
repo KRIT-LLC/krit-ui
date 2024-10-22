@@ -11,12 +11,12 @@ export interface FileInputProps extends React.InputHTMLAttributes<HTMLInputEleme
   onClick?: () => void;
   error?: string | boolean;
   maxFileSize: number;
-  textValue?: string;
+  defaultValue?: string;
 }
 
 const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(
   (
-    { className, onAdd, onClick, onFileRemove, error, accept, maxFileSize, textValue, ...props },
+    { className, onAdd, onClick, onFileRemove, error, accept, maxFileSize, defaultValue, ...props },
     ref,
   ) => {
     const [fileName, setFileName] = React.useState('');
@@ -73,7 +73,7 @@ const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(
             onChange={e => e.target.files?.length && handleInputChange(e.target.files)}
           />
           <Input
-            defaultValue={fileName || textValue}
+            defaultValue={fileName || defaultValue}
             style={{ pointerEvents: 'none', background: 'white' }}
             placeholder={props.placeholder}
             error={error}
