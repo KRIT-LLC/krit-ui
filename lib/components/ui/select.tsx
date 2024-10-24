@@ -41,14 +41,18 @@ const Select = ({
   onOpenChange,
   ...props
 }: SelectProps) => {
-  const handleChange = (value: string) =>
+  const [value, setValue] = React.useState('');
+  const handleChange = (value: string) => {
+    setValue(value);
     onValueChange
       ? onValueChange(value)
       : onChange?.(value, props.options.find(option => option.value === value)?.label || '');
+  };
 
   return (
     <SelectPrimitive.Root
       {...props}
+      value={value}
       onValueChange={handleChange}
       onOpenChange={onClick || onOpenChange}
     >
@@ -58,7 +62,9 @@ const Select = ({
           triggerClassName,
         )}
       >
-        <SelectValue placeholder={props.placeholder} />
+        <SelectValue placeholder={props.placeholder}>
+          {props.options.find(d => d.value === value)?.label ?? ''}
+        </SelectValue>
         {clearable && props.value && (
           <CancelOutline
             width={18}
@@ -78,13 +84,11 @@ const Select = ({
         />
         {props.options.length > 100 ? (
           <FixedSizeList height={384} itemCount={props.options.length} itemSize={36} width={'100%'}>
-            {({ index, style }) => {
-              return (
-                <SelectItem value={props.options[index].value} style={style}>
-                  {renderOption(props.options[index])}
-                </SelectItem>
-              );
-            }}
+            {({ index, style }) => (
+              <SelectItem value={props.options[index].value} style={style}>
+                {renderOption(props.options[index])}
+              </SelectItem>
+            )}
           </FixedSizeList>
         ) : (
           props.options.map(option => (
