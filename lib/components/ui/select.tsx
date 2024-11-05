@@ -41,7 +41,7 @@ const Select = ({
   onOpenChange,
   ...props
 }: SelectProps) => {
-  const [value, setValue] = React.useState('');
+  const [value, setValue] = React.useState(props.value || '');
   const handleChange = (value: string) => {
     setValue(value);
     onValueChange
