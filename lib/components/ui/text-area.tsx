@@ -14,6 +14,7 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
       setValueLength(e.target.value.length);
       props.onChange?.(e);
     };
+
     const textArea = (
       <>
         <textarea
@@ -24,12 +25,12 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
           )}
           ref={ref}
           placeholder={props.placeholder}
-          onChange={onChange}
           rows={rows ?? 4}
           onKeyDown={e => {
             if (e.key === 'Enter') onEnter?.((e.target as HTMLTextAreaElement).value);
           }}
           {...props}
+          onChange={onChange}
         />
         {props.maxLength && (
           <span
