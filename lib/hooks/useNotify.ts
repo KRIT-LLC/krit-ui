@@ -56,7 +56,6 @@ export const useNotify = (text?: string) => {
 
   const getErrorText = (error: Error) => {
     const data = getErrorData(error);
-    console.log(data);
     const errorTitle = (data && 'title' in data ? data.title : undefined) as string | undefined;
     const errorMessage = data?.message || String(data && ('Message' in data ? data.Message : ''));
     const errorText = errorMessage || data?.error || errorTitle;
