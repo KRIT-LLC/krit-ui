@@ -11,6 +11,7 @@ export interface ErrorResponse {
   error: string;
   errors: string[] | ErrorsObj;
   message: string;
+  detail: string;
   path: string;
   status: number;
   timestamp: string;
@@ -57,7 +58,8 @@ export const useNotify = (text?: string) => {
   const getErrorText = (error: Error) => {
     const data = getErrorData(error);
     const errorTitle = (data && 'title' in data ? data.title : undefined) as string | undefined;
-    const errorMessage = data?.message || String(data && ('Message' in data ? data.Message : ''));
+    const errorMessage =
+      data?.message || String(data && ('Message' in data ? data.Message : '')) || data?.detail;
     const errorText = errorMessage || data?.error || errorTitle;
     const errorsText = getErrorsText(data);
     return text || errorsText || errorText;
