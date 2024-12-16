@@ -2,11 +2,12 @@ import * as React from 'react';
 import * as SelectPrimitive from '@radix-ui/react-select';
 import { Check } from 'lucide-react';
 import { FixedSizeList } from 'react-window';
-
+import { debounce } from 'lodash';
 import { cn } from '@/utils';
 import ArrowDropDown from '@/assets/arrow_drop_down.svg?react';
 import CancelOutline from '@/assets/cancel_outline.svg?react';
 import { NetworkErrorMessage } from './network-error-message';
+import { Input } from './input';
 
 export interface OptionType {
   label: string;
@@ -42,12 +43,40 @@ const Select = ({
   ...props
 }: SelectProps) => {
   const [value, setValue] = React.useState(props.value || '');
+
   const handleChange = (value: string) => {
     setValue(value);
-    onValueChange
-      ? onValueChange(value)
-      : onChange?.(value, props.options.find(option => option.value === value)?.label || '');
+    if (onValueChange) {
+      onValueChange(value);
+    } else {
+      onChange?.(value, props.options.find(option => option.value === value)?.label || '');
+    }
   };
+
+  const [searchState, setSearchState] = React.useState('');
+  const [debouncedSearchState, setDebouncedSearchState] = React.useState('');
+
+  const handleSearchChange = React.useCallback(
+    debounce(value => {
+      setDebouncedSearchState(value);
+    }, 800),
+    [],
+  );
+
+  const onSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.stopPropagation();
+    const value = event.target.value.trim();
+    setSearchState(value);
+    handleSearchChange(value);
+  };
+
+  const filteredOptions = React.useMemo(() => {
+    if (!debouncedSearchState) return props.options;
+    const results = props.options.filter(option =>
+      option.label.toLowerCase().includes(debouncedSearchState.toLowerCase()),
+    );
+    return results.length > 0 ? results : [{ label: 'No results', value: '__no_results__' }];
+  }, [props.options, debouncedSearchState]);
 
   return (
     <SelectPrimitive.Root
@@ -83,13 +112,28 @@ const Select = ({
           onRefetch={onRefetch}
         />
         {props.options.length > 100 ? (
-          <FixedSizeList height={384} itemCount={props.options.length} itemSize={36} width={'100%'}>
-            {({ index, style }) => (
-              <SelectItem value={props.options[index].value} style={style}>
-                {renderOption(props.options[index])}
-              </SelectItem>
-            )}
-          </FixedSizeList>
+          <>
+            <Input
+              key='search'
+              placeholder='Search...'
+              value={searchState}
+              onChange={onSearchChange}
+              asSearch
+              className='position-relative top-[-4px]'
+            />
+            <FixedSizeList
+              height={384}
+              itemCount={filteredOptions.length}
+              itemSize={36}
+              width={'100%'}
+            >
+              {({ index, style }) => (
+                <SelectItem value={filteredOptions[index].value} style={style}>
+                  {renderOption(filteredOptions[index])}
+                </SelectItem>
+              )}
+            </FixedSizeList>
+          </>
         ) : (
           props.options.map(option => (
             <SelectItem key={option.value} value={option.value}>
