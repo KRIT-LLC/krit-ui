@@ -16,7 +16,7 @@ export type MultiSelectOptionType = {
   hidden?: boolean;
 };
 
-interface MultiSelectProps {
+export interface MultiSelectProps {
   className?: string;
   triggerClassName?: string;
   variant?: ButtonVariant;
@@ -64,7 +64,7 @@ function MultiSelect({
 }: MultiSelectProps) {
   const { t } = useTranslation();
   const [search, setSearch] = React.useState('');
-  
+
   React.useEffect(() => {
     onSearch?.(search);
   }, [search]);
