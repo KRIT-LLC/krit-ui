@@ -32,6 +32,7 @@ export * from '@/components/ui/file-input';
 export * from '@/components/ui/text-area';
 export * from '@/components/ui/switch';
 export * from '@/components/ui/previews';
+export * from '@/components/ui/multi-select';
 
 export * from '@/utils';
 
