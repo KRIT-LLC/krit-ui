@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, ButtonVariant } from './button';
-import { Command, CommandEmpty, CommandInput } from './command';
+import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from './command';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 import ArrowDropDown from '@/assets/arrow_drop_down.svg?react';
 import CloseCircle from '@/assets/close_circle.svg?react';
@@ -10,7 +10,6 @@ import { Checkbox } from './checkbox';
 import { Separator } from './separator';
 import { cn } from '@/utils';
 import { FixedSizeList } from 'react-window';
-import { CommandItem, CommandList } from 'cmdk';
 
 export type MultiSelectOptionType = {
   label: string;
@@ -160,7 +159,7 @@ function MultiSelect({
             onRefetch={onRefetch}
           />
           {!isLoading && !isError && <CommandEmpty>{t('notFound')}</CommandEmpty>}{' '}
-          <CommandList className='py-1 px-0 overflow-hidden'>
+          <CommandList className='py-1 px-0 overflow-hidden max-h-[340px]'>
             <FixedSizeList
               height={340}
               itemCount={filteredOptions.length}
