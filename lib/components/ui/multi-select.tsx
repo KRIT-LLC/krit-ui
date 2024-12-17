@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, ButtonVariant } from './button';
-import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from './command';
+import { Command, CommandEmpty, CommandInput } from './command';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 import ArrowDropDown from '@/assets/arrow_drop_down.svg?react';
 import CloseCircle from '@/assets/close_circle.svg?react';
@@ -9,6 +9,8 @@ import { NetworkErrorMessage } from './network-error-message';
 import { Checkbox } from './checkbox';
 import { Separator } from './separator';
 import { cn } from '@/utils';
+import { FixedSizeList } from 'react-window';
+import { CommandItem, CommandList } from 'cmdk';
 
 export type MultiSelectOptionType = {
   label: string;
@@ -30,6 +32,7 @@ export interface MultiSelectProps {
   isLoading?: boolean;
   isError?: boolean;
   disabled?: boolean;
+  searchPlaceholder?: string;
   renderOption?: (option: MultiSelectOptionType) => React.ReactNode;
   onRefetch?: () => void;
   onOpenChange?: (open: boolean) => void;
@@ -53,6 +56,7 @@ function MultiSelect({
   isLoading,
   isError,
   disabled,
+  searchPlaceholder,
   renderOption,
   onRefetch,
   onOpenChange,
@@ -90,6 +94,17 @@ function MultiSelect({
       ).trim(),
     )
     .join(', ');
+
+  const filteredOptions = React.useMemo(() => {
+    if (shouldFilter) {
+      return options
+        .filter(({ hidden }) => !hidden)
+        .filter(option =>
+          shouldFilter ? option.label.toLowerCase().includes(search.toLowerCase()) : true,
+        );
+    }
+    return options;
+  }, [options, search, shouldFilter]);
 
   return (
     <Popover open={open} onOpenChange={onOpenChange} modal={true} {...props}>
@@ -131,7 +146,11 @@ function MultiSelect({
       <PopoverContent className='w-full p-0 min-w-[var(--radix-popover-trigger-width)] overflow-auto'>
         <Command shouldFilter={false} className={className}>
           {shouldFilter && (
-            <CommandInput placeholder={t('search')} value={search} onValueChange={setSearch} />
+            <CommandInput
+              placeholder={searchPlaceholder || t('search')}
+              value={search}
+              onValueChange={setSearch}
+            />
           )}
           <NetworkErrorMessage
             isLoading={isLoading}
@@ -140,32 +159,38 @@ function MultiSelect({
             center
             onRefetch={onRefetch}
           />
-          {!isLoading && !isError && <CommandEmpty>{t('notFound')}</CommandEmpty>}
-          <CommandList className='max-h-64 py-1 px-0 overflow-auto'>
-            {options
-              .filter(({ hidden }) => !hidden)
-              .filter(option =>
-                shouldFilter ? option.label.toLowerCase().includes(search.toLowerCase()) : true,
-              )
-              .map(option => (
-                <CommandItem
-                  key={option.value}
-                  className={cn(
-                    'rounded-none py-2 px-3 aria-selected:bg-background-theme-fade aria-selected:text-foreground ',
-                    value.includes(option.value) && 'bg-background-theme-fade text-foreground',
-                  )}
-                  onSelect={() => handleSelect(option)}
-                >
-                  {renderOption ? (
-                    <React.Fragment key={option.value}>{renderOption(option)}</React.Fragment>
-                  ) : (
-                    <>
-                      <Checkbox className='mr-2' checked={value.includes(option.value)} />
-                      {option.label}
-                    </>
-                  )}
-                </CommandItem>
-              ))}
+          {!isLoading && !isError && <CommandEmpty>{t('notFound')}</CommandEmpty>}{' '}
+          <CommandList className='py-1 px-0 overflow-hidden'>
+            <FixedSizeList
+              height={340}
+              itemCount={filteredOptions.length}
+              itemSize={36}
+              width={'100%'}
+            >
+              {({ index, style }) => {
+                const option = filteredOptions[index];
+                return (
+                  <CommandItem
+                    style={style}
+                    key={option.value}
+                    className={cn(
+                      'relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground rounded-none py-2 px-3 aria-selected:bg-background-theme-fade aria-selected:text-foreground',
+                      value.includes(option.value) && 'bg-background-theme-fade text-foreground',
+                    )}
+                    onSelect={() => handleSelect(option)}
+                  >
+                    {renderOption ? (
+                      <React.Fragment key={option.value}>{renderOption(option)}</React.Fragment>
+                    ) : (
+                      <>
+                        <Checkbox className='mr-2' checked={value.includes(option.value)} />
+                        {option.label}
+                      </>
+                    )}
+                  </CommandItem>
+                );
+              }}
+            </FixedSizeList>
           </CommandList>
         </Command>
       </PopoverContent>
