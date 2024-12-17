@@ -158,7 +158,7 @@ function MultiSelect({
             center
             onRefetch={onRefetch}
           />
-          {!isLoading && !isError && <CommandEmpty>{t('notFound')}</CommandEmpty>}{' '}
+          {!isLoading && !isError && <CommandEmpty>{t('notFound')}</CommandEmpty>}
           <CommandList className='py-1 px-0 overflow-hidden max-h-[340px]'>
             <FixedSizeList
               height={340}
