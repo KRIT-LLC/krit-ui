@@ -123,7 +123,7 @@ function MultiSelect({
               <div className='truncate text-nowrap whitespace-nowrap' title={valueText}>
                 {valueText}
               </div>
-              <ArrowDropDown className='w-6 h-6 shrink-0 text-icon-fade-contrast' />
+              <ArrowDropDown className='w-6 h-6 shrink-0 text-icon-fade-contrast ml-auto' />
               {onRemoveClick && (
                 <span className='flex items-center'>
                   <Separator orientation='vertical' className='w-px h-5 mr-2' />
