@@ -1,0 +1,14 @@
+export { default as ChevronLeft } from '@/assets/chevron_left.svg?react';
+export { default as ChevronRight } from '@/assets/chevron_left.svg?react';
+export { default as TableChart } from '@/assets/table_chart.svg?react';
+export { default as ViewSidebar } from '@/assets/view_sidebar.svg?react';
+export { default as Add } from '@/assets/add.svg?react';
+export { default as ExpandMore } from '@/assets/expand_more.svg?react';
+export { default as Assignment } from '@/assets/assignment.svg?react';
+export { default as Hardware } from '@/assets/hardware.svg?react';
+export { default as ShoppingBasket } from '@/assets/shopping_basket.svg?react';
+export { default as Straighten } from '@/assets/straighten.svg?react';
+export { default as MoreVert } from '@/assets/more_vert.svg?react';
+export { default as EditOutline } from '@/assets/edit_outline.svg?react';
+export { default as DeleteOutline } from '@/assets/delete_outline.svg?react';
+export { default as History } from '@/assets/history.svg?react';
