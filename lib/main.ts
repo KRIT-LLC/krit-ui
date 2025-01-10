@@ -35,6 +35,8 @@ export * from '@/components/ui/previews';
 export * from '@/components/ui/multi-select';
 export * from '@/components/ui/resizable';
 export * from '@/components/ui/theme-provider';
+export * from '@/components/ui/header';
+export * from '@/components/ui/tabs';
 
 export * from '@/utils';
 
@@ -42,3 +44,5 @@ export * from '@/hooks/useToast';
 export * from '@/hooks/useNotify';
 export * from '@/hooks/useTheme';
 export * from '@/lib/file';
+
+export * from '@/assets';
