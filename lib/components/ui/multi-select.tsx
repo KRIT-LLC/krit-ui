@@ -124,7 +124,7 @@ function MultiSelect({
                 {valueText}
               </div>
               <ArrowDropDown className='w-6 h-6 shrink-0 text-icon-fade-contrast ml-auto' />
-              {onRemoveClick && (
+              {onRemoveClick && valueText && (
                 <span className='flex items-center'>
                   <Separator orientation='vertical' className='w-px h-5 mr-2' />
                   <div
@@ -183,7 +183,9 @@ function MultiSelect({
                     ) : (
                       <>
                         <Checkbox className='mr-2' checked={value.includes(option.value)} />
-                        {option.label}
+                        <span title={option.label} className='truncate'>
+                          {option.label}
+                        </span>
                       </>
                     )}
                   </CommandItem>
