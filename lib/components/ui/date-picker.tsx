@@ -85,7 +85,7 @@ export function DatePicker({ className, locale, ...props }: DatePickerProps) {
           variant={'secondary-outline'}
           size={'sm'}
           className={cn(
-            'w-full justify-start text-left px-4 font-normal pr-1.5 text-sm',
+            'w-full justify-start text-left font-normal px-3 text-sm',
             !props.value && 'text-foreground-secondary',
             className,
           )}
