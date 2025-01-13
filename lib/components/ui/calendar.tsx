@@ -13,15 +13,17 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      captionLayout="dropdown-buttons"
+      captionLayout='dropdown-buttons'
       fromYear={new Date().getFullYear() - 6}
       toYear={new Date().getFullYear() + 6}
       className={cn('p-3', className)}
       classNames={{
         months: 'flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0',
         month: 'space-y-4',
-        caption_dropdowns: 'flex text-[15px] capitalize font-medium grid gap-2 grid-cols-[0px_3fr_2fr]',
-        dropdown_month: '[&>.rdp-vhidden]:hidden flex [&>select:focus-visible]:outline-none [&>select]:capitalize mr-2',
+        caption_dropdowns:
+          'flex text-[15px] capitalize font-medium grid gap-2 grid-cols-[0px_3fr_2fr]',
+        dropdown_month:
+          '[&>.rdp-vhidden]:hidden flex [&>select:focus-visible]:outline-none [&>select]:capitalize mr-2',
         dropdown_year: '[&>.rdp-vhidden]:hidden flex [&>select:focus-visible]:outline-none',
         caption: 'flex justify-center pt-1 relative items-center',
         caption_label: 'hidden',
@@ -46,7 +48,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         day_selected:
           'bg-background-theme text-foreground-on-contrast hover:bg-background-theme/80 hover:text-foreground-on-contrast focus:bg-background-theme focus:text-foreground-on-contrast',
         day_today:
-          'transition-none bg-muted !font-normal text-transparent bg-background-theme hover:bg-none  hover:text-primary hover:bg-clip-content',
+          'transition-none bg-muted text-foreground-theme bg-background-theme hover:bg-none  hover:text-primary hover:bg-clip-content',
         day_outside:
           'day-outside text-foreground-secondary opacity-50 hover:text-foreground/90 aria-selected:bg-muted aria-selected:text-foreground-secondary aria-selected:opacity-30',
         day_disabled: 'text-foreground-secondary opacity-50',
@@ -63,7 +65,9 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
             <SelectPrimitive.Root
               name={props.name}
               value={props.value as string | undefined}
-              onValueChange={(value) => props.onChange?.({ target: { value } } as React.ChangeEvent<HTMLSelectElement>)}
+              onValueChange={value =>
+                props.onChange?.({ target: { value } } as React.ChangeEvent<HTMLSelectElement>)
+              }
             >
               <SelectTrigger
                 className={cn(
@@ -74,7 +78,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
                 <SelectValue placeholder={props.caption} />
               </SelectTrigger>
               <SelectContent>
-                {React.Children.toArray(children).map((child) => {
+                {React.Children.toArray(children).map(child => {
                   const option = child as React.ReactElement<HTMLOptionElement>;
                   return (
                     <SelectItem key={option.props.value} value={option.props.value}>
