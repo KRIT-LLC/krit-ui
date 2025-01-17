@@ -166,7 +166,7 @@
 
 @layer utilities {
   .dialog-scrollbar::-webkit-scrollbar {
-    width: 16px;
+    width: 6px;
     background-color: transparent;
   }
 
