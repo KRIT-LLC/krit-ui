@@ -5,6 +5,10 @@ import { Controller, ControllerProps, FieldPath, FieldValues, FormProvider } fro
 import { cn } from '@/utils';
 import { Label } from './label';
 import { FormFieldContext, FormItemContext, useFormField } from './form.lib';
+import { Input, InputProps } from './input';
+import { Select, SelectProps } from './select';
+import { DatePicker, DatePickerProps } from './date-picker';
+import { MultiSelect, MultiSelectProps } from './multi-select';
 
 const Form = FormProvider;
 
@@ -121,4 +125,56 @@ const FormMessage = React.forwardRef<
 });
 FormMessage.displayName = 'FormMessage';
 
-export { Form, FormItem, FormLabel, FormControl, FormDescription, FormMessage, FormField };
+const FormItemInput = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
+  return (
+    <FormItem>
+      <FormControl>
+        <Input ref={ref} {...props} />
+      </FormControl>
+    </FormItem>
+  );
+});
+
+const FormItemSelect = (props: SelectProps) => {
+  return (
+    <FormItem>
+      <FormControl>
+        <Select {...props} />
+      </FormControl>
+    </FormItem>
+  );
+};
+
+const FormItemMultiSelect = (props: MultiSelectProps) => {
+  return (
+    <FormItem>
+      <FormControl>
+        <MultiSelect {...props} />
+      </FormControl>
+    </FormItem>
+  );
+};
+
+const FormItemDatePicker = (props: DatePickerProps) => {
+  return (
+    <FormItem>
+      <FormControl>
+        <DatePicker {...props} />
+      </FormControl>
+    </FormItem>
+  );
+};
+
+export {
+  Form,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+  FormField,
+  FormItemInput,
+  FormItemSelect,
+  FormItemMultiSelect,
+  FormItemDatePicker,
+};
