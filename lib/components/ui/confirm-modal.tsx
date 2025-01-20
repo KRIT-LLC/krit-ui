@@ -21,6 +21,7 @@ import { cn } from '@/utils';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from './form';
 import { PromptOptions } from '@/hooks/useConfirm';
 import { zRequired } from '@/lib/zod';
+import { renderTextWithBoldMarkdown } from '@/lib/text';
 
 interface ConfirmModalProps extends PromptOptions {
   children?: ReactNode;
@@ -58,23 +59,6 @@ export const ConfirmModal = ({
     resolver: zodResolver(formSchema),
     defaultValues: { inputValue: '' },
   });
-
-  const renderTextWithBoldMarkdown = (text: string) => {
-    // Парсинг и отрисовка текста как жирного, если вокруг подстроки **
-    const regex = /\*\*(.*?)\*\*/g;
-    const match = text.match(regex);
-    if (!match) return text;
-    const textShouldBeBold = match.map(item => item.replaceAll('*', ''));
-    return text.split('**').map(part =>
-      textShouldBeBold.includes(part) ? (
-        <b key={part} className='text-foreground'>
-          {part}
-        </b>
-      ) : (
-        part
-      ),
-    );
-  };
 
   useEffect(() => {
     if (!visible) form.reset({ inputValue: '' });
