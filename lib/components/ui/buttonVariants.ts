@@ -25,7 +25,7 @@ export const buttonVariants = cva(
         'secondary-outline':
           'border border-line-primary bg-input text-foreground hover:bg-background-secondary/90 active:bg-background-secondary',
         'secondary-contrast':
-          'bg-background-contrast-fade-selected hover:bg-background-contrast-fade-selected/90',
+          'bg-background-contrast-fade-selected hover:bg-background-contrast-fade-hover/90',
         contrast:
           'bg-background-contrast text-foreground-on-contrast hover:bg-background-contrast/90',
         'contrast-fade':

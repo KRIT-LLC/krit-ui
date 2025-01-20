@@ -10,19 +10,18 @@
   "bracketSpacing": true,
   "jsxBracketSameLine": false,
   "arrowParens": "avoid",
+  "plugins": ["@trivago/prettier-plugin-sort-imports"],
   "importOrder": [
     "^react*",
-    "^classnames|date-fns",
-    "^@vtbhome*",
-    "^widgets/*",
-    "^features/*",
-    "^entities/*",
-    "^pages/*",
-    "^shared/*",
-    "^[../].*(?<!\\.(c|le|sc)ss)$",
-    "^[./].*(?<!\\.(c|le|sc)ss)$",
-    "\\.(c|le|sc)ss$"
+    "<THIRD_PARTY_MODULES>",
+    "^@/components",
+    "^@/hooks",
+    "^@/utils",
+    "^@/assets",
+    "^[./]"
   ],
   "importOrderSeparation": false,
-  "importOrderSortSpecifiers": true
+  "importOrderSortSpecifiers": true,
+  "importOrderGroupNamespaceSpecifiers": true,
+  "importOrderCaseInsensitive": true
 }
