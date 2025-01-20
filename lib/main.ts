@@ -37,12 +37,15 @@ export * from '@/components/ui/resizable';
 export * from '@/components/ui/theme-provider';
 export * from '@/components/ui/header';
 export * from '@/components/ui/tabs';
+export * from '@/components/ui/confirm-modal';
 
 export * from '@/utils';
 
 export * from '@/hooks/useToast';
 export * from '@/hooks/useNotify';
 export * from '@/hooks/useTheme';
+export * from '@/hooks/useConfirm';
 export * from '@/lib/file';
+export * from '@/lib/zod';
 
 export * from '@/assets';
