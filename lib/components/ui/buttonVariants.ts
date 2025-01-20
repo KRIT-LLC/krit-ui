@@ -14,7 +14,7 @@ export const buttonVariants = cva(
         destructive:
           'bg-background-error-fade text-foreground-error hover:bg-background-error-fade-hover',
         'destructive-primary':
-          'bg-destructive-foreground text-primary-foreground hover:bg-destructive-foreground/80',
+          'bg-background-error text-primary-foreground hover:bg-background-error/80',
         success: 'bg-success text-success-foreground hover:bg-success/80',
         'success-primary':
           'bg-success-foreground text-primary-foreground hover:bg-success-foreground/80',
