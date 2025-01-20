@@ -132,23 +132,23 @@ export function DataTable<TData, TValue>({
         <TableBody>
           {loading
             ? table.getHeaderGroups().map(headerGroup =>
-              Array.from({ length: 5 }).map((_, key) => (
-                <TableRow key={key}>
-                  {headerGroup.headers.map(header => {
-                    return (
-                      <TableCell
-                        key={header.id}
-                        colSpan={header.colSpan}
-                        style={{ width: header.column.getSize() }}
-                        className={getCellPadding()}
-                      >
-                        <Skeleton className={cn('w-full', skeletonClassName)} />
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              )),
-            )
+                Array.from({ length: 5 }).map((_, key) => (
+                  <TableRow key={key}>
+                    {headerGroup.headers.map(header => {
+                      return (
+                        <TableCell
+                          key={header.id}
+                          colSpan={header.colSpan}
+                          style={{ width: header.column.getSize() }}
+                          className={getCellPadding()}
+                        >
+                          <Skeleton className={cn('w-full', skeletonClassName)} />
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                )),
+              )
             : null}
           {loading ? null : table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map(row => (
@@ -222,7 +222,7 @@ function PaginationButton({
   );
 }
 
-interface PaginationProps {
+export interface PaginationProps {
   horizontalPadding?: 'small' | 'medium' | 'large';
   className?: string;
   pageSize?: number;
