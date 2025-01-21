@@ -38,6 +38,9 @@ export * from '@/components/ui/theme-provider';
 export * from '@/components/ui/header';
 export * from '@/components/ui/tabs';
 export * from '@/components/ui/confirm-modal';
+export * from '@/components/ui/nav';
+export * from '@/components/ui/nav-panel';
+export * from '@/components/ui/tooltip';
 
 export * from '@/utils';
 
