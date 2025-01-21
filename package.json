@@ -29,6 +29,7 @@
     "postinstall": "npm run build"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-checkbox": "^1.0.4",
     "@radix-ui/react-collapsible": "^1.0.3",
     "@radix-ui/react-dialog": "^1.0.5",
@@ -56,9 +57,12 @@
     "react-hook-form": "^7.51.5",
     "react-i18next": "^14.1.1",
     "react-resizable-panels": "^2.0.19",
+    "react-router-dom": "^6.24.0",
     "react-window": "^1.8.10",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.24.1",
+    "zod-i18n-map": "^2.27.0",
     "zustand": "^5.0.3"
   },
   "devDependencies": {
