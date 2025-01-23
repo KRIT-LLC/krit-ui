@@ -1,8 +1,7 @@
 import * as React from 'react';
+import { FixedSizeList } from 'react-window';
 import * as SelectPrimitive from '@radix-ui/react-select';
 import { Check } from 'lucide-react';
-import { FixedSizeList } from 'react-window';
-
 import { cn } from '@/utils';
 import ArrowDropDown from '@/assets/arrow_drop_down.svg?react';
 import CancelOutline from '@/assets/cancel_outline.svg?react';
@@ -48,6 +47,12 @@ const Select = ({
       ? onValueChange(value)
       : onChange?.(value, props.options.find(option => option.value === value)?.label || '');
   };
+
+  React.useEffect(() => {
+    if (props.value) {
+      setValue(props.value);
+    }
+  }, [props.value]);
 
   return (
     <SelectPrimitive.Root
