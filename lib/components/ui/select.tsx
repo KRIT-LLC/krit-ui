@@ -20,6 +20,7 @@ export interface SelectProps extends React.ComponentPropsWithoutRef<typeof Selec
   borderless?: boolean;
   isLoading?: boolean;
   isError?: boolean;
+  error?: string | boolean;
   renderOption?: (option: OptionType) => React.ReactNode;
   onRefetch?: () => void;
   onChange?: (value: string, label: string) => void;
@@ -31,7 +32,9 @@ const Select = ({
   clearable,
   borderless,
   isLoading,
+  // TODO: Подумать над объединением isError и error
   isError,
+  error,
   renderOption = option => option.label,
   onRefetch,
   onChange,
@@ -64,6 +67,7 @@ const Select = ({
       <SelectTrigger
         className={cn(
           borderless && 'bg-background-secondary border-line-primary text-base',
+          error ? 'border-line-error focus-visible:border-line-error' : '',
           triggerClassName,
         )}
       >
