@@ -1,4 +1,3 @@
-import { enUS, Locale, ru } from 'date-fns/locale';
 import {
   DayPickerMultipleProps,
   DayPickerRangeProps,
@@ -7,24 +6,28 @@ import {
   SelectRangeEventHandler,
   SelectSingleEventHandler,
 } from 'react-day-picker';
-import { useTranslation } from 'react-i18next'; // TODO: Решить вопрос с локализацией
+import { useTranslation } from 'react-i18next';
+import { toRuDateString } from '@/date';
+import { enUS, Locale, ru } from 'date-fns/locale';
+// TODO: Решить вопрос с локализацией
 import { cn } from '@/utils';
+import CalendarOutline from '@/assets/calendar_outline.svg?react';
 import { Button } from './button';
 import { Calendar } from './calendar';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
-import { toRuDateString } from '@/date';
-import CalendarOutline from '@/assets/calendar_outline.svg?react';
 
 export interface DatePickerSingleProps extends DayPickerSingleProps {
   placeholder?: string;
   value?: Date;
   onChange?: SelectSingleEventHandler;
+  error?: string | boolean;
 }
 
 export interface DatePickerMultipleProps extends DayPickerMultipleProps {
   placeholder?: string;
   value?: Date[];
   onChange?: SelectMultipleEventHandler;
+  error?: string | boolean;
 }
 
 export interface DateRange {
@@ -36,6 +39,7 @@ interface DatePickerRangeProps extends DayPickerRangeProps {
   placeholder?: string;
   value?: DateRange;
   onChange?: SelectRangeEventHandler;
+  error?: string | boolean;
 }
 
 export type DatePickerProps =
@@ -87,6 +91,7 @@ export function DatePicker({ className, locale, ...props }: DatePickerProps) {
           className={cn(
             'w-full justify-start text-left font-normal px-3 text-sm',
             !props.value && 'text-foreground-secondary',
+            props.error ? 'border-line-error focus-visible:border-line-error' : '',
             className,
           )}
         >
