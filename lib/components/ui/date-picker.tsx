@@ -21,6 +21,7 @@ export interface DatePickerSingleProps extends DayPickerSingleProps {
   value?: Date;
   onChange?: SelectSingleEventHandler;
   error?: string | boolean;
+  readOnly?: boolean;
 }
 
 export interface DatePickerMultipleProps extends DayPickerMultipleProps {
@@ -28,6 +29,7 @@ export interface DatePickerMultipleProps extends DayPickerMultipleProps {
   value?: Date[];
   onChange?: SelectMultipleEventHandler;
   error?: string | boolean;
+  readOnly?: boolean;
 }
 
 export interface DateRange {
@@ -40,6 +42,7 @@ interface DatePickerRangeProps extends DayPickerRangeProps {
   value?: DateRange;
   onChange?: SelectRangeEventHandler;
   error?: string | boolean;
+  readOnly?: boolean;
 }
 
 export type DatePickerProps =
@@ -93,6 +96,7 @@ export function DatePicker({ className, locale, ...props }: DatePickerProps) {
             !props.value && 'text-foreground-secondary',
             props.error ? 'border-line-error focus-visible:border-line-error' : '',
             className,
+            props.readOnly && 'cursor-not-allowed pointer-events-none opaciinput.tsxty-95',
           )}
         >
           {formatValue()}

@@ -25,6 +25,7 @@ export interface SelectProps extends React.ComponentPropsWithoutRef<typeof Selec
   onRefetch?: () => void;
   onChange?: (value: string, label: string) => void;
   onClick?: () => void;
+  readOnly?: boolean;
 }
 
 const Select = ({
@@ -41,6 +42,7 @@ const Select = ({
   onValueChange,
   onClick,
   onOpenChange,
+  readOnly,
   ...props
 }: SelectProps) => {
   const [value, setValue] = React.useState(props.value || '');
@@ -68,6 +70,7 @@ const Select = ({
         className={cn(
           borderless && 'bg-background-secondary border-line-primary text-base',
           error ? 'border-line-error focus-visible:border-line-error' : '',
+          readOnly && 'cursor-not-allowed pointer-events-none opacity-95',
           triggerClassName,
         )}
       >
