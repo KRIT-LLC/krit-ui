@@ -9,8 +9,7 @@ const meta = {
   },
   tags: ['autodocs'],
   args: {
-    onChange: () => {
-    },
+    onChange: () => {},
   },
   argTypes: {},
 } satisfies Meta<typeof DatePicker>;
@@ -22,11 +21,13 @@ export const Single: Story = {
   args: {
     mode: 'single',
     value: new Date(),
+    error: false,
   },
 };
 export const Multiple: Story = {
   args: {
     mode: 'multiple',
     value: [new Date()],
+    error: false,
   },
 };
