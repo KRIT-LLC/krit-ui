@@ -89,7 +89,7 @@ export function DatePicker({ className, locale, ...props }: DatePickerProps) {
           variant={'secondary-outline'}
           size={'sm'}
           className={cn(
-            'w-full justify-start text-left font-normal px-3 text-sm',
+            'w-full justify-start text-left font-normal px-3 text-sm focus-visible:outline-none focus-visible:border-line-focused data-[state=open]:border-line-focused',
             !props.value && 'text-foreground-secondary',
             props.error ? 'border-line-error focus-visible:border-line-error' : '',
             className,
