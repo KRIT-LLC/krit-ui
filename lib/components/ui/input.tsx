@@ -25,6 +25,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             error ? 'border-line-error focus-visible:border-line-error' : '',
             !shouldWrapWithRelative && className,
             rightIcon && 'pr-14',
+            props.readOnly && 'cursor-not-allowed pointer-events-none opacity-95',
           )}
           ref={ref}
           placeholder={asSearch ? props.placeholder || 'Search' : props.placeholder}
