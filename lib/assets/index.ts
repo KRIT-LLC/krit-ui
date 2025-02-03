@@ -9,6 +9,7 @@ export { default as Hardware } from '@/assets/hardware.svg?react';
 export { default as ShoppingBasket } from '@/assets/shopping_basket.svg?react';
 export { default as Straighten } from '@/assets/straighten.svg?react';
 export { default as MoreVert } from '@/assets/more_vert.svg?react';
+export { default as Translate } from '@/assets/translate.svg?react';
 export { default as EditOutline } from '@/assets/edit_outline.svg?react';
 export { default as Edit } from '@/assets/edit.svg?react';
 export { default as Save } from '@/assets/save.svg?react';
