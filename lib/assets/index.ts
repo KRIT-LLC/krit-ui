@@ -22,3 +22,4 @@ export { default as ArrowBack } from '@/assets/arrow_back.svg?react';
 export { default as ArrowDropDown } from '@/assets/arrow_drop_down.svg?react';
 export { default as Person } from '@/assets/person.svg?react';
 export { default as RestartAlt } from '@/assets/restart_alt.svg?react';
+export { default as DocumentListOutline } from '@/assets/document_list_outline.svg?react';

@@ -45,7 +45,7 @@ export const buttonVariants = cva(
         xl: 'h-12 px-8',
         xxl: 'h-16 px-8',
         xxxl: 'h-20 px-8 font-medium',
-        icon: 'h-10 w-10',
+        icon: 'h-9 w-9',
       },
     },
     defaultVariants: {
