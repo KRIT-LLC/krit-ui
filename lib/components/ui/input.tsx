@@ -13,9 +13,12 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, error, asSearch, rightIcon, withCount, onEnter, ...props }, ref) => {
+  (
+    { className, type, error, asSearch, rightIcon, withCount, onEnter, value = '', ...props },
+    ref,
+  ) => {
     const [passwordVisible, setPasswordVisible] = React.useState(false);
-    const [valueLength, setValueLength] = React.useState(0);
+    const [valueLength, setValueLength] = React.useState(value.toString().length);
     const shouldWrapWithRelative = asSearch || type === 'password' || rightIcon || withCount;
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setValueLength(e.target.value.length);
