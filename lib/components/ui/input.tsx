@@ -41,6 +41,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           onKeyDown={e => {
             if (e.key === 'Enter') onEnter?.((e.target as HTMLInputElement).value);
           }}
+          value={value}
           {...props}
           onChange={onChange}
         />
