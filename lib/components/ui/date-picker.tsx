@@ -96,7 +96,7 @@ export function DatePicker({ className, locale, ...props }: DatePickerProps) {
             !props.value && 'text-foreground-secondary',
             props.error ? 'border-line-error focus-visible:border-line-error' : '',
             className,
-            props.readOnly && 'cursor-not-allowed pointer-events-none opaciinput.tsxty-95',
+            props.readOnly && 'cursor-not-allowed pointer-events-none opacity-95',
           )}
         >
           {formatValue()}

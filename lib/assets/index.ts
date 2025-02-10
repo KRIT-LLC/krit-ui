@@ -1,5 +1,5 @@
 export { default as ChevronLeft } from '@/assets/chevron_left.svg?react';
-export { default as ChevronRight } from '@/assets/chevron_left.svg?react';
+export { default as ChevronRight } from '@/assets/chevron_right.svg?react';
 export { default as TableChart } from '@/assets/table_chart.svg?react';
 export { default as ViewSidebar } from '@/assets/view_sidebar.svg?react';
 export { default as Add } from '@/assets/add.svg?react';
