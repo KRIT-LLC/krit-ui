@@ -54,9 +54,7 @@ const Select = ({
   };
 
   React.useEffect(() => {
-    if (props.value) {
-      setValue(props.value);
-    }
+    setValue(props.value || '');
   }, [props.value]);
 
   return (
