@@ -14,6 +14,7 @@ export { default as EditOutline } from '@/assets/edit_outline.svg?react';
 export { default as Edit } from '@/assets/edit.svg?react';
 export { default as Save } from '@/assets/save.svg?react';
 export { default as DeleteOutline } from '@/assets/delete_outline.svg?react';
+export { default as Delete } from '@/assets/delete.svg?react';
 export { default as History } from '@/assets/history.svg?react';
 export { default as FirstPage } from '@/assets/first_page.svg?react';
 export { default as LastPage } from '@/assets/last_page.svg?react';
