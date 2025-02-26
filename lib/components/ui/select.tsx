@@ -47,7 +47,8 @@ const Select = ({
 }: SelectProps) => {
   const [value, setValue] = React.useState(props.value || '');
   const handleChange = (value: string) => {
-    setValue(value);
+    if (!props.options.length) return;
+    value;
     onValueChange
       ? onValueChange(value)
       : onChange?.(value, props.options.find(option => option.value === value)?.label || '');
