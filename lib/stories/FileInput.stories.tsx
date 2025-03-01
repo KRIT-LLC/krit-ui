@@ -51,6 +51,5 @@ export const Demo: Story = {
     accept: 'image/jpeg, image/jpg, image/png',
     maxFileSize: 10,
     error: false,
-    placeholder: 'Upload file',
   },
 };
