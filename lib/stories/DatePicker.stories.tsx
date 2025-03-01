@@ -20,10 +20,10 @@ type Story = StoryObj<typeof meta>;
 export const Single: Story = {
   args: {
     mode: 'single',
-    value: new Date(),
     error: false,
   },
 };
+
 export const Multiple: Story = {
   args: {
     mode: 'multiple',
