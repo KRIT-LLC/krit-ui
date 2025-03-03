@@ -12,7 +12,6 @@ import { enUS, Locale, ru } from 'date-fns/locale';
 // TODO: Решить вопрос с локализацией
 import { cn } from '@/utils';
 import CalendarOutline from '@/assets/calendar_outline.svg?react';
-import { i18n } from '../../lib/i18n';
 import { Button } from './button';
 import { Calendar } from './calendar';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
@@ -65,7 +64,8 @@ export function DatePicker({ className, locale, ...props }: DatePickerProps) {
     if (locale) {
       return locale;
     }
-    return i18n.language?.includes('ru') ? ru : enUS;
+    const browserLanguage = navigator.language || navigator.languages[0];
+    return browserLanguage.includes('ru') ? ru : enUS;
   };
 
   const formatValue = () => {

@@ -42,7 +42,7 @@ export const NetworkErrorMessage = ({
           <span className='text-icon'>{context.translations.networkError}</span>
           {onRefetch && (
             <span className='text-primary cursor-pointer' onClick={onRefetch}>
-              {context.translations.refresh}
+              {context.translations.refetch}
             </span>
           )}
         </>
