@@ -58,3 +58,7 @@
 ![document_list_outline.svg](document_list_outline.svg)
 #### Search
 ![search.svg](search.svg)
+#### ViewList
+![view_list.svg](view_list.svg)
+#### CheckCloseFolder
+![check_close_folder.svg](check_close_folder.svg)
