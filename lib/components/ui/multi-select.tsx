@@ -1,15 +1,16 @@
 import * as React from 'react';
-import { useTranslation } from 'react-i18next';
-import { Button, ButtonVariant } from './button';
-import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from './command';
-import { Popover, PopoverContent, PopoverTrigger } from './popover';
+import { useContext } from 'react';
+import { FixedSizeList } from 'react-window';
+import { cn } from '@/utils';
 import ArrowDropDown from '@/assets/arrow_drop_down.svg?react';
 import CloseCircle from '@/assets/close_circle.svg?react';
-import { NetworkErrorMessage } from './network-error-message';
+import { Button, ButtonVariant } from './button';
 import { Checkbox } from './checkbox';
+import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from './command';
+import { NetworkErrorMessage } from './network-error-message';
+import { Popover, PopoverContent, PopoverTrigger } from './popover';
 import { Separator } from './separator';
-import { cn } from '@/utils';
-import { FixedSizeList } from 'react-window';
+import { ThemeProviderContext } from './theme-provider';
 
 export type MultiSelectOptionType = {
   label: string;
@@ -65,7 +66,7 @@ function MultiSelect({
   onRemoveClick,
   ...props
 }: MultiSelectProps) {
-  const { t } = useTranslation();
+  const context = useContext(ThemeProviderContext);
   const [search, setSearch] = React.useState('');
 
   React.useEffect(() => {
@@ -146,7 +147,7 @@ function MultiSelect({
         <Command shouldFilter={false} className={className}>
           {shouldFilter && (
             <CommandInput
-              placeholder={searchPlaceholder || t('search')}
+              placeholder={searchPlaceholder || context.translations.search}
               value={search}
               onValueChange={setSearch}
             />
@@ -158,7 +159,7 @@ function MultiSelect({
             center
             onRefetch={onRefetch}
           />
-          {!isLoading && !isError && <CommandEmpty>{t('notFound')}</CommandEmpty>}
+          {!isLoading && !isError && <CommandEmpty>{context.translations.notFound}</CommandEmpty>}
           <CommandList className='py-1 px-0 overflow-hidden max-h-[340px]'>
             <FixedSizeList
               height={340}

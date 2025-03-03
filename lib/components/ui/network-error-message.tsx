@@ -1,6 +1,7 @@
-import { useTranslation } from 'react-i18next';
+import { useContext } from 'react';
 import { cn } from '@/utils';
 import { Preloader } from './preloader';
+import { ThemeProviderContext } from './theme-provider';
 
 export interface NetworkErrorMessageProps {
   className?: string;
@@ -21,7 +22,7 @@ export const NetworkErrorMessage = ({
   inline,
   onRefetch,
 }: NetworkErrorMessageProps) => {
-  const { t } = useTranslation();
+  const context = useContext(ThemeProviderContext);
 
   if (!isLoading && !isError) return null;
 
@@ -38,10 +39,10 @@ export const NetworkErrorMessage = ({
       {isLoading && <Preloader className={textSize === 'base' ? 'w-7' : 'w-5'} />}
       {isError && (
         <>
-          <span className='text-icon'>{t('networkError')}</span>
+          <span className='text-icon'>{context.translations.networkError}</span>
           {onRefetch && (
             <span className='text-primary cursor-pointer' onClick={onRefetch}>
-              {t('refetch')}
+              {context.translations.refresh}
             </span>
           )}
         </>

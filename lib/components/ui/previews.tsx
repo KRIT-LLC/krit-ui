@@ -1,14 +1,12 @@
-import { useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Loader2 } from 'lucide-react';
-
-import CancelCircleOutline from '@/assets/cancel_circle_outline.svg?react';
-import AttachFile from '@/assets/attach_file.svg?react';
-
-import { cn } from '@/utils';
-import { Input } from './input';
+import { useContext, useRef, useState } from 'react';
 import { compressFile } from '@/lib/file';
+import { Loader2 } from 'lucide-react';
+import { cn } from '@/utils';
+import AttachFile from '@/assets/attach_file.svg?react';
+import CancelCircleOutline from '@/assets/cancel_circle_outline.svg?react';
+import { Input } from './input';
 import { PreviewFull } from './previewFull';
+import { ThemeProviderContext } from './theme-provider';
 
 export type ContentType = 'video' | 'image';
 
@@ -59,7 +57,7 @@ export const Previews = ({
   handleAllFilesLimit,
 }: PreviewsProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const { t } = useTranslation();
+  const context = useContext(ThemeProviderContext);
   const [currentPreview, setCurrentPreview] = useState<AttachmentItem>(data[0]);
 
   const getPrevHandler = () => {
@@ -158,7 +156,9 @@ export const Previews = ({
               <AttachFile
                 className={cn('text-icon-fade-contrast', { 'opacity-50': data.length >= max })}
               />
-              <span className='text-sm text-foreground-tertiary'>{t('attachFile')}</span>
+              <span className='text-sm text-foreground-tertiary'>
+                {context.translations.attachFile}
+              </span>
             </div>
           )}
         </div>

@@ -1,8 +1,11 @@
-import { ReactNode, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { z } from 'zod';
+import { ReactNode, useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { renderTextWithBoldMarkdown } from '@/lib/text';
+import { zRequired } from '@/lib/zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { PromptOptions } from '@/hooks/useConfirm';
+import { cn } from '@/utils';
 import { Button } from './button';
 import {
   Dialog,
@@ -15,13 +18,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from './dialog';
-
-import { cn } from '@/utils';
-
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from './form';
-import { PromptOptions } from '@/hooks/useConfirm';
-import { zRequired } from '@/lib/zod';
-import { renderTextWithBoldMarkdown } from '@/lib/text';
+import { ThemeProviderContext } from './theme-provider';
 
 interface ConfirmModalProps extends PromptOptions {
   children?: ReactNode;
@@ -35,25 +33,26 @@ const formSchema = z.object({ inputValue: z.string().refine(...zRequired('fillFi
 
 type FormValues = z.infer<typeof formSchema>;
 
-export const ConfirmModal = ({
-  title,
-  description,
-  confirmType = 'contrast',
-  confirmText = 'OK',
-  confirmHidden,
-  cancelText,
-  cancelHidden,
-  input: Input,
-  inputPlaceholder,
-  inputRequiredLabel,
-  inputMaxLength,
-  children,
-  visible,
-  onVisibleChange,
-  onConfirm,
-  onCancel,
-}: ConfirmModalProps) => {
-  const { t } = useTranslation();
+export const ConfirmModal = (props: ConfirmModalProps) => {
+  const {
+    title,
+    description,
+    confirmType = 'contrast',
+    confirmText = 'OK',
+    confirmHidden,
+    cancelText,
+    cancelHidden,
+    input: Input,
+    inputPlaceholder,
+    inputRequiredLabel,
+    inputMaxLength,
+    children,
+    visible,
+    onVisibleChange,
+    onConfirm,
+    onCancel,
+  } = props;
+  const context = useContext(ThemeProviderContext);
   const hasInput = !!(Input || inputPlaceholder);
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -74,7 +73,7 @@ export const ConfirmModal = ({
   };
 
   const renderDescription = () => {
-    return renderTextWithBoldMarkdown(description || t('confirmAction'));
+    return renderTextWithBoldMarkdown(description || context.translations.confirmAction);
   };
 
   return (
@@ -83,7 +82,7 @@ export const ConfirmModal = ({
       <DialogContent className='w-[460px]'>
         <Form {...form}>
           <DialogHeader>
-            <DialogTitle>{title || t('warning')}</DialogTitle>
+            <DialogTitle>{title || context.translations.warning}</DialogTitle>
           </DialogHeader>
           <DialogSection
             className={cn(
@@ -115,7 +114,9 @@ export const ConfirmModal = ({
                       )}
                     </FormControl>
                     {!!inputMaxLength && (
-                      <FormDescription>{t('maxNChars', { count: inputMaxLength })}</FormDescription>
+                      <FormDescription>
+                        {context.translations.maxNChars + inputMaxLength}
+                      </FormDescription>
                     )}
                     {fieldState.error && <FormMessage>{inputRequiredLabel}</FormMessage>}
                   </FormItem>
@@ -137,7 +138,7 @@ export const ConfirmModal = ({
             {!cancelHidden && (
               <DialogClose aria-label='Close' asChild>
                 <Button type='button' variant='outline' size='sm' onClick={onCancel}>
-                  {cancelText || t('cancellation')}
+                  {cancelText || context.translations.cancellation}
                 </Button>
               </DialogClose>
             )}

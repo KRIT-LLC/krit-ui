@@ -1,6 +1,7 @@
+import { useContext } from 'react';
 import { AxiosError } from 'axios';
-import { useTranslation } from 'react-i18next';
-import { useToast } from '@/hooks/useToast.ts';
+import { ThemeProviderContext } from '@/components/ui/theme-provider';
+import { useToast } from '@/hooks/useToast';
 
 interface ErrorsObj {
   errors: {
@@ -29,13 +30,15 @@ export type MessageFromServer = string;
 export type MessageForUser = string | ((errors?: string[]) => string);
 
 export const useNotify = (text?: string) => {
-  const { t } = useTranslation();
+  const context = useContext(ThemeProviderContext);
   const { toast } = useToast();
 
   const notifyError = (text?: string) => {
     toast({
       variant: 'destructive',
-      title: text ? `${t('errorOccurred')}: ${text}` : t('errorOccurred'),
+      title: text
+        ? `${context.translations.errorOccurred}: ${text}`
+        : context.translations.errorOccurred,
     });
   };
 

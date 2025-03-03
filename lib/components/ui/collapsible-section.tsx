@@ -1,11 +1,11 @@
-import { ReactNode, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import ChevronUp from '@/assets/chevron_up.svg?react';
-import AddOutline from '@/assets/add_outline.svg?react';
+import { ReactNode, useContext, useEffect, useState } from 'react';
 import { cn } from '@/utils';
+import AddOutline from '@/assets/add_outline.svg?react';
+import ChevronUp from '@/assets/chevron_up.svg?react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './collapsible';
-import { Preloader } from './preloader';
 import { NetworkErrorMessage } from './network-error-message';
+import { Preloader } from './preloader';
+import { ThemeProviderContext } from './theme-provider';
 
 interface CollapsibleSectionProps {
   title: string;
@@ -23,22 +23,23 @@ interface CollapsibleSectionProps {
   onAdd?: () => void;
 }
 
-export const CollapsibleSection = ({
-                                     title,
-                                     icon,
-                                     defaultExpanded,
-                                     showExpanderButton,
-                                     expandOnAdd = true,
-                                     count,
-                                     placeholder,
-                                     right,
-                                     children,
-                                     isLoading,
-                                     isError,
-                                     onRefetch,
-                                     onAdd,
-                                   }: CollapsibleSectionProps) => {
-  const { t } = useTranslation();
+export const CollapsibleSection = (props: CollapsibleSectionProps) => {
+  const {
+    title,
+    icon,
+    defaultExpanded,
+    showExpanderButton,
+    expandOnAdd = true,
+    count,
+    placeholder,
+    right,
+    children,
+    isLoading,
+    isError,
+    onRefetch,
+    onAdd,
+  } = props;
+  const context = useContext(ThemeProviderContext);
   const [expanded, setExpanded] = useState(defaultExpanded ?? false);
 
   useEffect(() => {
@@ -47,18 +48,17 @@ export const CollapsibleSection = ({
 
   return (
     <Collapsible open={isError || expanded} onOpenChange={setExpanded}>
-      <div className="flex justify-between text-base w-full">
-        {icon && <span className="text-primary">{icon}</span>}
+      <div className='flex justify-between text-base w-full'>
+        {icon && <span className='text-primary'>{icon}</span>}
         <span>{title}</span>
         {count ? (
-          <div
-            className="h-6 px-2 rounded-full bg-icon-tertiary flex justify-center items-center text-background text-[15px] font-medium pb-[1px]">
+          <div className='h-6 px-2 rounded-full bg-icon-tertiary flex justify-center items-center text-background text-[15px] font-medium pb-[1px]'>
             <span>{count}</span>
           </div>
         ) : null}
-        <CollapsibleTrigger className="focus:outline-none">
+        <CollapsibleTrigger className='focus:outline-none'>
           {isLoading ? (
-            <Preloader className="w-[25px] h-[25px]" />
+            <Preloader className='w-[25px] h-[25px]' />
           ) : (
             <ChevronUp
               className={cn('text-icon-tertiary cursor-pointer transition-transform duration-300', {
@@ -67,9 +67,9 @@ export const CollapsibleSection = ({
             />
           )}
         </CollapsibleTrigger>
-        <div className="ml-auto flex gap-2">
+        <div className='ml-auto flex gap-2'>
           {right}
-          <div className="text-primary cursor-pointer">
+          <div className='text-primary cursor-pointer'>
             {onAdd && (
               <AddOutline
                 onClick={() => {
@@ -83,21 +83,21 @@ export const CollapsibleSection = ({
       </div>
       {showExpanderButton && !expanded && (
         <div
-          className="w-full flex bg-background-secondary/80 cursor-pointer rounded-lg items-center justify-center gap-1 text-muted-foreground font-medium py-1 mt-4 transition-colors hover:bg-background-secondary/70"
+          className='w-full flex bg-background-secondary/80 cursor-pointer rounded-lg items-center justify-center gap-1 text-muted-foreground font-medium py-1 mt-4 transition-colors hover:bg-background-secondary/70'
           onClick={() => setExpanded(true)}
         >
-          <span>{t('expand')}</span>
+          <span>{context.translations.expand}</span>
           <ChevronUp className={cn('rotate-180')} />
         </div>
       )}
       <CollapsibleContent>
         <NetworkErrorMessage isError={isError} onRefetch={onRefetch} />
         {!isError && !isLoading && !count && (
-          <div className="p-6 flex justify-center text-secondary-foreground tracking-[0.1px] select-none">
-            {placeholder || t('empty')}
+          <div className='p-6 flex justify-center text-secondary-foreground tracking-[0.1px] select-none'>
+            {placeholder || context.translations.empty}
           </div>
         )}
-        {!!count && <div className="flex flex-col gap-3 mt-3">{children}</div>}
+        {!!count && <div className='flex flex-col gap-3 mt-3'>{children}</div>}
       </CollapsibleContent>
     </Collapsible>
   );
