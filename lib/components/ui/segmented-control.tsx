@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { Tabs, TabsList, TabsTrigger } from './tabs';
 
-interface SegmentedControlProps {
+export interface SegmentedControlProps {
   defaultValue?: string;
   options?: { value: string; label: string; icon?: ReactNode }[];
   onClick?: (value: string) => void;
@@ -10,8 +10,8 @@ interface SegmentedControlProps {
 export const SegmentedControl = ({ defaultValue, options, onClick }: SegmentedControlProps) => {
   return (
     <Tabs value={defaultValue}>
-      <TabsList className="w-fit">
-        {options?.map((option) => (
+      <TabsList className='w-fit'>
+        {options?.map(option => (
           <TabsTrigger
             key={option.value}
             value={option.value}
