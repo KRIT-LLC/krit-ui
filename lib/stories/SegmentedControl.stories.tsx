@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { CheckIcon, XIcon } from 'lucide-react';
-import { SegmentedControl } from '@/components/ui/segmented-control.tsx';
+import { SegmentedControl } from '@/components/ui/segmented-control';
 
 const meta = {
   title: 'SegmentedControl',
