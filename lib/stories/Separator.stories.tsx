@@ -1,6 +1,5 @@
 import type { Meta, StoryFn } from '@storybook/react';
-import { Separator } from '@/components/ui/separator.tsx';
-
+import { Separator } from '@/components/ui/separator';
 
 export default {
   title: 'Separator',
@@ -22,8 +21,10 @@ export default {
   args: {},
 } satisfies Meta<typeof Separator>;
 
-export const Demo: StoryFn = (args) => {
-  return <div style={{ width: '100%', height: 300 }}>
-    <Separator className="bg-line-error" {...args} />
-  </div>;
+export const Demo: StoryFn = args => {
+  return (
+    <div style={{ width: '100%', height: 300 }}>
+      <Separator className='bg-line-error' {...args} />
+    </div>
+  );
 };
