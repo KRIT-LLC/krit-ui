@@ -12,15 +12,15 @@ import {
   Table as TanTable,
   useReactTable,
 } from '@tanstack/react-table';
-import { useTranslation } from 'react-i18next';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './table';
-import { Button } from './button';
-import { Select } from './select';
-import { Skeleton } from './skeleton';
+import { useTranslation } from '@/hooks/useTranslation';
 import { cn } from '@/utils';
 import ChevronLeft from '@/assets/chevron_left.svg?react';
 import ChevronRight from '@/assets/chevron_right.svg?react';
 import LastPage from '@/assets/last_page.svg?react';
+import { Button } from './button';
+import { Select } from './select';
+import { Skeleton } from './skeleton';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './table';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

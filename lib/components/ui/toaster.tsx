@@ -1,5 +1,4 @@
 import * as Portal from '@radix-ui/react-portal';
-import { useToast } from '@/hooks/useToast.ts';
 import {
   Toast,
   ToastClose,
@@ -7,7 +6,8 @@ import {
   ToastProvider,
   ToastTitle,
   ToastViewport,
-} from '@/components/ui/toast.tsx';
+} from '@/components/ui/toast';
+import { useToast } from '@/hooks/useToast';
 
 export function Toaster() {
   const { toasts } = useToast();
@@ -15,10 +15,10 @@ export function Toaster() {
   return (
     <Portal.Root>
       <ToastProvider>
-        {toasts.map(function({ id, title, description, action, ...props }) {
+        {toasts.map(function ({ id, title, description, action, ...props }) {
           return (
             <Toast key={id} {...props}>
-              <div className="grid gap-1">
+              <div className='grid gap-1'>
                 {title && <ToastTitle>{title}</ToastTitle>}
                 {description && <ToastDescription>{description}</ToastDescription>}
               </div>

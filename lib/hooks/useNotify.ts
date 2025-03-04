@@ -1,12 +1,13 @@
 import { AxiosError } from 'axios';
-import { useTranslation } from 'react-i18next';
-import { useToast } from '@/hooks/useToast.ts';
+import { useToast } from '@/hooks/useToast';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface ErrorsObj {
   errors: {
     [key: string]: string[]; // Each key is a string (field name), and its value is an array of error messages
   };
 }
+
 export interface ErrorResponse {
   error: string;
   errors: string[] | ErrorsObj;

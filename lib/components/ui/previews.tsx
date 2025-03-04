@@ -1,13 +1,11 @@
 import { useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Loader2 } from 'lucide-react';
-
-import CancelCircleOutline from '@/assets/cancel_circle_outline.svg?react';
-import AttachFile from '@/assets/attach_file.svg?react';
-
-import { cn } from '@/utils';
-import { Input } from './input';
 import { compressFile } from '@/lib/file';
+import { Loader2 } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
+import { cn } from '@/utils';
+import AttachFile from '@/assets/attach_file.svg?react';
+import CancelCircleOutline from '@/assets/cancel_circle_outline.svg?react';
+import { Input } from './input';
 import { PreviewFull } from './previewFull';
 
 export type ContentType = 'video' | 'image';
@@ -43,21 +41,22 @@ const acceptMap = new Map<string, string>([
   ['image', 'image/png, image/jpeg'],
 ]);
 
-export const Previews = ({
-  className,
-  placeholder,
-  data = [],
-  accepts = ['video', 'image'],
-  multiple = true,
-  max = 10,
-  previewSize = 130,
-  gap = 2,
-  maxSizes = { video: 20, image: 1, total: 40 },
-  onAdd,
-  onRemove,
-  handleFileLimit,
-  handleAllFilesLimit,
-}: PreviewsProps) => {
+export const Previews = (props: PreviewsProps) => {
+  const {
+    className,
+    placeholder,
+    data = [],
+    accepts = ['video', 'image'],
+    multiple = true,
+    max = 10,
+    previewSize = 130,
+    gap = 2,
+    maxSizes = { video: 20, image: 1, total: 40 },
+    onAdd,
+    onRemove,
+    handleFileLimit,
+    handleAllFilesLimit,
+  } = props;
   const inputRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation();
   const [currentPreview, setCurrentPreview] = useState<AttachmentItem>(data[0]);
