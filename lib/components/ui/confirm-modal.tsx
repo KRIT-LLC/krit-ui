@@ -1,10 +1,11 @@
-import { ReactNode, useContext, useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { renderTextWithBoldMarkdown } from '@/lib/text';
 import { zRequired } from '@/lib/zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { PromptOptions } from '@/hooks/useConfirm';
+import { useTranslation } from '@/hooks/useTranslation';
 import { cn } from '@/utils';
 import { Button } from './button';
 import {
@@ -19,7 +20,6 @@ import {
   DialogTrigger,
 } from './dialog';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from './form';
-import { ThemeProviderContext } from './theme-provider';
 
 interface ConfirmModalProps extends PromptOptions {
   children?: ReactNode;
@@ -52,7 +52,7 @@ export const ConfirmModal = (props: ConfirmModalProps) => {
     onConfirm,
     onCancel,
   } = props;
-  const context = useContext(ThemeProviderContext);
+  const { t } = useTranslation();
   const hasInput = !!(Input || inputPlaceholder);
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -73,7 +73,7 @@ export const ConfirmModal = (props: ConfirmModalProps) => {
   };
 
   const renderDescription = () => {
-    return renderTextWithBoldMarkdown(description || context.translations.confirmAction);
+    return renderTextWithBoldMarkdown(description || t('confirmAction'));
   };
 
   return (
@@ -82,7 +82,7 @@ export const ConfirmModal = (props: ConfirmModalProps) => {
       <DialogContent className='w-[460px]'>
         <Form {...form}>
           <DialogHeader>
-            <DialogTitle>{title || context.translations.warning}</DialogTitle>
+            <DialogTitle>{title || t('warning')}</DialogTitle>
           </DialogHeader>
           <DialogSection
             className={cn(
@@ -114,9 +114,7 @@ export const ConfirmModal = (props: ConfirmModalProps) => {
                       )}
                     </FormControl>
                     {!!inputMaxLength && (
-                      <FormDescription>
-                        {context.translations.maxNChars + inputMaxLength}
-                      </FormDescription>
+                      <FormDescription>{t('maxNChars') + inputMaxLength}</FormDescription>
                     )}
                     {fieldState.error && <FormMessage>{inputRequiredLabel}</FormMessage>}
                   </FormItem>
@@ -138,7 +136,7 @@ export const ConfirmModal = (props: ConfirmModalProps) => {
             {!cancelHidden && (
               <DialogClose aria-label='Close' asChild>
                 <Button type='button' variant='outline' size='sm' onClick={onCancel}>
-                  {cancelText || context.translations.cancellation}
+                  {cancelText || t('cancellation')}
                 </Button>
               </DialogClose>
             )}

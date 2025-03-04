@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from 'react';
 
 export type Theme = 'dark' | 'light' | 'system';
 
-type Translations =
+export type Translations =
   | 'expand'
   | 'empty'
   | 'confirmAction'

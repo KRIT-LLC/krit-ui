@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import {
   ColumnDef,
   ExpandedState,
@@ -12,6 +12,7 @@ import {
   Table as TanTable,
   useReactTable,
 } from '@tanstack/react-table';
+import { useTranslation } from '@/hooks/useTranslation';
 import { cn } from '@/utils';
 import ChevronLeft from '@/assets/chevron_left.svg?react';
 import ChevronRight from '@/assets/chevron_right.svg?react';
@@ -20,7 +21,6 @@ import { Button } from './button';
 import { Select } from './select';
 import { Skeleton } from './skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './table';
-import { ThemeProviderContext } from './theme-provider';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -257,7 +257,7 @@ export function Pagination({
   setPageSize,
   setPageIndex,
 }: PaginationProps) {
-  const context = useContext(ThemeProviderContext);
+  const { t } = useTranslation();
   const getCellPadding = () => {
     switch (horizontalPadding) {
       case 'small':
@@ -304,20 +304,20 @@ export function Pagination({
         <div className='flex items-center space-x-2'>
           <Select
             options={[
-              { value: '10', label: `${context.translations.displayBy} 10` },
-              { value: '20', label: `${context.translations.displayBy} 20` },
-              { value: '30', label: `${context.translations.displayBy} 30` },
-              { value: '40', label: `${context.translations.displayBy} 40` },
-              { value: '50', label: `${context.translations.displayBy} 50` },
+              { value: '10', label: `${t('displayBy')} 10` },
+              { value: '20', label: `${t('displayBy')} 20` },
+              { value: '30', label: `${t('displayBy')} 30` },
+              { value: '40', label: `${t('displayBy')} 40` },
+              { value: '50', label: `${t('displayBy')} 50` },
             ]}
             triggerClassName='h-8 text-sm text-foreground-secondary border-none hover:bg-[transparent] px-0'
-            placeholder={`${context.translations.displayBy} ${pageSize}`}
+            placeholder={`${t('displayBy')} ${pageSize}`}
             value={`${pageSize}`}
             onValueChange={(value: string) => setPageSize?.(Number(value))}
           />
           {!!selectedCount && (
             <div className='flex-1 text-sm text-foreground-secondary'>
-              {`${context.translations.selected} ${selectedCount} ${context.translations.of} ${totalCount}`}
+              {`${t('selected')} ${selectedCount} ${t('of')} ${totalCount}`}
             </div>
           )}
         </div>

@@ -1,13 +1,13 @@
-import { useContext } from 'react';
 import { AxiosError } from 'axios';
-import { ThemeProviderContext } from '@/components/ui/theme-provider';
 import { useToast } from '@/hooks/useToast';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface ErrorsObj {
   errors: {
     [key: string]: string[]; // Each key is a string (field name), and its value is an array of error messages
   };
 }
+
 export interface ErrorResponse {
   error: string;
   errors: string[] | ErrorsObj;
@@ -30,15 +30,13 @@ export type MessageFromServer = string;
 export type MessageForUser = string | ((errors?: string[]) => string);
 
 export const useNotify = (text?: string) => {
-  const context = useContext(ThemeProviderContext);
+  const { t } = useTranslation();
   const { toast } = useToast();
 
   const notifyError = (text?: string) => {
     toast({
       variant: 'destructive',
-      title: text
-        ? `${context.translations.errorOccurred}: ${text}`
-        : context.translations.errorOccurred,
+      title: text ? `${t('errorOccurred')}: ${text}` : t('errorOccurred'),
     });
   };
 

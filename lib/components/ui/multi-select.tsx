@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useContext } from 'react';
 import { FixedSizeList } from 'react-window';
+import { useTranslation } from '@/hooks/useTranslation';
 import { cn } from '@/utils';
 import ArrowDropDown from '@/assets/arrow_drop_down.svg?react';
 import CloseCircle from '@/assets/close_circle.svg?react';
@@ -10,7 +10,6 @@ import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from '.
 import { NetworkErrorMessage } from './network-error-message';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 import { Separator } from './separator';
-import { ThemeProviderContext } from './theme-provider';
 
 export type MultiSelectOptionType = {
   label: string;
@@ -66,7 +65,7 @@ function MultiSelect({
   onRemoveClick,
   ...props
 }: MultiSelectProps) {
-  const context = useContext(ThemeProviderContext);
+  const { t } = useTranslation();
   const [search, setSearch] = React.useState('');
 
   React.useEffect(() => {
@@ -147,7 +146,7 @@ function MultiSelect({
         <Command shouldFilter={false} className={className}>
           {shouldFilter && (
             <CommandInput
-              placeholder={searchPlaceholder || context.translations.search}
+              placeholder={searchPlaceholder || t('search')}
               value={search}
               onValueChange={setSearch}
             />
@@ -159,7 +158,7 @@ function MultiSelect({
             center
             onRefetch={onRefetch}
           />
-          {!isLoading && !isError && <CommandEmpty>{context.translations.notFound}</CommandEmpty>}
+          {!isLoading && !isError && <CommandEmpty>{t('notFound')}</CommandEmpty>}
           <CommandList className='py-1 px-0 overflow-hidden max-h-[340px]'>
             <FixedSizeList
               height={340}

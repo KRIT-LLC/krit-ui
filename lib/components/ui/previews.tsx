@@ -1,12 +1,12 @@
-import { useContext, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { compressFile } from '@/lib/file';
 import { Loader2 } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
 import { cn } from '@/utils';
 import AttachFile from '@/assets/attach_file.svg?react';
 import CancelCircleOutline from '@/assets/cancel_circle_outline.svg?react';
 import { Input } from './input';
 import { PreviewFull } from './previewFull';
-import { ThemeProviderContext } from './theme-provider';
 
 export type ContentType = 'video' | 'image';
 
@@ -41,23 +41,24 @@ const acceptMap = new Map<string, string>([
   ['image', 'image/png, image/jpeg'],
 ]);
 
-export const Previews = ({
-  className,
-  placeholder,
-  data = [],
-  accepts = ['video', 'image'],
-  multiple = true,
-  max = 10,
-  previewSize = 130,
-  gap = 2,
-  maxSizes = { video: 20, image: 1, total: 40 },
-  onAdd,
-  onRemove,
-  handleFileLimit,
-  handleAllFilesLimit,
-}: PreviewsProps) => {
+export const Previews = (props: PreviewsProps) => {
+  const {
+    className,
+    placeholder,
+    data = [],
+    accepts = ['video', 'image'],
+    multiple = true,
+    max = 10,
+    previewSize = 130,
+    gap = 2,
+    maxSizes = { video: 20, image: 1, total: 40 },
+    onAdd,
+    onRemove,
+    handleFileLimit,
+    handleAllFilesLimit,
+  } = props;
   const inputRef = useRef<HTMLInputElement>(null);
-  const context = useContext(ThemeProviderContext);
+  const { t } = useTranslation();
   const [currentPreview, setCurrentPreview] = useState<AttachmentItem>(data[0]);
 
   const getPrevHandler = () => {
@@ -156,9 +157,7 @@ export const Previews = ({
               <AttachFile
                 className={cn('text-icon-fade-contrast', { 'opacity-50': data.length >= max })}
               />
-              <span className='text-sm text-foreground-tertiary'>
-                {context.translations.attachFile}
-              </span>
+              <span className='text-sm text-foreground-tertiary'>{t('attachFile')}</span>
             </div>
           )}
         </div>

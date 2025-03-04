@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import {
   DayPickerMultipleProps,
   DayPickerRangeProps,
@@ -9,13 +8,13 @@ import {
 } from 'react-day-picker';
 import { toRuDateString } from '@/date';
 import { enUS, Locale, ru } from 'date-fns/locale';
+import { useTranslation } from '@/hooks/useTranslation';
 // TODO: Решить вопрос с локализацией
 import { cn } from '@/utils';
 import CalendarOutline from '@/assets/calendar_outline.svg?react';
 import { Button } from './button';
 import { Calendar } from './calendar';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
-import { ThemeProviderContext } from './theme-provider';
 
 export interface DatePickerSingleProps extends DayPickerSingleProps {
   placeholder?: string;
@@ -54,10 +53,10 @@ export type DatePickerProps =
     });
 
 export function DatePicker({ className, locale, ...props }: DatePickerProps) {
-  const context = useContext(ThemeProviderContext);
+  const { t } = useTranslation();
   const placeholder = (
     <span className='text-foreground-secondary font-normal'>
-      {props.placeholder || context.translations.selectDate}
+      {props.placeholder || t('selectDate')}
     </span>
   );
   const getInputLocale = () => {

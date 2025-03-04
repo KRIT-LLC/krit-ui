@@ -1,11 +1,11 @@
-import { ReactNode, useContext, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
 import { cn } from '@/utils';
 import AddOutline from '@/assets/add_outline.svg?react';
 import ChevronUp from '@/assets/chevron_up.svg?react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './collapsible';
 import { NetworkErrorMessage } from './network-error-message';
 import { Preloader } from './preloader';
-import { ThemeProviderContext } from './theme-provider';
 
 interface CollapsibleSectionProps {
   title: string;
@@ -39,7 +39,7 @@ export const CollapsibleSection = (props: CollapsibleSectionProps) => {
     onRefetch,
     onAdd,
   } = props;
-  const context = useContext(ThemeProviderContext);
+  const { t } = useTranslation();
   const [expanded, setExpanded] = useState(defaultExpanded ?? false);
 
   useEffect(() => {
@@ -86,7 +86,7 @@ export const CollapsibleSection = (props: CollapsibleSectionProps) => {
           className='w-full flex bg-background-secondary/80 cursor-pointer rounded-lg items-center justify-center gap-1 text-muted-foreground font-medium py-1 mt-4 transition-colors hover:bg-background-secondary/70'
           onClick={() => setExpanded(true)}
         >
-          <span>{context.translations.expand}</span>
+          <span>{t('expand')}</span>
           <ChevronUp className={cn('rotate-180')} />
         </div>
       )}
@@ -94,7 +94,7 @@ export const CollapsibleSection = (props: CollapsibleSectionProps) => {
         <NetworkErrorMessage isError={isError} onRefetch={onRefetch} />
         {!isError && !isLoading && !count && (
           <div className='p-6 flex justify-center text-secondary-foreground tracking-[0.1px] select-none'>
-            {placeholder || context.translations.empty}
+            {placeholder || t('empty')}
           </div>
         )}
         {!!count && <div className='flex flex-col gap-3 mt-3'>{children}</div>}
