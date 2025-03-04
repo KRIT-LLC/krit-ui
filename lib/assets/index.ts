@@ -30,5 +30,5 @@ export { default as RestartAlt } from '@/assets/restart_alt.svg?react';
 export { default as DocumentListOutline } from '@/assets/document_list_outline.svg?react';
 export { default as Search } from '@/assets/search.svg?react';
 export { default as NoAssignment } from '@/assets/noAssignment.svg?react';
-export { default as CheckCloseFolder } from '@/assets/checkCloseFolder.svg?react';
+export { default as CheckCloseFolder } from '@/assets/check_close_folder.svg?react';
 export { default as ViewList } from '@/assets/view_list.svg?react';
