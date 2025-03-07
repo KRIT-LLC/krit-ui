@@ -31,7 +31,7 @@ export type ThemeProviderState = {
   theme: Theme;
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
-  translations: Record<Translations, string>;
+  translations?: Record<Translations, string>;
 };
 
 const initialState: ThemeProviderState = {
