@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ColumnDef,
   ExpandedState,
@@ -12,7 +13,6 @@ import {
   Table as TanTable,
   useReactTable,
 } from '@tanstack/react-table';
-import { useTranslation } from '@/hooks/useTranslation';
 import { cn } from '@/utils';
 import ChevronLeft from '@/assets/chevron_left.svg?react';
 import ChevronRight from '@/assets/chevron_right.svg?react';
@@ -274,7 +274,7 @@ export function Pagination({
   const getFirstPageNumber = () => {
     if (pageCount <= 3) return 1;
     if (pageIndex < pageCount - 3) return pageIndex + 1;
-    else pageCount - 3;
+    else return pageCount - 3;
   };
   const onFirstPageClick = () => {
     if (pageCount <= 3) return setPageIndex?.(0);
@@ -285,7 +285,7 @@ export function Pagination({
   const getAfterFirstPageNumber = () => {
     if (pageCount <= 3) return 2;
     if (pageIndex < pageCount - 3) return pageIndex + 2;
-    else pageCount - 2;
+    else return pageCount - 2;
   };
   const onAfterFirstPageClick = () => {
     if (pageCount <= 3) return setPageIndex?.(1);
