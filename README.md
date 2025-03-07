@@ -2,6 +2,25 @@
 
 Библиотека UI компонентов для [KRIT](https://krit.global/)
 
+## Использование библиотеки
+
+`<ThemeProvider>` обязательна для корректного отображения компонентов UI.
+
+`<ThemeProvider>` принимает свойство `translations` через которое можно передать переводы.
+
+### Пример
+```jsx
+<ThemeProvider translations={
+  {
+    confirmAction: 'Подтвердите действие',
+    cancelAction: 'Отменить действие',
+    ...
+  }
+}>
+    <App />
+</ThemeProvider>
+```
+
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:

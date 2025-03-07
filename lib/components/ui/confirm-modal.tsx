@@ -1,8 +1,12 @@
 import { ReactNode, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { z } from 'zod';
 import { useForm } from 'react-hook-form';
+import { renderTextWithBoldMarkdown } from '@/lib/text';
+import { zRequired } from '@/lib/zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { PromptOptions } from '@/hooks/useConfirm';
+import { useTranslation } from '@/hooks/useTranslation';
+import { cn } from '@/utils';
 import { Button } from './button';
 import {
   Dialog,
@@ -15,13 +19,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from './dialog';
-
-import { cn } from '@/utils';
-
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from './form';
-import { PromptOptions } from '@/hooks/useConfirm';
-import { zRequired } from '@/lib/zod';
-import { renderTextWithBoldMarkdown } from '@/lib/text';
 
 interface ConfirmModalProps extends PromptOptions {
   children?: ReactNode;
@@ -35,24 +33,25 @@ const formSchema = z.object({ inputValue: z.string().refine(...zRequired('fillFi
 
 type FormValues = z.infer<typeof formSchema>;
 
-export const ConfirmModal = ({
-  title,
-  description,
-  confirmType = 'contrast',
-  confirmText = 'OK',
-  confirmHidden,
-  cancelText,
-  cancelHidden,
-  input: Input,
-  inputPlaceholder,
-  inputRequiredLabel,
-  inputMaxLength,
-  children,
-  visible,
-  onVisibleChange,
-  onConfirm,
-  onCancel,
-}: ConfirmModalProps) => {
+export const ConfirmModal = (props: ConfirmModalProps) => {
+  const {
+    title,
+    description,
+    confirmType = 'contrast',
+    confirmText = 'OK',
+    confirmHidden,
+    cancelText,
+    cancelHidden,
+    input: Input,
+    inputPlaceholder,
+    inputRequiredLabel,
+    inputMaxLength,
+    children,
+    visible,
+    onVisibleChange,
+    onConfirm,
+    onCancel,
+  } = props;
   const { t } = useTranslation();
   const hasInput = !!(Input || inputPlaceholder);
   const form = useForm({
@@ -115,7 +114,7 @@ export const ConfirmModal = ({
                       )}
                     </FormControl>
                     {!!inputMaxLength && (
-                      <FormDescription>{t('maxNChars', { count: inputMaxLength })}</FormDescription>
+                      <FormDescription>{t('maxNChars') + inputMaxLength}</FormDescription>
                     )}
                     {fieldState.error && <FormMessage>{inputRequiredLabel}</FormMessage>}
                   </FormItem>

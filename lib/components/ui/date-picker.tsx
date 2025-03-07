@@ -6,13 +6,12 @@ import {
   SelectRangeEventHandler,
   SelectSingleEventHandler,
 } from 'react-day-picker';
-import { useTranslation } from 'react-i18next';
 import { toRuDateString } from '@/date';
 import { enUS, Locale, ru } from 'date-fns/locale';
+import { useTranslation } from '@/hooks/useTranslation';
 // TODO: Решить вопрос с локализацией
 import { cn } from '@/utils';
 import CalendarOutline from '@/assets/calendar_outline.svg?react';
-import { i18n } from '../../lib/i18n';
 import { Button } from './button';
 import { Calendar } from './calendar';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
@@ -64,7 +63,8 @@ export function DatePicker({ className, locale, ...props }: DatePickerProps) {
     if (locale) {
       return locale;
     }
-    return i18n.language?.includes('ru') ? ru : enUS;
+    const browserLanguage = navigator.language || navigator.languages[0];
+    return browserLanguage.includes('ru') ? ru : enUS;
   };
 
   const formatValue = () => {
