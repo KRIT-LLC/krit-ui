@@ -2,23 +2,26 @@ import { createContext, useEffect, useState } from 'react';
 
 export type Theme = 'dark' | 'light' | 'system';
 
-export type Translations =
-  | 'expand'
-  | 'empty'
-  | 'confirmAction'
-  | 'warning'
-  | 'maxNChars'
-  | 'cancellation'
-  | 'displayBy'
-  | 'selected'
-  | 'of'
-  | 'selectDate'
-  | 'search'
-  | 'notFound'
-  | 'networkError'
-  | 'refetch'
-  | 'attachFile'
-  | 'errorOccurred';
+const translations = {
+  expand: 'Expand',
+  empty: 'Empty',
+  confirmAction: 'Confirm action',
+  warning: 'Warning',
+  maxNChars: 'Max charts',
+  cancellation: 'Cancel',
+  displayBy: 'Display by',
+  selected: 'Selected',
+  of: 'of',
+  selectDate: 'Select date',
+  search: 'Search...',
+  notFound: 'Not found',
+  networkError: 'Network error',
+  refetch: 'Refetch',
+  attachFile: 'Attach file',
+  errorOccurred: 'Error occurred',
+};
+
+export type Translations = keyof typeof translations;
 
 export type ThemeProviderProps = {
   children: React.ReactNode;
@@ -38,24 +41,7 @@ const initialState: ThemeProviderState = {
   theme: 'system',
   setTheme: () => null,
   toggleTheme: () => null,
-  translations: {
-    expand: 'Expand',
-    empty: 'Empty',
-    confirmAction: 'Confirm action',
-    warning: 'Warning',
-    maxNChars: 'Max charts',
-    cancellation: 'Cancel',
-    displayBy: 'Display by',
-    selected: 'Selected',
-    of: 'of',
-    selectDate: 'Select date',
-    search: 'Search...',
-    notFound: 'Not found',
-    networkError: 'Network error',
-    refetch: 'Refetch',
-    attachFile: 'Attach file',
-    errorOccurred: 'Error occurred',
-  },
+  translations,
 };
 
 export const ThemeProviderContext = createContext<ThemeProviderState>(initialState);

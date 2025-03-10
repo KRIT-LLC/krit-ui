@@ -1,5 +1,4 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import {
   ColumnDef,
   ExpandedState,
@@ -13,6 +12,7 @@ import {
   Table as TanTable,
   useReactTable,
 } from '@tanstack/react-table';
+import { useTranslation } from '@/hooks/useTranslation';
 import { cn } from '@/utils';
 import ChevronLeft from '@/assets/chevron_left.svg?react';
 import ChevronRight from '@/assets/chevron_right.svg?react';
