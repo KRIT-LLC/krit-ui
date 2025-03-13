@@ -34,3 +34,4 @@ export { default as CheckCloseFolder } from '@/assets/check_close_folder.svg?rea
 export { default as ViewList } from '@/assets/view_list.svg?react';
 export { default as WatchLater } from '@/assets/watch_later.svg?react';
 export { default as WarningAmber } from '@/assets/warning_amber.svg?react';
+export { default as Whatshot } from '@/assets/whatshot.svg?react';
