@@ -33,3 +33,4 @@ export { default as NoAssignment } from '@/assets/noAssignment.svg?react';
 export { default as CheckCloseFolder } from '@/assets/check_close_folder.svg?react';
 export { default as ViewList } from '@/assets/view_list.svg?react';
 export { default as WatchLater } from '@/assets/watch_later.svg?react';
+export { default as WarningAmber } from '@/assets/warning_amber.svg?react';
