@@ -35,3 +35,5 @@ export { default as ViewList } from '@/assets/view_list.svg?react';
 export { default as WatchLater } from '@/assets/watch_later.svg?react';
 export { default as WarningAmber } from '@/assets/warning_amber.svg?react';
 export { default as Whatshot } from '@/assets/whatshot.svg?react';
+export { default as Play } from '@/assets/play.svg?react';
+export { default as GearsAlarm } from '@/assets/gears_alarm.svg?react';
