@@ -37,3 +37,5 @@ export { default as WarningAmber } from '@/assets/warning_amber.svg?react';
 export { default as Whatshot } from '@/assets/whatshot.svg?react';
 export { default as Play } from '@/assets/play.svg?react';
 export { default as GearsAlarm } from '@/assets/gears_alarm.svg?react';
+export { default as Handyman } from '@/assets/handyman.svg?react';
+export { default as SaveFill } from '@/assets/save_fill.svg?react';
