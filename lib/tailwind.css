@@ -76,6 +76,9 @@
 
     --purple: 241 98% 69%;
 
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 0 0% 66%;
+
     --radius: 0.5rem;
   }
 
@@ -149,6 +152,9 @@
     --icon-success: var(--foreground-success);
 
     --purple: 241 98% 69%;
+
+    --muted: 223 47% 11%;
+    --muted-foreground: 0 0% 52%;
 
     --radius: 0.5rem;
   }

@@ -119,7 +119,9 @@ function MultiSelect({
         >
           {children || (
             <>
-              {!value?.length && <span className='text-foreground text-sm'>{placeholder}</span>}
+              {!value?.length && (
+                <span className='text-muted-foreground text-sm'>{placeholder}</span>
+              )}
               <div className='truncate text-nowrap whitespace-nowrap' title={valueText}>
                 {valueText}
               </div>
