@@ -106,12 +106,15 @@ export function DataTable<TData, TValue>({
 
   return (
     <div
-      className={`${className && className} 'relative flex flex-1 flex-col h-full overflow-auto'`}
+      className={cn(
+        'relative flex flex-1 flex-col h-full overflow-auto',
+        className,
+      )}
     >
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map(headerGroup => (
-            <TableRow key={headerGroup.id}>
+            <TableRow key={headerGroup.id} className='border-line-primary'>
               {headerGroup.headers.map(header => {
                 return (
                   <TableHead
