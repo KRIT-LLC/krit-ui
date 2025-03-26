@@ -40,3 +40,6 @@ export { default as GearsAlarm } from '@/assets/gears_alarm.svg?react';
 export { default as Handyman } from '@/assets/handyman.svg?react';
 export { default as SaveFill } from '@/assets/save_fill.svg?react';
 export { default as Build } from '@/assets/build.svg?react';
+export { default as Close } from '@/assets/close.svg?react';
+export { default as ChecksOutline } from '@/assets/checks_outline.svg?react';
+export { default as RoundStroked } from '@/assets/roundStroked.svg?react';

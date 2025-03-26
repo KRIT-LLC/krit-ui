@@ -6,23 +6,37 @@ export const badgeVariants = cva(
     variants: {
       variant: {
         default: 'border-0 bg-background text-foreground hover:bg-background-primary/80',
-        gradient: 'leading-3 border-0 bg-background-theme text-foreground-on-contrast hover:bg-background-theme/80',
+        gradient:
+          'leading-3 border-0 bg-background-theme text-foreground-on-contrast hover:bg-background-theme/80',
         secondary: 'border-0 bg-background-secondary text-foreground hover:bg-foreground/5',
-        'secondary-contrast': 'bg-background-secondary/60 text-foreground hover:bg-background-secondary/80',
-        accent: 'bg-background-theme border-line-theme/10 text-[white] hover:bg-background-theme/80',
+        'secondary-contrast':
+          'bg-background-secondary/60 text-foreground hover:bg-background-secondary/80',
+        accent:
+          'bg-background-theme border-line-theme/10 text-[white] hover:bg-background-theme/80',
         theme: 'bg-background-theme border-line-theme/10 text-[white] hover:bg-background-theme/80',
+        'theme-fade':
+          'bg-background-theme-fade text-foreground-theme hover:bg-background-theme-fade_hover',
         pale: 'bg-background-warning border-line-warning text-foreground-on-contrast hover:bg-background-warning/80',
         'pale-primary': 'bg-pale-foreground text-primary-foreground hover:bg-pale-foreground/80',
-        destructive: 'bg-background-error border-line-error text-[white] hover:bg-background-error/80',
-        'destructive-fade': 'bg-background-error-fade text-foreground-error hover:bg-background-error-fade-hover',
-        'destructive-primary': 'bg-destructive-foreground text-primary-foreground hover:bg-destructive-foreground/80',
+        destructive:
+          'bg-background-error border-line-error text-[white] hover:bg-background-error/80',
+        'destructive-fade':
+          'bg-background-error-fade text-foreground-error hover:bg-background-error-fade-hover',
+        'destructive-primary':
+          'bg-destructive-foreground text-primary-foreground hover:bg-destructive-foreground/80',
         success: 'bg-background-success text-[white] hover:bg-background-success/80',
-        'success-fade': 'bg-background-success-fade text-foreground-success hover:bg-background-success-fade-hover',
-        'success-primary': 'bg-success-foreground text-primary-foreground hover:bg-success-foreground/80',
+        'success-fade':
+          'bg-background-success-fade text-foreground-success hover:bg-background-success-fade-hover',
+        'success-primary':
+          'bg-success-foreground text-primary-foreground hover:bg-success-foreground/80',
         grey: 'bg-background-contrast-fade text-foreground hover:bg-background-contrast-fade/80',
         'grey-primary': 'bg-grey-foreground text-primary-foreground hover:bg-grey-foreground/80',
         outline: 'bg-background border border-line-primary text-foreground',
         'outline-success': 'bg-background border border-line-success text-foreground-success',
+        warning:
+          'bg-background-warning text-foreground-on-contrast hover:bg-background-warning_hover',
+        'warning-fade':
+          'bg-background-warning-fade text-foreground-warning hover:bg-background-warning-fade-hover',
       },
       size: {
         sm: 'h-[24px]',
