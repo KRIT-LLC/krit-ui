@@ -9,7 +9,12 @@ import {
 } from '@/components/ui/toast';
 import { useToast } from '@/hooks/useToast';
 
-export function Toaster() {
+interface ToasterProps {
+  viewportClassname?: string;
+}
+
+export function Toaster(props: ToasterProps) {
+  const { viewportClassname } = props;
   const { toasts } = useToast();
 
   return (
@@ -27,7 +32,7 @@ export function Toaster() {
             </Toast>
           );
         })}
-        <ToastViewport />
+        <ToastViewport className={viewportClassname} />
       </ToastProvider>
     </Portal.Root>
   );
