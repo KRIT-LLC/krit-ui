@@ -74,16 +74,17 @@ export function DatePicker({ className, locale, ...props }: DatePickerProps) {
       case 'multiple':
         return props.value?.length ? props.value.map(toRuDateString).join(', ') : placeholder;
       case 'range': {
-        const to = props.value?.to ? ' — ' + toRuDateString(props.value?.to) : '';
-        return props.value?.from ? toRuDateString(props.value.from) + to : placeholder;
+        const value = props.selected || props.value;
+        const to = value?.to ? ' — ' + toRuDateString(value?.to) : '';
+        return value?.from ? toRuDateString(value.from) + to : placeholder;
       }
     }
   };
 
   const modifiedProps = {
     ...props,
-    selected: props.value,
-    onSelect: props.onChange,
+    selected: props.selected || props.value,
+    onSelect: props.onSelect || props.onChange,
   } as DatePickerProps;
 
   return (
