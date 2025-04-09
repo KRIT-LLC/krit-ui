@@ -19,7 +19,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from './dialog';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from './form';
+import { Form, FormControl, FormField, FormItem, FormMessage } from './form';
+import { TextArea } from './text-area';
 
 interface ConfirmModalProps extends PromptOptions {
   children?: ReactNode;
@@ -28,10 +29,6 @@ interface ConfirmModalProps extends PromptOptions {
   onConfirm?: (input?: string) => void;
   onCancel?: () => void;
 }
-
-const formSchema = z.object({ inputValue: z.string().refine(...zRequired('fillField')) });
-
-type FormValues = z.infer<typeof formSchema>;
 
 export const ConfirmModal = (props: ConfirmModalProps) => {
   const {
@@ -46,6 +43,7 @@ export const ConfirmModal = (props: ConfirmModalProps) => {
     inputPlaceholder,
     inputRequiredLabel,
     inputMaxLength,
+    inputRequired,
     children,
     visible,
     onVisibleChange,
@@ -54,8 +52,15 @@ export const ConfirmModal = (props: ConfirmModalProps) => {
   } = props;
   const { t } = useTranslation();
   const hasInput = !!(Input || inputPlaceholder);
-  const form = useForm({
-    resolver: zodResolver(formSchema),
+
+  const dynamicFormSchema = z.object({
+    inputValue: inputRequired ? z.string().refine(...zRequired('fillField')) : z.string(),
+  });
+
+  type FormValues = z.infer<typeof dynamicFormSchema>;
+
+  const form = useForm<FormValues>({
+    resolver: zodResolver(dynamicFormSchema),
     defaultValues: { inputValue: '' },
   });
 
@@ -73,7 +78,12 @@ export const ConfirmModal = (props: ConfirmModalProps) => {
   };
 
   const renderDescription = () => {
-    return renderTextWithBoldMarkdown(description || t('confirmAction'));
+    return (
+      <>
+        {renderTextWithBoldMarkdown(description || t('confirmAction'))}
+        {inputRequired && <span className='text-foreground-error'>*</span>}
+      </>
+    );
   };
 
   return (
@@ -105,7 +115,8 @@ export const ConfirmModal = (props: ConfirmModalProps) => {
                       {Input ? (
                         <Input {...field} />
                       ) : (
-                        <textarea
+                        <TextArea
+                          rows={4}
                           placeholder={inputPlaceholder}
                           maxLength={inputMaxLength}
                           autoFocus
@@ -113,9 +124,6 @@ export const ConfirmModal = (props: ConfirmModalProps) => {
                         />
                       )}
                     </FormControl>
-                    {!!inputMaxLength && (
-                      <FormDescription>{t('maxNChars') + inputMaxLength}</FormDescription>
-                    )}
                     {fieldState.error && <FormMessage>{inputRequiredLabel}</FormMessage>}
                   </FormItem>
                 )}

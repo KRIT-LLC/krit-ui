@@ -24,6 +24,7 @@ interface ConfirmState {
   inputPlaceholder: string;
   inputRequiredLabel: string;
   inputMaxLength?: number;
+  inputRequired?: boolean;
   setInput: (inputValue: string) => void;
   confirmed: boolean | null;
   visible: boolean;
@@ -46,6 +47,7 @@ export interface PromptOptions {
   inputPlaceholder?: string;
   inputRequiredLabel?: string;
   inputMaxLength?: number;
+  inputRequired?: boolean;
 }
 
 export const useConfirmStore = create<ConfirmState>()(set => ({
@@ -78,6 +80,7 @@ export const useConfirmStore = create<ConfirmState>()(set => ({
       inputPlaceholder: options.inputPlaceholder ?? '',
       inputRequiredLabel: options.inputRequiredLabel ?? '',
       inputMaxLength: options.inputMaxLength,
+      inputRequired: options.inputRequired,
     }),
   hide: () => set({ visible: false }),
   confirm: inputValue => set({ confirmed: true, visible: false, inputValue }),
