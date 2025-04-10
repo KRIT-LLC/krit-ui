@@ -42,6 +42,7 @@ export * from '@/components/ui/nav';
 export * from '@/components/ui/nav-panel';
 export * from '@/components/ui/tooltip';
 export * from '@/components/ui/segmented-control';
+export * from '@/components/ui/radio-group';
 
 export * from '@/utils';
 
