@@ -1,14 +1,14 @@
 import * as React from 'react';
+import { Controller, ControllerProps, FieldPath, FieldValues, FormProvider } from 'react-hook-form';
 import * as LabelPrimitive from '@radix-ui/react-label';
 import { Slot } from '@radix-ui/react-slot';
-import { Controller, ControllerProps, FieldPath, FieldValues, FormProvider } from 'react-hook-form';
 import { cn } from '@/utils';
-import { Label } from './label';
+import { DatePicker, DatePickerProps } from './date-picker';
 import { FormFieldContext, FormItemContext, useFormField } from './form.lib';
 import { Input, InputProps } from './input';
-import { Select, SelectProps } from './select';
-import { DatePicker, DatePickerProps } from './date-picker';
+import { Label } from './label';
 import { MultiSelect, MultiSelectProps } from './multi-select';
+import { Select, SelectProps } from './select';
 
 const Form = FormProvider;
 
@@ -106,7 +106,7 @@ const FormMessage = React.forwardRef<
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, children, ...props }, ref) => {
   const { error, formMessageId } = useFormField();
-  const body = error ? String(error?.message) : children;
+  const body = children || (error ? String(error?.message) : null);
 
   if (!body) {
     return null;
