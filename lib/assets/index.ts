@@ -45,3 +45,4 @@ export { default as ChecksOutline } from '@/assets/checks_outline.svg?react';
 export { default as RoundStroked } from '@/assets/roundStroked.svg?react';
 export { default as Info } from '@/assets/info.svg?react';
 export { default as LockOpen } from '@/assets/lock_open.svg?react';
+export { default as Warehouse } from '@/assets/warehouse.svg?react';
