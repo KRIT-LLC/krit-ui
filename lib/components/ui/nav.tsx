@@ -9,7 +9,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from './tooltip';
 export interface NavItem {
   title: string;
   label?: string;
-  icon:
+  icon?:
     | LucideIcon
     | FunctionComponent<React.SVGProps<SVGSVGElement> & { title?: string | undefined }>;
   to?: string;
@@ -55,7 +55,7 @@ export function Nav(props: NavProps) {
                     item.onClick?.();
                   }}
                 >
-                  <item.icon className='h-6 w-6' />
+                  {item.icon && <item.icon className='h-6 w-6' />}
                   <span className='sr-only'>{item.title}</span>
                 </LinkComponent>
               </TooltipTrigger>
@@ -79,7 +79,7 @@ export function Nav(props: NavProps) {
                 item.onClick?.();
               }}
             >
-              <item.icon className='h-6 w-6' />
+              {item.icon && <item.icon className='h-6 w-6' />}
               <span className='text-sm tracking-[0.25px] animate-in fade-in'>{item.title}</span>
               {item.label && (
                 <span
