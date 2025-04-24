@@ -8,7 +8,14 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { useSidebar } from '@/hooks/useSidebar';
 import { useTheme } from '@/hooks/useTheme';
 import { cn } from '@/utils';
-import { AccountCircle, Assignment, FirstPage, Hardware, LastPage, Person } from '@/assets';
+import {
+  AccountCircleIcon,
+  AssignmentIcon,
+  FirstPageIcon,
+  HardwareIcon,
+  LastPageIcon,
+  PersonIcon,
+} from '@/assets';
 import styles from './NavPanel.module.css';
 
 export default {
@@ -34,7 +41,7 @@ export const Demo: StoryFn = () => {
         },
         {
           title: 'Выход',
-          icon: AccountCircle,
+          icon: AccountCircleIcon,
           onClick: () => {},
           variant: 'ghost',
         },
@@ -49,7 +56,7 @@ export const Demo: StoryFn = () => {
       items={[
         {
           title: sidebar.isCollapsed ? 'Развернуть' : 'Свернуть',
-          icon: sidebar.isCollapsed ? LastPage : FirstPage,
+          icon: sidebar.isCollapsed ? LastPageIcon : FirstPageIcon,
           onClick: sidebar.isCollapsed ? sidebar.expand : sidebar.collapse,
           variant: 'ghost',
         },
@@ -63,19 +70,19 @@ export const Demo: StoryFn = () => {
       {
         title: 'Тест',
         to: '/1',
-        icon: Hardware,
+        icon: HardwareIcon,
       },
       {
         title: 'Тест 2',
         to: '/',
-        icon: Assignment,
+        icon: AssignmentIcon,
       },
     ],
   ];
 
   const profile = (
     <div className={styles.profile} title={'Тестов Тест Тестович'}>
-      <Person />
+      <PersonIcon />
       {sidebar.isCollapsed ? null : <span>Тестов Тест Тестович</span>}
     </div>
   );
