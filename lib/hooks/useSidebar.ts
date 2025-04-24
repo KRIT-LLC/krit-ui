@@ -2,11 +2,11 @@ import { useRef, useState } from 'react';
 import { ImperativePanelHandle } from 'react-resizable-panels';
 import { cookies } from '@/lib/cookies';
 
-export const useSidebar = () => {
-  const layout = cookies().get('react-resizable-panels:layout');
-  const collapsed = cookies().get('react-resizable-panels:collapsed');
-  const collapsedLayout = [4, 96];
-  const expandedLayout = [12, 88];
+export const useSidebar = (collapsedLayout = [4, 96], expandedLayout = [12, 88]) => {
+  const layoutName = 'react-resizable-panels:layout';
+  const collapsedName = 'react-resizable-panels:collapsed';
+  const layout = cookies().get(layoutName);
+  const collapsed = cookies().get(collapsedName);
   const defaultLayout = layout ? JSON.parse(layout) : collapsedLayout;
   const defaultCollapsed = collapsed ? JSON.parse(collapsed) : false;
   const [isCollapsed, setIsCollapsed] = useState<boolean>(defaultCollapsed);
@@ -25,5 +25,5 @@ export const useSidebar = () => {
     setIsCollapsed(false);
   };
 
-  return { defaultLayout, isCollapsed, ref, collapse, expand };
+  return { layoutName, collapsedName, defaultLayout, isCollapsed, ref, collapse, expand };
 };

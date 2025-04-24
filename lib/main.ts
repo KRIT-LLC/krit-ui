@@ -52,5 +52,7 @@ export * from '@/hooks/useTheme';
 export * from '@/hooks/useConfirm';
 export * from '@/lib/file';
 export * from '@/lib/zod';
+export * from '@/hooks/useSidebar';
+export * from '@/lib/cookies';
 
 export * from '@/assets';
