@@ -9,15 +9,21 @@ const toPascalCase = str =>
 const stripExtension = str => str.split('.').slice(0, -1).join('.');
 const isIcon = filename => new Set(['.svg', '.png']).has(path.extname(filename));
 
+/**
+ * Добавление префикса, в название переменной если она начинается с числа
+ */
+const getPrefix = firstChart => (isNaN(parseInt(firstChart)) ? '' : 'N');
+
 const makeIconReadme = filename => {
   const title = toPascalCase(stripExtension(filename));
-  return [`#### ${title}`, `![${filename}](${filename})`].join('\n');
+  const prefix = getPrefix(title[0]);
+  return [`#### ${prefix}${title}Icon`, `![${filename}](${filename})`].join('\n');
 };
 
 const makeIconExport = filename => {
   const title = toPascalCase(stripExtension(filename));
   if (!filename.endsWith('.svg')) return; // Плагин для импорта иконок только для SVG
-  const prefix = isNaN(parseInt(title[0])) ? '' : 'N'; // Добавляем префикс, чтобы название переменной не начиналось с числа
+  const prefix = getPrefix(title[0]);
   return `export { default as ${prefix}${title}Icon } from '@/assets/${filename}?react';`;
 };
 

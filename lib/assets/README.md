@@ -1,240 +1,242 @@
-#### 00
+#### N00Icon
 ![00.svg](00.svg)
-#### 01
+#### N01Icon
 ![01.svg](01.svg)
-#### 02
+#### N02Icon
 ![02.svg](02.svg)
-#### 03
+#### N03Icon
 ![03.svg](03.svg)
-#### 04
+#### N04Icon
 ![04.svg](04.svg)
-#### AccessDeniedDark
+#### AccessDeniedDarkIcon
 ![access_denied_dark.svg](access_denied_dark.svg)
-#### AccessDeniedLight
+#### AccessDeniedLightIcon
 ![access_denied_light.svg](access_denied_light.svg)
-#### AccountBalance
+#### AccountBalanceIcon
 ![account_balance.svg](account_balance.svg)
-#### AccountBox
+#### AccountBoxIcon
 ![account_box.svg](account_box.svg)
-#### AccountCircle
+#### AccountCircleIcon
 ![account_circle.svg](account_circle.svg)
-#### Add
+#### AddIcon
 ![add.svg](add.svg)
-#### AddBox
+#### AddBoxIcon
 ![add_box.svg](add_box.svg)
-#### AddCircleOutline
+#### AddCircleOutlineIcon
 ![add_circle_outline.svg](add_circle_outline.svg)
-#### AddOutline
+#### AddOutlineIcon
 ![add_outline.svg](add_outline.svg)
-#### Analytics
+#### AnalyticsIcon
 ![analytics.svg](analytics.svg)
-#### ArrowBack
+#### ArchiveIcon
+![archive.svg](archive.svg)
+#### ArrowBackIcon
 ![arrow_back.svg](arrow_back.svg)
-#### ArrowDropDown
+#### ArrowDropDownIcon
 ![arrow_drop_down.svg](arrow_drop_down.svg)
-#### Assignment
+#### AssignmentIcon
 ![assignment.svg](assignment.svg)
-#### AssignmentTurnedIn
+#### AssignmentTurnedInIcon
 ![assignment_turned_in.svg](assignment_turned_in.svg)
-#### AttachFile
+#### AttachFileIcon
 ![attach_file.svg](attach_file.svg)
-#### BgDark
+#### BgDarkIcon
 ![bg_dark.svg](bg_dark.svg)
-#### BgLight
+#### BgLightIcon
 ![bg_light.svg](bg_light.svg)
-#### BillEmpty
+#### BillEmptyIcon
 ![bill_empty.svg](bill_empty.svg)
-#### Build
+#### BuildIcon
 ![build.svg](build.svg)
-#### CalendarOutline
+#### CalendarOutlineIcon
 ![calendar_outline.svg](calendar_outline.svg)
-#### Cancel
+#### CancelIcon
 ![cancel.svg](cancel.svg)
-#### CancelCircleOutline
+#### CancelCircleOutlineIcon
 ![cancel_circle_outline.svg](cancel_circle_outline.svg)
-#### CancelOutline
+#### CancelOutlineIcon
 ![cancel_outline.svg](cancel_outline.svg)
-#### Category
+#### CategoryIcon
 ![category.svg](category.svg)
-#### Check
+#### CheckIcon
 ![check.svg](check.svg)
-#### CheckCircleOutline
-![check_circle_outline.svg](check_circle_outline.svg)
-#### CheckCloseFolder
-![check_close_folder.svg](check_close_folder.svg)
-#### ChecksOutline
+#### ChecksOutlineIcon
 ![checks_outline.svg](checks_outline.svg)
-#### ChevronDown
+#### CheckCircleOutlineIcon
+![check_circle_outline.svg](check_circle_outline.svg)
+#### CheckCloseFolderIcon
+![check_close_folder.svg](check_close_folder.svg)
+#### ChevronDownIcon
 ![chevron_down.svg](chevron_down.svg)
-#### ChevronLeft
+#### ChevronLeftIcon
 ![chevron_left.svg](chevron_left.svg)
-#### ChevronLeftOutline
+#### ChevronLeftOutlineIcon
 ![chevron_left_outline.svg](chevron_left_outline.svg)
-#### ChevronRight
+#### ChevronRightIcon
 ![chevron_right.svg](chevron_right.svg)
-#### ChevronRightOutline
+#### ChevronRightOutlineIcon
 ![chevron_right_outline.svg](chevron_right_outline.svg)
-#### ChevronUp
+#### ChevronUpIcon
 ![chevron_up.svg](chevron_up.svg)
-#### Close
+#### CloseIcon
 ![close.svg](close.svg)
-#### CloseCircle
+#### CloseCircleIcon
 ![close_circle.svg](close_circle.svg)
-#### Coins
+#### CoinsIcon
 ![coins.svg](coins.svg)
-#### CorporateFare
+#### CorporateFareIcon
 ![corporate_fare.svg](corporate_fare.svg)
-#### CupOutline
+#### CupOutlineIcon
 ![cup_outline.svg](cup_outline.svg)
-#### DarkMode
+#### DarkModeIcon
 ![dark_mode.svg](dark_mode.svg)
-#### Dashboard
+#### DashboardIcon
 ![dashboard.svg](dashboard.svg)
-#### Delete
+#### DeleteIcon
 ![delete.svg](delete.svg)
-#### DeleteOutline
+#### DeleteOutlineIcon
 ![delete_outline.svg](delete_outline.svg)
-#### DocumentArrowUpOutline
+#### DocumentArrowUpOutlineIcon
 ![document_arrow_up_outline.svg](document_arrow_up_outline.svg)
-#### DocumentListOutline
+#### DocumentListOutlineIcon
 ![document_list_outline.svg](document_list_outline.svg)
-#### DonateOutline
+#### DonateOutlineIcon
 ![donate_outline.svg](donate_outline.svg)
-#### Done
+#### DoneIcon
 ![done.svg](done.svg)
-#### DoneOutline
+#### DoneOutlineIcon
 ![done_outline.svg](done_outline.svg)
-#### DoorArrowRightOutline
+#### DoorArrowRightOutlineIcon
 ![door_arrow_right_outline.svg](door_arrow_right_outline.svg)
-#### DownloadOutline
+#### DownloadOutlineIcon
 ![download_outline.svg](download_outline.svg)
-#### Edit
+#### EditIcon
 ![edit.svg](edit.svg)
-#### EditOutline
+#### EditOutlineIcon
 ![edit_outline.svg](edit_outline.svg)
-#### ErrorOutline
+#### ErrorOutlineIcon
 ![error_outline.svg](error_outline.svg)
-#### EventNote
+#### EventNoteIcon
 ![event_note.svg](event_note.svg)
-#### ExpandMore
+#### ExpandMoreIcon
 ![expand_more.svg](expand_more.svg)
-#### FirstPage
+#### FirstPageIcon
 ![first_page.svg](first_page.svg)
-#### FormatAlignLeft
+#### FormatAlignLeftIcon
 ![format_align_left.svg](format_align_left.svg)
-#### GearsAlarm
+#### GearsAlarmIcon
 ![gears_alarm.svg](gears_alarm.svg)
-#### HandPaper
-![hand_paper.svg](hand_paper.svg)
-#### Handyman
+#### HandymanIcon
 ![handyman.svg](handyman.svg)
-#### Hardware
+#### HandPaperIcon
+![hand_paper.svg](hand_paper.svg)
+#### HardwareIcon
 ![hardware.svg](hardware.svg)
-#### HideOutline
+#### HideOutlineIcon
 ![hide_outline.svg](hide_outline.svg)
-#### History
+#### HistoryIcon
 ![history.svg](history.svg)
-#### HotelClass
+#### HotelClassIcon
 ![hotel_class.svg](hotel_class.svg)
-#### Image
+#### ImageIcon
 ![image.svg](image.svg)
-#### ImgBoxFill
+#### ImgBoxFillIcon
 ![img_box_fill.svg](img_box_fill.svg)
-#### Info
+#### InfoIcon
 ![info.svg](info.svg)
-#### LastPage
+#### LastPageIcon
 ![last_page.svg](last_page.svg)
-#### LightMode
+#### LightModeIcon
 ![light_mode.svg](light_mode.svg)
-#### LocalFireDepartment
+#### LocalFireDepartmentIcon
 ![local_fire_department.svg](local_fire_department.svg)
-#### LocationMapOutline
+#### LocationMapOutlineIcon
 ![location_map_outline.svg](location_map_outline.svg)
-#### Lock
+#### LockIcon
 ![lock.svg](lock.svg)
-#### LockOpen
+#### LockOpenIcon
 ![lock_open.svg](lock_open.svg)
-#### Menu
+#### MenuIcon
 ![menu.svg](menu.svg)
-#### MoreVert
+#### MoreVertIcon
 ![more_vert.svg](more_vert.svg)
-#### NetworkError
+#### NetworkErrorIcon
 ![network_error.svg](network_error.svg)
-#### Noassignment
+#### NoassignmentIcon
 ![noAssignment.svg](noAssignment.svg)
-#### NorthEast
+#### NorthEastIcon
 ![north_east.svg](north_east.svg)
-#### Output
+#### OutputIcon
 ![output.svg](output.svg)
-#### PenOutline
+#### PenOutlineIcon
 ![pen_outline.svg](pen_outline.svg)
-#### Person
+#### PersonIcon
 ![person.svg](person.svg)
-#### Play
+#### PlayIcon
 ![play.svg](play.svg)
-#### Priority
+#### PriorityIcon
 ![priority.svg](priority.svg)
-#### Publish
+#### PublishIcon
 ![publish.svg](publish.svg)
-#### RectangleSplit4UnevenOutline
-![rectangle_split_4_uneven_outline.svg](rectangle_split_4_uneven_outline.svg)
-#### RectanglesOutline
+#### RectanglesOutlineIcon
 ![rectangles_outline.svg](rectangles_outline.svg)
-#### RestartAlt
+#### RectangleSplit4UnevenOutlineIcon
+![rectangle_split_4_uneven_outline.svg](rectangle_split_4_uneven_outline.svg)
+#### RestartAltIcon
 ![restart_alt.svg](restart_alt.svg)
-#### Room
+#### RoomIcon
 ![room.svg](room.svg)
-#### Roundstroked
+#### RoundstrokedIcon
 ![roundStroked.svg](roundStroked.svg)
-#### Save
+#### SaveIcon
 ![save.svg](save.svg)
-#### SaveFill
+#### SaveFillIcon
 ![save_fill.svg](save_fill.svg)
-#### Search
+#### SearchIcon
 ![search.svg](search.svg)
-#### SearchEmpty
+#### SearchEmptyIcon
 ![search_empty.svg](search_empty.svg)
-#### Settings
+#### SettingsIcon
 ![settings.svg](settings.svg)
-#### ShoppingBasket
+#### ShoppingBasketIcon
 ![shopping_basket.svg](shopping_basket.svg)
-#### SignInBackground
+#### SignInBackgroundIcon
 ![sign_in_background.png](sign_in_background.png)
-#### Square4Outline
+#### Square4OutlineIcon
 ![square_4_outline.svg](square_4_outline.svg)
-#### Stars
+#### StarsIcon
 ![stars.svg](stars.svg)
-#### Straighten
+#### StraightenIcon
 ![straighten.svg](straighten.svg)
-#### TableChart
+#### TableChartIcon
 ![table_chart.svg](table_chart.svg)
-#### TargetOutline
+#### TargetOutlineIcon
 ![target_outline.svg](target_outline.svg)
-#### Toll
+#### TollIcon
 ![toll.svg](toll.svg)
-#### Tour
+#### TourIcon
 ![tour.svg](tour.svg)
-#### Translate
+#### TranslateIcon
 ![translate.svg](translate.svg)
-#### Unlock
+#### UnlockIcon
 ![unlock.svg](unlock.svg)
-#### User
+#### UserIcon
 ![user.svg](user.svg)
-#### ViewList
+#### ViewListIcon
 ![view_list.svg](view_list.svg)
-#### ViewOutline
+#### ViewOutlineIcon
 ![view_outline.svg](view_outline.svg)
-#### ViewSidebar
+#### ViewSidebarIcon
 ![view_sidebar.svg](view_sidebar.svg)
-#### Warehouse
+#### WarehouseIcon
 ![warehouse.svg](warehouse.svg)
-#### WarningAmber
+#### WarningAmberIcon
 ![warning_amber.svg](warning_amber.svg)
-#### WatchLater
+#### WatchLaterIcon
 ![watch_later.svg](watch_later.svg)
-#### Whatshot
+#### WhatshotIcon
 ![whatshot.svg](whatshot.svg)
-#### Workspaces
+#### WorkspacesIcon
 ![workspaces.svg](workspaces.svg)
-#### Write
+#### WriteIcon
 ![write.svg](write.svg)
