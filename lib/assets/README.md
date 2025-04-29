@@ -162,10 +162,10 @@
 ![more_vert.svg](more_vert.svg)
 #### NetworkErrorIcon
 ![network_error.svg](network_error.svg)
-#### NoassignmentIcon
-![noAssignment.svg](noAssignment.svg)
 #### NorthEastIcon
 ![north_east.svg](north_east.svg)
+#### NoAssignmentIcon
+![no_assignment.svg](no_assignment.svg)
 #### OutputIcon
 ![output.svg](output.svg)
 #### PenOutlineIcon
@@ -186,8 +186,8 @@
 ![restart_alt.svg](restart_alt.svg)
 #### RoomIcon
 ![room.svg](room.svg)
-#### RoundstrokedIcon
-![roundStroked.svg](roundStroked.svg)
+#### RoundStrokedIcon
+![round_stroked.svg](round_stroked.svg)
 #### SaveIcon
 ![save.svg](save.svg)
 #### SaveFillIcon

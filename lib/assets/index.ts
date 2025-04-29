@@ -80,8 +80,8 @@ export { default as LockOpenIcon } from '@/assets/lock_open.svg?react';
 export { default as MenuIcon } from '@/assets/menu.svg?react';
 export { default as MoreVertIcon } from '@/assets/more_vert.svg?react';
 export { default as NetworkErrorIcon } from '@/assets/network_error.svg?react';
-export { default as NoassignmentIcon } from '@/assets/noAssignment.svg?react';
 export { default as NorthEastIcon } from '@/assets/north_east.svg?react';
+export { default as NoAssignmentIcon } from '@/assets/no_assignment.svg?react';
 export { default as OutputIcon } from '@/assets/output.svg?react';
 export { default as PenOutlineIcon } from '@/assets/pen_outline.svg?react';
 export { default as PersonIcon } from '@/assets/person.svg?react';
@@ -92,7 +92,7 @@ export { default as RectanglesOutlineIcon } from '@/assets/rectangles_outline.sv
 export { default as RectangleSplit4UnevenOutlineIcon } from '@/assets/rectangle_split_4_uneven_outline.svg?react';
 export { default as RestartAltIcon } from '@/assets/restart_alt.svg?react';
 export { default as RoomIcon } from '@/assets/room.svg?react';
-export { default as RoundstrokedIcon } from '@/assets/roundStroked.svg?react';
+export { default as RoundStrokedIcon } from '@/assets/round_stroked.svg?react';
 export { default as SaveIcon } from '@/assets/save.svg?react';
 export { default as SaveFillIcon } from '@/assets/save_fill.svg?react';
 export { default as SearchIcon } from '@/assets/search.svg?react';
