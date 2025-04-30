@@ -1,5 +1,5 @@
 import i18next from 'i18next';
-import { ZodErrorMap, z } from 'zod';
+import { z, ZodErrorMap } from 'zod';
 import { makeZodI18nMap } from 'zod-i18n-map';
 
 z.setErrorMap(makeZodI18nMap({ ns: ['zod', 'translation'] }));

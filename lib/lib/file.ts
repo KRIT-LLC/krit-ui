@@ -1,3 +1,5 @@
+import { AttachmentItem } from './attachments';
+
 export const compressImage = async (file: File, { quality = 1, type = file.type } = {}) => {
   const imageBitmap = await createImageBitmap(file);
   const canvas = document.createElement('canvas');
@@ -17,7 +19,9 @@ export const compressFile = async (file: File, { quality = 1, type = file.type }
   else return file;
 };
 
-export type ValidateFileResult = { ok: true } | { ok: false; fileTypeError?: string; fileSizeError?: string };
+export type ValidateFileResult =
+  | { ok: true }
+  | { ok: false; fileTypeError?: string; fileSizeError?: string };
 
 export const validateFileSize = (file: File, maxFileSize: number): ValidateFileResult => {
   const ok = file.size < maxFileSize * 1024 * 1024;
@@ -33,7 +37,7 @@ export const validateFileType = async (file: File, validTypes: string) => {
       return;
     }
     const reader = new FileReader();
-    reader.onload = function(e) {
+    reader.onload = function (e) {
       const data = e.target?.result as ArrayBuffer | null;
       if (!data) return;
       const arr = new Uint8Array(data).subarray(0, 12);
@@ -62,8 +66,51 @@ export const validateFileType = async (file: File, validTypes: string) => {
   });
 };
 
-export const validateFile = async (file: File, validTypes: string, maxFileSize = 10): Promise<ValidateFileResult> => {
+export const validateFile = async (
+  file: File,
+  validTypes: string,
+  maxFileSize = 10,
+): Promise<ValidateFileResult> => {
   const result = await validateFileType(file, validTypes).catch(error => error);
   if (!result.ok) return result;
   return validateFileSize(file, maxFileSize);
+};
+
+const getVideoThumbnail = (file: File) => {
+  return new Promise<string>(resolve => {
+    const canvas = document.createElement('canvas');
+    const video = document.createElement('video');
+
+    video.autoplay = true;
+    video.muted = true;
+    video.src = URL.createObjectURL(file);
+
+    video.onloadeddata = () => {
+      const ctx = canvas.getContext('2d');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      ctx?.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+      video.pause();
+      return resolve(canvas.toDataURL('image/png'));
+    };
+  });
+};
+
+export const getFileThumbnail = (file: File) => {
+  if (file.type.includes('image')) return URL.createObjectURL(file);
+  else if (file.type.includes('video')) return getVideoThumbnail(file);
+};
+
+export const filesToAttachments = async (files: File[]) => {
+  const attachments: AttachmentItem[] = [];
+  for (const file of files) {
+    attachments.push({
+      id: new Date().getTime(),
+      file,
+      contentType: file.type,
+      fileName: file.name,
+      url: await getFileThumbnail(file),
+    });
+  }
+  return attachments;
 };
