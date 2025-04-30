@@ -43,6 +43,8 @@ export * from '@/components/ui/nav-panel';
 export * from '@/components/ui/tooltip';
 export * from '@/components/ui/segmented-control';
 export * from '@/components/ui/radio-group';
+export * from '@/components/ui/banner';
+export * from '@/components/ui/attachmentsSection';
 
 export * from '@/utils';
 
@@ -57,5 +59,6 @@ export * from '@/lib/cookies';
 export * from '@/hooks/useStoredTabs';
 export * from '@/hooks/useTableStates';
 export * from '@/hooks/useStoredFields';
+export * from '@/lib/attachments';
 
 export * from '@/assets';

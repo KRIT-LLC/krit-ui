@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { AttachmentItem, ContentType } from '@/lib/attachments';
 import { compressFile } from '@/lib/file';
 import { Loader2 } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -7,18 +8,6 @@ import AttachFile from '@/assets/attach_file.svg?react';
 import CancelCircleOutline from '@/assets/cancel_circle_outline.svg?react';
 import { Input } from './input';
 import { PreviewFull } from './previewFull';
-
-export type ContentType = 'video' | 'image';
-
-export type AttachmentItem = {
-  id: number;
-  contentType: string;
-  url?: string;
-  file?: File | undefined;
-  fileName?: string;
-  inProgress?: boolean;
-  onRemove?: () => void;
-};
 
 interface PreviewsProps {
   className?: string;
