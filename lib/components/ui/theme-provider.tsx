@@ -99,6 +99,8 @@ const translations = {
   refetch: 'Refetch',
   attachFile: 'Attach file',
   errorOccurred: 'Error occurred',
+  noMediaFiles: 'No media files',
+  networkErrorDescription: 'Network error description',
 };
 
 export type Translations = keyof typeof translations;

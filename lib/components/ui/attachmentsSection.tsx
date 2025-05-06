@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 import { cn } from '@/utils';
 import { AttachmentItem, Attachments } from '../../lib/attachments';
 import { filesToAttachments } from '../../lib/file';
