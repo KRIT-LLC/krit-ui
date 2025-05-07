@@ -183,7 +183,7 @@ function MultiSelect({
                     style={style}
                     key={option.value}
                     className={cn(
-                      'relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground rounded-none py-2 px-3 aria-selected:bg-background-theme-fade aria-selected:text-foreground',
+                      'relative flex cursor-default select-none items-center text-sm outline-none rounded-none py-2 px-3 aria-selected:bg-background-theme-fade aria-selected:text-foreground',
                       value.includes(option.value) && 'bg-background-theme-fade text-foreground',
                     )}
                     onSelect={() => handleSelect(option)}
