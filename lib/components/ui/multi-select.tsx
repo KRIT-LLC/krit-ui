@@ -111,7 +111,7 @@ function MultiSelect({
   const getListHeight = React.useCallback(() => {
     const totalHeight = filteredOptions.length * ITEM_SIZE;
     return Math.min(totalHeight, MAX_HEIGHT);
-  }, []);
+  }, [filteredOptions]);
 
   return (
     <Popover open={open} onOpenChange={onOpenChange} modal={true} {...props}>
