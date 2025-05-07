@@ -39,4 +39,4 @@ export const attachmentsSchema = z.array(
 
 export type Attachments = z.infer<typeof attachmentsSchema>;
 
-export type ContentType = 'video' | 'image';
+export type ContentType = 'video' | 'audio' | 'image' | 'pdf';

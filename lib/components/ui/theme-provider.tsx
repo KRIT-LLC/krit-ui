@@ -101,6 +101,8 @@ const translations = {
   errorOccurred: 'Error occurred',
   noMediaFiles: 'No media files',
   networkErrorDescription: 'Network error description',
+  confirmDeleteMedia: 'Are you sure you want to delete the file?',
+  delete: 'Delete',
 };
 
 export type Translations = keyof typeof translations;
@@ -163,7 +165,7 @@ export function ThemeProvider({
     Object.entries(colors?.[theme] || {}).forEach(([key, value]) => {
       document.documentElement.style.setProperty(key, value);
     });
-  }
+  };
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -181,7 +183,6 @@ export function ThemeProvider({
       root.classList.add(theme);
       updateThemeVariables(theme);
     }
-
   }, [theme, colors]);
 
   const value: ThemeProviderState = {
