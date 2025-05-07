@@ -9,7 +9,7 @@ export interface TextAreaProps extends React.InputHTMLAttributes<HTMLTextAreaEle
 
 const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
   ({ className, error, rows, onEnter, ...props }, ref) => {
-    const [valueLength, setValueLength] = React.useState(0);
+    const [valueLength, setValueLength] = React.useState(props.value?.toString().length ?? 0);
     const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       setValueLength(e.target.value.length);
       props.onChange?.(e);
