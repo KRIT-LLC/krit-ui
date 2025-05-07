@@ -41,6 +41,9 @@ export interface MultiSelectProps {
   onRemoveClick?: () => void;
 }
 
+const MAX_HEIGHT = 340;
+const ITEM_SIZE = 36;
+
 function MultiSelect({
   className,
   triggerClassName,
@@ -79,7 +82,7 @@ function MultiSelect({
     const isSelectedOverflow = maxSelected && newValues.length >= maxSelected;
     if (isSelectedOverflow) newValues = newValues.reverse().slice(0, maxSelected);
     onChange?.(newValues);
-    onOpenChange?.(maxSelected === 1 ? false : true);
+    onOpenChange?.(maxSelected !== 1);
   };
 
   // modal={true} because of broken scroll in CommandList: https://github.com/shadcn-ui/ui/issues/542#issuecomment-1587142689
@@ -104,6 +107,11 @@ function MultiSelect({
     }
     return options;
   }, [options, search, shouldFilter]);
+
+  const getListHeight = React.useCallback(() => {
+    const totalHeight = filteredOptions.length * ITEM_SIZE;
+    return Math.min(totalHeight, MAX_HEIGHT);
+  }, []);
 
   return (
     <Popover open={open} onOpenChange={onOpenChange} modal={true} {...props}>
@@ -163,7 +171,7 @@ function MultiSelect({
           {!isLoading && !isError && <CommandEmpty>{t('notFound')}</CommandEmpty>}
           <CommandList className='py-1 px-0 overflow-hidden max-h-[340px]'>
             <FixedSizeList
-              height={340}
+              height={getListHeight()}
               itemCount={filteredOptions.length}
               itemSize={36}
               width={'100%'}
@@ -175,7 +183,7 @@ function MultiSelect({
                     style={style}
                     key={option.value}
                     className={cn(
-                      'relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground rounded-none py-2 px-3 aria-selected:bg-background-theme-fade aria-selected:text-foreground',
+                      'relative flex cursor-default select-none items-center text-sm outline-none rounded-none py-2 px-3 aria-selected:bg-background-theme-fade aria-selected:text-foreground',
                       value.includes(option.value) && 'bg-background-theme-fade text-foreground',
                     )}
                     onSelect={() => handleSelect(option)}
