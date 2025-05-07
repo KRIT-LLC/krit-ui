@@ -119,3 +119,8 @@ export { default as WatchLaterIcon } from '@/assets/watch_later.svg?react';
 export { default as WhatshotIcon } from '@/assets/whatshot.svg?react';
 export { default as WorkspacesIcon } from '@/assets/workspaces.svg?react';
 export { default as WriteIcon } from '@/assets/write.svg?react';
+export { default as RotateLeftIcon } from '@/assets/rotate_left.svg?react';
+export { default as RotateRightIcon } from '@/assets/rotate_right.svg?react';
+export { default as FileIcon } from '@/assets/file_icon.svg?react';
+export { default as VideoFileIcon } from '@/assets/video_file.svg?react';
+export { default as AudioFileIcon } from '@/assets/audio_file.svg?react';
