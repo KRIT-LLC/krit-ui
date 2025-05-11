@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const attachmentItemSchema = z
   .object({
-    id: z.number(),
+    id: z.number().or(z.string()),
     contentType: z.string(),
     url: z.string(),
     file: z.instanceof(File).optional(),
@@ -13,7 +13,7 @@ export const attachmentItemSchema = z
   })
   .or(
     z.object({
-      id: z.number(),
+      id: z.number().or(z.string()),
       contentType: z.string(),
       url: z.string().optional(),
       file: z.instanceof(File),
@@ -39,4 +39,4 @@ export const attachmentsSchema = z.array(
 
 export type Attachments = z.infer<typeof attachmentsSchema>;
 
-export type ContentType = 'video' | 'image';
+export type ContentType = 'video' | 'audio' | 'image' | 'pdf';

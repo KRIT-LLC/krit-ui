@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 import { cn } from '@/utils';
 import BillEmpty from '@/assets/bill_empty.svg?react';
 import NetworkError from '@/assets/network_error.svg?react';

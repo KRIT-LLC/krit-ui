@@ -50,6 +50,9 @@ export interface MultiSelectProps {
   onRemoveClick?: () => void;
 }
 
+const MAX_HEIGHT = 340;
+const ITEM_SIZE = 36;
+
 function MultiSelect({
   className,
   triggerClassName,
@@ -148,6 +151,11 @@ function MultiSelect({
     return displayOptions;
   }, [displayOptions, search, shouldFilter]);
 
+  const getListHeight = React.useCallback(() => {
+    const totalHeight = filteredOptions.length * ITEM_SIZE;
+    return Math.min(totalHeight, MAX_HEIGHT);
+  }, [filteredOptions]);
+
   return (
     <Popover open={open} onOpenChange={onOpenChange} modal={true} {...props}>
       <PopoverTrigger asChild>
@@ -206,7 +214,7 @@ function MultiSelect({
           {!isLoading && !isError && <CommandEmpty>{t('notFound')}</CommandEmpty>}
           <CommandList className='py-1 px-0 overflow-hidden max-h-[340px]'>
             <FixedSizeList
-              height={340}
+              height={getListHeight()}
               itemCount={filteredOptions.length}
               itemSize={36}
               width={'100%'}
@@ -223,7 +231,7 @@ function MultiSelect({
                     style={style}
                     key={typeof option.value === 'symbol' ? String(option.value) : option.value}
                     className={cn(
-                      'relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground rounded-none py-2 px-3 aria-selected:bg-background-theme-fade aria-selected:text-foreground',
+                      'relative flex cursor-default select-none items-center text-sm outline-none rounded-none py-2 px-3 aria-selected:bg-background-theme-fade aria-selected:text-foreground',
                       isChecked && 'bg-background-theme-fade text-foreground',
                     )}
                     onSelect={() => handleSelect(option)}

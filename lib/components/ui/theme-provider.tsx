@@ -100,6 +100,10 @@ const translations = {
   refetch: 'Refetch',
   attachFile: 'Attach file',
   errorOccurred: 'Error occurred',
+  noMediaFiles: 'No media files',
+  networkErrorDescription: 'Network error description',
+  confirmDeleteMedia: 'Are you sure you want to delete the file?',
+  delete: 'Delete',
 };
 
 export type Translations = keyof typeof translations;

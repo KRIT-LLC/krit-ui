@@ -33,10 +33,11 @@ export const useNotify = (text?: string) => {
   const { t } = useTranslation();
   const { toast } = useToast();
 
-  const notifyError = (text?: string) => {
+  const notifyError = (text?: string, prefix?: string) => {
+    const defaultPrefix = `${t('errorOccurred')}: `;
     toast({
       variant: 'destructive',
-      title: text ? `${t('errorOccurred')}: ${text}` : t('errorOccurred'),
+      title: text ? `${prefix ?? defaultPrefix}${text}` : t('errorOccurred'),
     });
   };
 
@@ -91,7 +92,7 @@ export const useNotify = (text?: string) => {
           (!!userMessage && !messageFromServer);
         if (hasMessageMatch) notifications.push(userMessage);
       }
-      if (notifications.length) notifications.forEach(notifyError);
+      if (notifications.length) notifications.forEach(value => notifyError(value));
       else notifyError(errorText);
     };
   };
