@@ -91,6 +91,7 @@ const translations = {
   cancellation: 'Cancel',
   displayBy: 'Display by',
   selected: 'Selected',
+  all: 'All',
   of: 'of',
   selectDate: 'Select date',
   search: 'Search...',
@@ -161,7 +162,7 @@ export function ThemeProvider({
     Object.entries(colors?.[theme] || {}).forEach(([key, value]) => {
       document.documentElement.style.setProperty(key, value);
     });
-  }
+  };
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -179,7 +180,6 @@ export function ThemeProvider({
       root.classList.add(theme);
       updateThemeVariables(theme);
     }
-
   }, [theme, colors]);
 
   const value: ThemeProviderState = {
