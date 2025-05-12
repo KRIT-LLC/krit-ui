@@ -11,9 +11,17 @@ import { NetworkErrorMessage } from './network-error-message';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 import { Separator } from './separator';
 
+const ALL_VALUE = Symbol('all');
+
 export type MultiSelectOptionType = {
   label: string;
   value: string;
+  hidden?: boolean;
+};
+
+type InternalMultiSelectOptionType = {
+  label: string;
+  value: string | typeof ALL_VALUE;
   hidden?: boolean;
 };
 
@@ -32,6 +40,7 @@ export interface MultiSelectProps {
   isError?: boolean;
   disabled?: boolean;
   searchPlaceholder?: string;
+  showAllOption?: boolean;
   renderOption?: (option: MultiSelectOptionType) => React.ReactNode;
   onRefetch?: () => void;
   onOpenChange?: (open: boolean) => void;
@@ -59,6 +68,7 @@ function MultiSelect({
   isError,
   disabled,
   searchPlaceholder,
+  showAllOption = false,
   renderOption,
   onRefetch,
   onOpenChange,
@@ -75,38 +85,71 @@ function MultiSelect({
     onSearch?.(search);
   }, [search]);
 
-  const handleSelect = (option: MultiSelectOptionType) => {
+  const filteredActualOptions = React.useMemo(
+    () => options.filter(option => !option.hidden),
+    [options],
+  );
+
+  const allOption: InternalMultiSelectOptionType = { label: t('all'), value: ALL_VALUE };
+
+  const isAllSelected =
+    filteredActualOptions.length > 0 &&
+    filteredActualOptions.every(option => value.includes(option.value));
+
+  const internalOptions: InternalMultiSelectOptionType[] = React.useMemo(
+    () => options.map(opt => ({ ...opt })),
+    [options],
+  );
+
+  const handleSelect = (option: InternalMultiSelectOptionType | MultiSelectOptionType) => {
+    if (!onChange) return;
+
+    if (option.value === ALL_VALUE) {
+      if (isAllSelected) {
+        onChange([]);
+      } else {
+        const allValues = filteredActualOptions.map(opt => opt.value);
+        onChange(allValues);
+      }
+      onOpenChange?.(maxSelected !== 1);
+      return;
+    }
+
     let newValues = value.includes(option.value)
       ? value.filter(item => item !== option.value)
       : [...value, option.value];
+
     const isSelectedOverflow = maxSelected && newValues.length >= maxSelected;
     if (isSelectedOverflow) newValues = newValues.reverse().slice(0, maxSelected);
-    onChange?.(newValues);
+
+    onChange(newValues);
     onOpenChange?.(maxSelected !== 1);
   };
 
-  // modal={true} because of broken scroll in CommandList: https://github.com/shadcn-ui/ui/issues/542#issuecomment-1587142689
+  const valueText = React.useMemo(() => {
+    if (isAllSelected && showAllOption) {
+      return t('all');
+    }
 
-  const valueText = value
-    .map(item =>
-      (
-        options.find(({ value }) => String(value) === String(item))?.label ||
-        String(item) ||
-        ''
-      ).trim(),
-    )
-    .join(', ');
+    return value
+      .map(item => (options.find(({ value: optValue }) => optValue === item)?.label || item).trim())
+      .join(', ');
+  }, [value, options, isAllSelected, showAllOption, t]);
+
+  const displayOptions = React.useMemo(() => {
+    return showAllOption ? [allOption, ...internalOptions] : internalOptions;
+  }, [showAllOption, allOption, internalOptions]);
 
   const filteredOptions = React.useMemo(() => {
     if (shouldFilter) {
-      return options
+      return displayOptions
         .filter(({ hidden }) => !hidden)
         .filter(option =>
           shouldFilter ? option.label.toLowerCase().includes(search.toLowerCase()) : true,
         );
     }
-    return options;
-  }, [options, search, shouldFilter]);
+    return displayOptions;
+  }, [displayOptions, search, shouldFilter]);
 
   const getListHeight = React.useCallback(() => {
     const totalHeight = filteredOptions.length * ITEM_SIZE;
@@ -178,21 +221,30 @@ function MultiSelect({
             >
               {({ index, style }) => {
                 const option = filteredOptions[index];
+                const isChecked =
+                  option.value === ALL_VALUE
+                    ? isAllSelected
+                    : value.includes(option.value as string);
+
                 return (
                   <CommandItem
                     style={style}
-                    key={option.value}
+                    key={typeof option.value === 'symbol' ? String(option.value) : option.value}
                     className={cn(
                       'relative flex cursor-default select-none items-center text-sm outline-none rounded-none py-2 px-3 aria-selected:bg-background-theme-fade aria-selected:text-foreground',
-                      value.includes(option.value) && 'bg-background-theme-fade text-foreground',
+                      isChecked && 'bg-background-theme-fade text-foreground',
                     )}
                     onSelect={() => handleSelect(option)}
                   >
-                    {renderOption ? (
-                      <React.Fragment key={option.value}>{renderOption(option)}</React.Fragment>
+                    {renderOption && option.value !== ALL_VALUE ? (
+                      <React.Fragment
+                        key={typeof option.value === 'symbol' ? String(option.value) : option.value}
+                      >
+                        {renderOption(option as MultiSelectOptionType)}
+                      </React.Fragment>
                     ) : (
                       <>
-                        <Checkbox className='mr-2' checked={value.includes(option.value)} />
+                        <Checkbox className='mr-2' checked={isChecked} />
                         <span title={option.label} className='truncate'>
                           {option.label}
                         </span>

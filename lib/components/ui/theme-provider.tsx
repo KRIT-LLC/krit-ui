@@ -91,6 +91,7 @@ const translations = {
   cancellation: 'Cancel',
   displayBy: 'Display by',
   selected: 'Selected',
+  all: 'All',
   of: 'of',
   selectDate: 'Select date',
   search: 'Search...',
