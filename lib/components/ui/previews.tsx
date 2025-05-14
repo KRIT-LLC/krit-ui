@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { AttachmentItem, ContentType } from '@/lib/attachments';
+import { acceptMap, AttachmentItem, ContentType, defaultAccepts } from '@/lib/attachments';
 import { compressFile } from '@/lib/file';
 import { Loader2 } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -27,13 +27,6 @@ interface PreviewsProps {
   onRemove?: (index: number) => void;
 }
 
-const acceptMap = new Map<string, string>([
-  ['video', 'video/mp4'],
-  ['image', 'image/png, image/jpeg'],
-  ['audio', 'audio/mp3'],
-  ['pdf', 'application/pdf'],
-]);
-
 const MAX_TOTAL_SIZE_MB = 40;
 const MAX_VIDEO_SIZE_MB = 20;
 const MAX_IMAGE_SIZE_MB = 1;
@@ -43,7 +36,7 @@ export const Previews = (props: PreviewsProps) => {
     className,
     placeholder,
     data = [],
-    accepts = ['video', 'image', 'audio', 'pdf'],
+    accepts = defaultAccepts,
     multiple = true,
     max = 10,
     previewSize = 130,
