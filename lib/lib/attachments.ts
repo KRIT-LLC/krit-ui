@@ -40,3 +40,12 @@ export const attachmentsSchema = z.array(
 export type Attachments = z.infer<typeof attachmentsSchema>;
 
 export type ContentType = 'video' | 'audio' | 'image' | 'pdf';
+
+export const defaultAccepts: ContentType[] = ['video', 'audio', 'image', 'pdf'];
+
+export const acceptMap = new Map<string, string>([
+  ['video', 'video/mp4'],
+  ['image', 'image/png, image/jpeg'],
+  ['audio', 'audio/mp3'],
+  ['pdf', 'application/pdf'],
+]);

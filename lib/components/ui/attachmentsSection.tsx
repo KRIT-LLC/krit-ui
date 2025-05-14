@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { cn } from '@/utils';
-import { AttachmentItem, Attachments } from '../../lib/attachments';
+import { AttachmentItem, Attachments, ContentType } from '../../lib/attachments';
 import { filesToAttachments } from '../../lib/file';
 import { NoDataBanner } from './banner';
 import { Previews } from './previews';
@@ -15,6 +15,7 @@ export interface AttachmentsSectionProps {
   addDescription?: string;
   visibleSections?: (string | number)[];
   orientation?: 'vertical' | 'horizontal';
+  accepts?: ContentType[];
   onAdd?: (attachments: AttachmentItem[], tabIndex: number) => Promise<void> | void;
   onRemove?: (index: number, tabIndex: number) => Promise<void> | void;
 }
@@ -24,6 +25,7 @@ export const AttachmentsSection = ({
   tabs = [],
   orientation,
   visibleSections,
+  accepts,
   onAdd,
   onRemove,
 }: AttachmentsSectionProps) => {
@@ -81,6 +83,7 @@ export const AttachmentsSection = ({
               <Previews
                 data={item.items}
                 max={item?.maxFiles}
+                accepts={accepts}
                 onRemove={onRemove ? index => onRemove?.(index, selected) : undefined}
                 onAdd={onAdd && item.canAdd ? files => add(files, getIndex(item.label)) : undefined}
               />
