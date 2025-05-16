@@ -16,6 +16,14 @@ export interface AttachmentsSectionProps {
   visibleSections?: (string | number)[];
   orientation?: 'vertical' | 'horizontal';
   accepts?: ContentType[];
+  maxSizes?: {
+    image?: number;
+    video?: number;
+    total?: number;
+    audio?: number;
+    pdf?: number;
+  };
+  withCompress?: boolean;
   onAdd?: (attachments: AttachmentItem[], tabIndex: number) => Promise<void> | void;
   onRemove?: (index: number, tabIndex: number) => Promise<void> | void;
 }
@@ -26,6 +34,8 @@ export const AttachmentsSection = ({
   orientation,
   visibleSections,
   accepts,
+  maxSizes,
+  withCompress,
   onAdd,
   onRemove,
 }: AttachmentsSectionProps) => {
@@ -84,6 +94,8 @@ export const AttachmentsSection = ({
                 data={item.items}
                 max={item?.maxFiles}
                 accepts={accepts}
+                maxSizes={maxSizes}
+                withCompress={withCompress}
                 onRemove={onRemove ? index => onRemove?.(index, selected) : undefined}
                 onAdd={onAdd && item.canAdd ? files => add(files, getIndex(item.label)) : undefined}
               />
