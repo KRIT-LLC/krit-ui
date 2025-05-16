@@ -1,7 +1,18 @@
 import { useRef, useState } from 'react';
-import { acceptMap, AttachmentItem, ContentType, defaultAccepts } from '@/lib/attachments';
+import {
+  acceptMap,
+  AttachmentItem,
+  ContentType,
+  defaultAccepts,
+  MAX_AUDIO_SIZE_MB,
+  MAX_IMAGE_SIZE_MB,
+  MAX_PDF_SIZE_MB,
+  MAX_TOTAL_SIZE_MB,
+  MAX_VIDEO_SIZE_MB,
+} from '@/lib/attachments';
 import { compressFile } from '@/lib/file';
 import { Loader2 } from 'lucide-react';
+import { useNotify } from '@/hooks/useNotify';
 import { useTranslation } from '@/hooks/useTranslation';
 import { cn } from '@/utils';
 import { AudioFileIcon, FileIcon, VideoFileIcon } from '@/assets';
@@ -11,7 +22,7 @@ import { useConfirm } from '../../hooks/useConfirm';
 import { Input } from './input';
 import { PreviewFull } from './previewFull';
 
-interface PreviewsProps {
+export interface PreviewsProps {
   className?: string;
   placeholder?: string;
   data?: AttachmentItem[];
@@ -21,15 +32,19 @@ interface PreviewsProps {
   previewSize?: number;
   gap?: number;
   title?: string;
+  maxSizes?: {
+    image?: number;
+    video?: number;
+    total?: number;
+    audio?: number;
+    pdf?: number;
+  };
+  withCompress?: boolean;
   handleFileLimit?: (filetype: ContentType) => void;
   handleAllFilesLimit?: () => void;
   onAdd?: (files: File[]) => void;
   onRemove?: (index: number) => void;
 }
-
-const MAX_TOTAL_SIZE_MB = 40;
-const MAX_VIDEO_SIZE_MB = 20;
-const MAX_IMAGE_SIZE_MB = 1;
 
 export const Previews = (props: PreviewsProps) => {
   const {
@@ -42,12 +57,19 @@ export const Previews = (props: PreviewsProps) => {
     previewSize = 130,
     gap = 2,
     title,
-    handleFileLimit,
-    handleAllFilesLimit,
+    maxSizes = {
+      image: MAX_IMAGE_SIZE_MB,
+      video: MAX_VIDEO_SIZE_MB,
+      total: MAX_TOTAL_SIZE_MB,
+      audio: MAX_AUDIO_SIZE_MB,
+      pdf: MAX_PDF_SIZE_MB,
+    },
+    withCompress = true,
     onAdd,
     onRemove,
   } = props;
   const { confirm } = useConfirm();
+  const { notifyError } = useNotify();
   const inputRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation();
   const [currentPreview, setCurrentPreview] = useState<AttachmentItem>(data[0]);
@@ -68,19 +90,38 @@ export const Previews = (props: PreviewsProps) => {
     return contentType as ContentType;
   };
 
-  const mbToBytes = (mb: number) => mb * 1024 * 1024;
+  const mbToBytes = (mb: number = 0) => mb * 1024 * 1024;
   const isImage = (file: File) => file.type.includes('image');
+  const isAudio = (file: File) => file.type.includes('audio');
+  const isPdf = (file: File) => file.type.includes('pdf');
 
   const [processing, setProcessing] = useState(false);
 
   const handleInputChange = async (files: FileList) => {
     const isSizeOk = (file: File) => {
-      if (isImage(file)) return file.size < mbToBytes(MAX_IMAGE_SIZE_MB);
-      else return file.size < mbToBytes(MAX_VIDEO_SIZE_MB);
+      if (isImage(file)) return file.size < mbToBytes(maxSizes.image);
+      else if (isAudio(file)) return file.size < mbToBytes(maxSizes.audio);
+      else if (isPdf(file)) return file.size < mbToBytes(maxSizes.pdf);
+      else return file.size < mbToBytes(maxSizes.video);
+    };
+
+    const getMaxSizeForFileType = (
+      file: File,
+      maxSizes: {
+        image?: number;
+        audio?: number;
+        pdf?: number;
+        video?: number;
+      },
+    ) => {
+      if (isImage(file)) return maxSizes.image;
+      if (isAudio(file)) return maxSizes.audio;
+      if (isPdf(file)) return maxSizes.pdf;
+      return maxSizes.video;
     };
 
     const calculateCompressQuality = (file: File) => {
-      const maxSizeBytes = mbToBytes(isImage(file) ? MAX_IMAGE_SIZE_MB : MAX_VIDEO_SIZE_MB);
+      const maxSizeBytes = mbToBytes(getMaxSizeForFileType(file, maxSizes));
       const quality = Number((maxSizeBytes / file.size).toFixed(2));
       if (quality >= 1) return 1;
       return quality;
@@ -89,25 +130,26 @@ export const Previews = (props: PreviewsProps) => {
     const filesArray = Array.from(files);
     if (filesArray.length) setProcessing(true);
     for (const file of filesArray) {
-      const processedFile = !isSizeOk(file)
-        ? await compressFile(file, { quality: calculateCompressQuality(file) })
-        : file;
+      const processedFile =
+        !isSizeOk(file) && withCompress
+          ? await compressFile(file, { quality: calculateCompressQuality(file) })
+          : file;
       filesArray[filesArray.indexOf(file)] = processedFile;
       if (!isSizeOk(processedFile)) {
-        handleFileLimit?.(processedFile.type.split('/')[0] as ContentType);
-        // TODO: вернуть notifyError после добавления count в кастомный translations
-        /* if (isImage(file))
-          notifyError(`${t('imageSizeLimitMB', { count: MAX_IMAGE_SIZE_MB })} (${file.name})`);
-        else notifyError(`${t('videoSizeLimitMB', { count: MAX_VIDEO_SIZE_MB })} (${file.name})`); */
+        if (isImage(file))
+          notifyError(`${t('imageSizeLimitMB')} ${maxSizes.image}(MB) (${file.name})`);
+        else if (isAudio(file))
+          notifyError(`${t('audioSizeLimitMB')} ${maxSizes.audio}(MB) (${file.name})`);
+        else if (isPdf(file))
+          notifyError(`${t('pdfSizeLimitMB')} ${maxSizes.pdf}(MB) (${file.name})`);
+        else notifyError(`${t('videoSizeLimitMB')} ${maxSizes.video}(MB) (${file.name})`);
       }
     }
     const currentFiles = data.filter(item => !!item.file).map(item => item.file);
     const totalSizeMb =
       [...currentFiles, ...filesArray].reduce((acc, file) => acc + file!.size, 0) / 1024 / 1024;
-    if (totalSizeMb > MAX_TOTAL_SIZE_MB) {
-      handleAllFilesLimit?.();
-      // TODO: вернуть notifyError после добавления count в кастомный translations
-      /*  notifyError(t('maxSizeOfFileMB', { count: MAX_TOTAL_SIZE_MB })); */
+    if (!maxSizes?.total || totalSizeMb > maxSizes.total) {
+      notifyError(`${t('maxSizeOfFilesMB')} ${maxSizes.total}(MB)`);
       return setProcessing(false);
     }
     const filesWithOkSize = filesArray.filter(isSizeOk);

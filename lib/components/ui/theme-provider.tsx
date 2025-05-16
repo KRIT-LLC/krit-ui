@@ -104,6 +104,11 @@ const translations = {
   networkErrorDescription: 'Network error description',
   confirmDeleteMedia: 'Are you sure you want to delete the file?',
   delete: 'Delete',
+  imageSizeLimitMB: 'Image size limit',
+  audioSizeLimitMB: 'Audio size limit',
+  pdfSizeLimitMB: 'PDF size limit',
+  videoSizeLimitMB: 'Video size limit',
+  maxSizeOfFilesMB: 'Max size of files',
 };
 
 export type Translations = keyof typeof translations;

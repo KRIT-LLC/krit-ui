@@ -49,3 +49,9 @@ export const acceptMap = new Map<string, string>([
   ['audio', 'audio/mp3'],
   ['pdf', 'application/pdf'],
 ]);
+
+export const MAX_TOTAL_SIZE_MB = 40;
+export const MAX_VIDEO_SIZE_MB = 20;
+export const MAX_AUDIO_SIZE_MB = 10;
+export const MAX_PDF_SIZE_MB = 1;
+export const MAX_IMAGE_SIZE_MB = 1;
