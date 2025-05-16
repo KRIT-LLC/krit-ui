@@ -122,10 +122,10 @@
 ![event_note.svg](event_note.svg)
 #### ExpandMoreIcon
 ![expand_more.svg](expand_more.svg)
+#### FileIcon
+![file.svg](file.svg)
 #### FileDownloadIcon
 ![file_download.svg](file_download.svg)
-#### FileIconIcon
-![file_icon.svg](file_icon.svg)
 #### FirstPageIcon
 ![first_page.svg](first_page.svg)
 #### FormatAlignLeftIcon
