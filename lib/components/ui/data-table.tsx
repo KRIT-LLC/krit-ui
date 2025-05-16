@@ -107,7 +107,7 @@ export function DataTable<TData, TValue>({
   return (
     <div
       className={cn(
-        'relative flex flex-1 flex-col h-full overflow-auto',
+        'relative flex flex-1 flex-col h-full',
         className,
       )}
     >
