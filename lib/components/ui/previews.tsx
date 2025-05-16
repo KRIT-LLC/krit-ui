@@ -105,16 +105,23 @@ export const Previews = (props: PreviewsProps) => {
       else return file.size < mbToBytes(maxSizes.video);
     };
 
+    const getMaxSizeForFileType = (
+      file: File,
+      maxSizes: {
+        image?: number;
+        audio?: number;
+        pdf?: number;
+        video?: number;
+      },
+    ) => {
+      if (isImage(file)) return maxSizes.image;
+      if (isAudio(file)) return maxSizes.audio;
+      if (isPdf(file)) return maxSizes.pdf;
+      return maxSizes.video;
+    };
+
     const calculateCompressQuality = (file: File) => {
-      const maxSizeBytes = mbToBytes(
-        isImage(file)
-          ? maxSizes.image
-          : isAudio(file)
-            ? maxSizes.audio
-            : isPdf(file)
-              ? maxSizes.pdf
-              : maxSizes.video,
-      );
+      const maxSizeBytes = mbToBytes(getMaxSizeForFileType(file, maxSizes));
       const quality = Number((maxSizeBytes / file.size).toFixed(2));
       if (quality >= 1) return 1;
       return quality;
