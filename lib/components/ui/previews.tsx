@@ -218,7 +218,7 @@ export const Previews = (props: PreviewsProps) => {
                     onClick={() => setCurrentPreview(item)}
                   >
                     <VideoFileIcon />
-                    <div className='text-sm mt-1 text-foreground-secondary w-full truncate  p-0.5'>
+                    <div className='text-sm mt-1 text-foreground-secondary w-full truncate text-center p-0.5'>
                       {item.fileName ||
                         item.url?.split('/').pop() +
                           `.${item.contentType?.split('/').pop() || 'mp4'}`}
@@ -234,7 +234,7 @@ export const Previews = (props: PreviewsProps) => {
                     onClick={() => setCurrentPreview(item)}
                   >
                     <AudioFileIcon />
-                    <div className='text-sm mt-1 text-foreground-secondary w-full truncate  p-0.5'>
+                    <div className='text-sm mt-1 text-foreground-secondary w-full truncate text-center p-0.5'>
                       {item.fileName ||
                         item.url?.split('/').pop() +
                           `.${item.contentType?.split('/').pop() || 'mp3'}`}
@@ -252,7 +252,7 @@ export const Previews = (props: PreviewsProps) => {
                     )}
                   >
                     <FileIcon />
-                    <div className='text-sm mt-1 text-foreground-secondary w-full truncate p-0.5'>
+                    <div className='text-sm mt-1 text-foreground-secondary w-full truncate text-center p-0.5'>
                       {item.fileName ||
                         item.url?.split('/').pop() +
                           `.${item.contentType?.split('/').pop() || 'pdf'}`}
