@@ -40,6 +40,8 @@
 ![assignment_turned_in.svg](assignment_turned_in.svg)
 #### AttachFileIcon
 ![attach_file.svg](attach_file.svg)
+#### AudioFileIcon
+![audio_file.svg](audio_file.svg)
 #### BgDarkIcon
 ![bg_dark.svg](bg_dark.svg)
 #### BgLightIcon
@@ -60,12 +62,12 @@
 ![category.svg](category.svg)
 #### CheckIcon
 ![check.svg](check.svg)
-#### ChecksOutlineIcon
-![checks_outline.svg](checks_outline.svg)
 #### CheckCircleOutlineIcon
 ![check_circle_outline.svg](check_circle_outline.svg)
 #### CheckCloseFolderIcon
 ![check_close_folder.svg](check_close_folder.svg)
+#### ChecksOutlineIcon
+![checks_outline.svg](checks_outline.svg)
 #### ChevronDownIcon
 ![chevron_down.svg](chevron_down.svg)
 #### ChevronLeftIcon
@@ -120,16 +122,20 @@
 ![event_note.svg](event_note.svg)
 #### ExpandMoreIcon
 ![expand_more.svg](expand_more.svg)
+#### FileDownloadIcon
+![file_download.svg](file_download.svg)
+#### FileIconIcon
+![file_icon.svg](file_icon.svg)
 #### FirstPageIcon
 ![first_page.svg](first_page.svg)
 #### FormatAlignLeftIcon
 ![format_align_left.svg](format_align_left.svg)
 #### GearsAlarmIcon
 ![gears_alarm.svg](gears_alarm.svg)
-#### HandymanIcon
-![handyman.svg](handyman.svg)
 #### HandPaperIcon
 ![hand_paper.svg](hand_paper.svg)
+#### HandymanIcon
+![handyman.svg](handyman.svg)
 #### HardwareIcon
 ![hardware.svg](hardware.svg)
 #### HideOutlineIcon
@@ -162,10 +168,10 @@
 ![more_vert.svg](more_vert.svg)
 #### NetworkErrorIcon
 ![network_error.svg](network_error.svg)
-#### NorthEastIcon
-![north_east.svg](north_east.svg)
 #### NoAssignmentIcon
 ![no_assignment.svg](no_assignment.svg)
+#### NorthEastIcon
+![north_east.svg](north_east.svg)
 #### OutputIcon
 ![output.svg](output.svg)
 #### PenOutlineIcon
@@ -178,14 +184,18 @@
 ![priority.svg](priority.svg)
 #### PublishIcon
 ![publish.svg](publish.svg)
-#### RectanglesOutlineIcon
-![rectangles_outline.svg](rectangles_outline.svg)
 #### RectangleSplit4UnevenOutlineIcon
 ![rectangle_split_4_uneven_outline.svg](rectangle_split_4_uneven_outline.svg)
+#### RectanglesOutlineIcon
+![rectangles_outline.svg](rectangles_outline.svg)
 #### RestartAltIcon
 ![restart_alt.svg](restart_alt.svg)
 #### RoomIcon
 ![room.svg](room.svg)
+#### RotateLeftIcon
+![rotate_left.svg](rotate_left.svg)
+#### RotateRightIcon
+![rotate_right.svg](rotate_right.svg)
 #### RoundStrokedIcon
 ![round_stroked.svg](round_stroked.svg)
 #### SaveIcon
@@ -222,6 +232,8 @@
 ![unlock.svg](unlock.svg)
 #### UserIcon
 ![user.svg](user.svg)
+#### VideoFileIcon
+![video_file.svg](video_file.svg)
 #### ViewListIcon
 ![view_list.svg](view_list.svg)
 #### ViewOutlineIcon
