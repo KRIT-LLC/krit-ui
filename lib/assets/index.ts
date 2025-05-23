@@ -105,6 +105,7 @@ export { default as SearchEmptyIcon } from '@/assets/search_empty.svg?react';
 export { default as SettingsIcon } from '@/assets/settings.svg?react';
 export { default as ShoppingBasketIcon } from '@/assets/shopping_basket.svg?react';
 
+export { default as SmsFailedIcon } from '@/assets/sms_failed.svg?react';
 export { default as Square4OutlineIcon } from '@/assets/square_4_outline.svg?react';
 export { default as StarsIcon } from '@/assets/stars.svg?react';
 export { default as StraightenIcon } from '@/assets/straighten.svg?react';
