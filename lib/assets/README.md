@@ -212,6 +212,8 @@
 ![shopping_basket.svg](shopping_basket.svg)
 #### SignInBackgroundIcon
 ![sign_in_background.png](sign_in_background.png)
+#### SmsFailedIcon
+![sms_failed.svg](sms_failed.svg)
 #### Square4OutlineIcon
 ![square_4_outline.svg](square_4_outline.svg)
 #### StarsIcon
