@@ -15,9 +15,8 @@ import { Loader2 } from 'lucide-react';
 import { useNotify } from '@/hooks/useNotify';
 import { useTranslation } from '@/hooks/useTranslation';
 import { cn } from '@/utils';
-import { AudioFileIcon, FileIcon, VideoFileIcon } from '@/assets';
+import { AudioFileIcon, CloseIcon, FileIcon, VideoFileIcon } from '@/assets';
 import AttachFile from '@/assets/attach_file.svg?react';
-import CancelCircleOutline from '@/assets/cancel_circle_outline.svg?react';
 import { useConfirm } from '../../hooks/useConfirm';
 import { Input } from './input';
 import { PreviewFull } from './previewFull';
@@ -305,7 +304,7 @@ export const Previews = (props: PreviewsProps) => {
             </PreviewFull>
             {(onRemove || item.onRemove) && (
               <div onClick={() => onRemoveAttachment(item, i)}>
-                <CancelCircleOutline className='absolute -top-[3px] -right-[3px] rounded-full bg-background fill-background text-destructive-foreground cursor-pointer' />
+                <CloseIcon className='absolute top-[2px] right-[2px] rounded-full bg-background text-destructive-foreground cursor-pointer' />
               </div>
             )}
           </div>
