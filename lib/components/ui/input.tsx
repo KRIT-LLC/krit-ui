@@ -39,7 +39,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           placeholder={asSearch ? props.placeholder || 'Search' : props.placeholder}
           onKeyDown={e => {
-            if (e.key === 'Enter') onEnter?.((e.target as HTMLInputElement).value);
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              onEnter?.((e.target as HTMLInputElement).value);
+            }
           }}
           value={value}
           {...props}
