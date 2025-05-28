@@ -55,6 +55,7 @@ export { default as DoneIcon } from '@/assets/done.svg?react';
 export { default as DoneOutlineIcon } from '@/assets/done_outline.svg?react';
 export { default as DoorArrowRightOutlineIcon } from '@/assets/door_arrow_right_outline.svg?react';
 export { default as DownloadOutlineIcon } from '@/assets/download_outline.svg?react';
+export { default as DragIndicatorIcon } from '@/assets/drag_indicator.svg?react';
 export { default as EditIcon } from '@/assets/edit.svg?react';
 export { default as EditOutlineIcon } from '@/assets/edit_outline.svg?react';
 export { default as ErrorOutlineIcon } from '@/assets/error_outline.svg?react';
