@@ -112,6 +112,8 @@
 ![door_arrow_right_outline.svg](door_arrow_right_outline.svg)
 #### DownloadOutlineIcon
 ![download_outline.svg](download_outline.svg)
+#### DragIndicatorIcon
+![drag_indicator.svg](drag_indicator.svg)
 #### EditIcon
 ![edit.svg](edit.svg)
 #### EditOutlineIcon
