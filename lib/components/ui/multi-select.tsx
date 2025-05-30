@@ -42,6 +42,7 @@ export interface MultiSelectProps {
   searchPlaceholder?: string;
   showAllOption?: boolean;
   showReset?: boolean;
+  required?: boolean;
   renderOption?: (option: MultiSelectOptionType) => React.ReactNode;
   onRefetch?: () => void;
   onOpenChange?: (open: boolean) => void;
@@ -71,6 +72,7 @@ function MultiSelect({
   searchPlaceholder,
   showAllOption = false,
   showReset,
+  required,
   renderOption,
   onRefetch,
   onOpenChange,
@@ -173,7 +175,10 @@ function MultiSelect({
           {children || (
             <>
               {!value?.length && (
-                <span className='text-muted-foreground text-sm'>{placeholder}</span>
+                <span className='text-muted-foreground text-sm'>
+                  {placeholder}
+                  {required && <span className='text-foreground-error ml-1'>*</span>}
+                </span>
               )}
               <div className='truncate text-nowrap whitespace-nowrap' title={valueText}>
                 {valueText}
