@@ -41,6 +41,7 @@ export interface MultiSelectProps {
   disabled?: boolean;
   searchPlaceholder?: string;
   showAllOption?: boolean;
+  showReset?: boolean;
   renderOption?: (option: MultiSelectOptionType) => React.ReactNode;
   onRefetch?: () => void;
   onOpenChange?: (open: boolean) => void;
@@ -69,6 +70,7 @@ function MultiSelect({
   disabled,
   searchPlaceholder,
   showAllOption = false,
+  showReset,
   renderOption,
   onRefetch,
   onOpenChange,
@@ -177,14 +179,18 @@ function MultiSelect({
                 {valueText}
               </div>
               <ArrowDropDown className='w-6 h-6 shrink-0 text-icon-fade-contrast ml-auto' />
-              {onRemoveClick && valueText && (
+              {(showReset || onRemoveClick) && valueText && (
                 <span className='flex items-center'>
                   <Separator orientation='vertical' className='w-px h-5 mr-2' />
                   <div
                     className='active:scale-90 transition-transform cursor-pointer'
                     onClick={e => {
                       e.stopPropagation();
-                      onRemoveClick();
+                      if (onRemoveClick) {
+                        onRemoveClick();
+                      } else if (showReset && onChange) {
+                        onChange([]);
+                      }
                     }}
                   >
                     <CloseCircle className='min-h-6 min-w-6 text-icon-fade-contrast' />
