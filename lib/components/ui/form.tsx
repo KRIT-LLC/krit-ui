@@ -135,15 +135,18 @@ const FormItemInput = React.forwardRef<HTMLInputElement, InputProps>((props, ref
   );
 });
 
-const FormItemSelect = (props: SelectProps) => {
-  return (
-    <FormItem>
-      <FormControl>
-        <Select {...props} />
-      </FormControl>
-    </FormItem>
-  );
-};
+const FormItemSelect = React.forwardRef<React.ElementRef<typeof Select>, SelectProps>(
+  (props, ref) => {
+    return (
+      <FormItem>
+        <FormControl>
+          <Select ref={ref} {...props} />
+        </FormControl>
+      </FormItem>
+    );
+  },
+);
+FormItemSelect.displayName = 'FormItemSelect';
 
 const FormItemMultiSelect = (props: MultiSelectProps) => {
   return (
