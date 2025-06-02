@@ -28,90 +28,101 @@ export interface SelectProps extends React.ComponentPropsWithoutRef<typeof Selec
   readOnly?: boolean;
 }
 
-const Select = ({
-  triggerClassName,
-  clearable,
-  borderless,
-  isLoading,
-  // TODO: Подумать над объединением isError и error
-  isError,
-  error,
-  renderOption = option => option.label,
-  onRefetch,
-  onChange,
-  onValueChange,
-  onClick,
-  onOpenChange,
-  readOnly,
-  ...props
-}: SelectProps) => {
-  const [value, setValue] = React.useState(props.value || '');
-  const handleChange = (value: string) => {
-    if (!props.options.length) return;
-    setValue(value);
-    onValueChange
-      ? onValueChange(value)
-      : onChange?.(value, props.options.find(option => option.value === value)?.label || '');
-  };
+const Select = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Trigger>, SelectProps>(
+  (
+    {
+      triggerClassName,
+      clearable,
+      borderless,
+      isLoading,
+      // TODO: Подумать над объединением isError и error
+      isError,
+      error,
+      renderOption = option => option.label,
+      onRefetch,
+      onChange,
+      onValueChange,
+      onClick,
+      onOpenChange,
+      readOnly,
+      ...props
+    },
+    ref,
+  ) => {
+    const [value, setValue] = React.useState(props.value || '');
+    const handleChange = (value: string) => {
+      if (!props.options.length) return;
+      setValue(value);
+      onValueChange
+        ? onValueChange(value)
+        : onChange?.(value, props.options.find(option => option.value === value)?.label || '');
+    };
 
-  React.useEffect(() => {
-    setValue(props.value || '');
-  }, [props.value]);
+    React.useEffect(() => {
+      setValue(props.value || '');
+    }, [props.value]);
 
-  return (
-    <SelectPrimitive.Root
-      {...props}
-      value={value}
-      onValueChange={handleChange}
-      onOpenChange={onClick || onOpenChange}
-    >
-      <SelectTrigger
-        className={cn(
-          borderless && 'bg-background-secondary border-line-primary text-base',
-          error ? 'border-line-error focus-visible:border-line-error' : '',
-          readOnly && 'cursor-not-allowed pointer-events-none opacity-95',
-          triggerClassName,
-        )}
+    return (
+      <SelectPrimitive.Root
+        {...props}
+        value={value}
+        onValueChange={handleChange}
+        onOpenChange={onClick || onOpenChange}
       >
-        <SelectValue placeholder={props.placeholder}>
-          {props.options.find(d => d.value === value)?.label ?? ''}
-        </SelectValue>
-        {clearable && props.value && (
-          <CancelOutline
-            width={18}
-            height={18}
-            className='text-icon-fade-contrast pointer-events-auto absolute z-50 right-9'
-            onClick={() => handleChange?.('')}
+        <SelectTrigger
+          ref={ref}
+          className={cn(
+            borderless && 'bg-background-secondary border-line-primary text-base',
+            error ? 'border-line-error focus-visible:border-line-error' : '',
+            readOnly && 'cursor-not-allowed pointer-events-none opacity-95',
+            triggerClassName,
+          )}
+        >
+          <SelectValue placeholder={props.placeholder}>
+            {props.options.find(d => d.value === value)?.label ?? ''}
+          </SelectValue>
+          {clearable && props.value && (
+            <CancelOutline
+              width={18}
+              height={18}
+              className='text-icon-fade-contrast pointer-events-auto absolute z-50 right-9'
+              onClick={() => handleChange?.('')}
+            />
+          )}
+        </SelectTrigger>
+        <SelectContent className={cn(isLoading && 'min-h-16', isError && 'min-h-20')}>
+          <NetworkErrorMessage
+            isLoading={isLoading}
+            isError={isError}
+            textSize='sm'
+            center
+            onRefetch={onRefetch}
           />
-        )}
-      </SelectTrigger>
-      <SelectContent className={cn(isLoading && 'min-h-16', isError && 'min-h-20')}>
-        <NetworkErrorMessage
-          isLoading={isLoading}
-          isError={isError}
-          textSize='sm'
-          center
-          onRefetch={onRefetch}
-        />
-        {props.options.length > 100 ? (
-          <FixedSizeList height={384} itemCount={props.options.length} itemSize={36} width={'100%'}>
-            {({ index, style }) => (
-              <SelectItem value={props.options[index].value} style={style}>
-                {renderOption(props.options[index])}
+          {props.options.length > 100 ? (
+            <FixedSizeList
+              height={384}
+              itemCount={props.options.length}
+              itemSize={36}
+              width={'100%'}
+            >
+              {({ index, style }) => (
+                <SelectItem value={props.options[index].value} style={style}>
+                  {renderOption(props.options[index])}
+                </SelectItem>
+              )}
+            </FixedSizeList>
+          ) : (
+            props.options.map(option => (
+              <SelectItem key={option.value} value={option.value}>
+                {renderOption(option)}
               </SelectItem>
-            )}
-          </FixedSizeList>
-        ) : (
-          props.options.map(option => (
-            <SelectItem key={option.value} value={option.value}>
-              {renderOption(option)}
-            </SelectItem>
-          ))
-        )}
-      </SelectContent>
-    </SelectPrimitive.Root>
-  );
-};
+            ))
+          )}
+        </SelectContent>
+      </SelectPrimitive.Root>
+    );
+  },
+);
 Select.displayName = 'Select';
 
 const SelectValue = React.forwardRef<
