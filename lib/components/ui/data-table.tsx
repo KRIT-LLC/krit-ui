@@ -46,6 +46,8 @@ interface DataTableProps<TData, TValue> {
   onExpandedChange?: OnChangeFn<ExpandedState>;
   loading?: boolean;
   skeletonClassName?: string;
+  isStickyHeader?: boolean;
+  headerClassName?: string;
 }
 
 export function DataTable<TData, TValue>({
@@ -72,6 +74,8 @@ export function DataTable<TData, TValue>({
   onExpandedChange,
   loading,
   skeletonClassName = 'h-5',
+  isStickyHeader,
+  headerClassName,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     getRowId,
@@ -112,7 +116,7 @@ export function DataTable<TData, TValue>({
       )}
     >
       <Table>
-        <TableHeader>
+        <TableHeader className={cn(isStickyHeader && 'sticky top-0 bg-background z-10', headerClassName)}>
           {table.getHeaderGroups().map(headerGroup => (
             <TableRow key={headerGroup.id} className='border-line-primary'>
               {headerGroup.headers.map(header => {
