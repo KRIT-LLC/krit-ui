@@ -17,12 +17,14 @@ export type MultiSelectOptionType = {
   label: string;
   value: string;
   hidden?: boolean;
+  disabled?: boolean;
 };
 
 type InternalMultiSelectOptionType = {
   label: string;
   value: string | typeof ALL_VALUE;
   hidden?: boolean;
+  disabled?: boolean;
 };
 
 export interface MultiSelectProps {
@@ -246,6 +248,7 @@ function MultiSelect({
                       isChecked && 'bg-background-theme-fade text-foreground',
                     )}
                     onSelect={() => handleSelect(option)}
+                    disabled={option?.disabled}
                   >
                     {renderOption && option.value !== ALL_VALUE ? (
                       <React.Fragment
@@ -255,7 +258,11 @@ function MultiSelect({
                       </React.Fragment>
                     ) : (
                       <>
-                        <Checkbox className='mr-2' checked={isChecked} />
+                        <Checkbox
+                          className='mr-2'
+                          checked={isChecked}
+                          disabled={option?.disabled}
+                        />
                         <span title={option.label} className='truncate'>
                           {option.label}
                         </span>
