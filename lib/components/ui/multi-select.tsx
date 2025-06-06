@@ -3,7 +3,7 @@ import { FixedSizeList } from 'react-window';
 import { useTranslation } from '@/hooks/useTranslation';
 import { cn } from '@/utils';
 import ArrowDropDown from '@/assets/arrow_drop_down.svg?react';
-import CloseCircle from '@/assets/close_circle.svg?react';
+import CancelOutline from '@/assets/cancel_outline.svg?react';
 import { Button, ButtonVariant } from './button';
 import { Checkbox } from './checkbox';
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from './command';
@@ -200,7 +200,7 @@ function MultiSelect({
                       }
                     }}
                   >
-                    <CloseCircle className='min-h-6 min-w-6 text-icon-fade-contrast' />
+                    <CancelOutline className='min-h-6 min-w-6 text-icon-fade-contrast' />
                   </div>
                 </span>
               )}
