@@ -180,6 +180,8 @@
 ![pen_outline.svg](pen_outline.svg)
 #### PersonIcon
 ![person.svg](person.svg)
+#### PersonOutlineIcon
+![person_outline.svg](person_outline.svg)
 #### PlayIcon
 ![play.svg](play.svg)
 #### PriorityIcon
@@ -222,6 +224,8 @@
 ![stars.svg](stars.svg)
 #### StraightenIcon
 ![straighten.svg](straighten.svg)
+#### SupervisorAccountIcon
+![supervisor_account.svg](supervisor_account.svg)
 #### TableChartIcon
 ![table_chart.svg](table_chart.svg)
 #### TargetOutlineIcon
@@ -250,6 +254,8 @@
 ![warning_amber.svg](warning_amber.svg)
 #### WatchLaterIcon
 ![watch_later.svg](watch_later.svg)
+#### WatchLaterOutlineIcon
+![watch_later_outline.svg](watch_later_outline.svg)
 #### WhatshotIcon
 ![whatshot.svg](whatshot.svg)
 #### WorkspacesIcon
