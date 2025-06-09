@@ -86,6 +86,8 @@
 ![close_circle.svg](close_circle.svg)
 #### CoinsIcon
 ![coins.svg](coins.svg)
+#### ControlPointIcon
+![control_point.svg](control_point.svg)
 #### CorporateFareIcon
 ![corporate_fare.svg](corporate_fare.svg)
 #### CupOutlineIcon

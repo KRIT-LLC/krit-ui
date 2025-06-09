@@ -42,6 +42,7 @@ export { default as ChevronUpIcon } from '@/assets/chevron_up.svg?react';
 export { default as CloseIcon } from '@/assets/close.svg?react';
 export { default as CloseCircleIcon } from '@/assets/close_circle.svg?react';
 export { default as CoinsIcon } from '@/assets/coins.svg?react';
+export { default as ControlPointIcon } from '@/assets/control_point.svg?react';
 export { default as CorporateFareIcon } from '@/assets/corporate_fare.svg?react';
 export { default as CupOutlineIcon } from '@/assets/cup_outline.svg?react';
 export { default as DarkModeIcon } from '@/assets/dark_mode.svg?react';
