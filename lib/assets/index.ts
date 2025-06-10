@@ -96,6 +96,7 @@ export { default as PriorityIcon } from '@/assets/priority.svg?react';
 export { default as PublishIcon } from '@/assets/publish.svg?react';
 export { default as RectangleSplit4UnevenOutlineIcon } from '@/assets/rectangle_split_4_uneven_outline.svg?react';
 export { default as RectanglesOutlineIcon } from '@/assets/rectangles_outline.svg?react';
+export { default as RefreshIcon } from '@/assets/refresh.svg?react';
 export { default as RestartAltIcon } from '@/assets/restart_alt.svg?react';
 export { default as RoomIcon } from '@/assets/room.svg?react';
 export { default as RotateLeftIcon } from '@/assets/rotate_left.svg?react';

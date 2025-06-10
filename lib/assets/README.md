@@ -194,6 +194,8 @@
 ![rectangle_split_4_uneven_outline.svg](rectangle_split_4_uneven_outline.svg)
 #### RectanglesOutlineIcon
 ![rectangles_outline.svg](rectangles_outline.svg)
+#### RefreshIcon
+![refresh.svg](refresh.svg)
 #### RestartAltIcon
 ![restart_alt.svg](restart_alt.svg)
 #### RoomIcon
