@@ -45,7 +45,7 @@ export interface MultiSelectProps {
   showAllOption?: boolean;
   showReset?: boolean;
   required?: boolean;
-  renderOption?: (option: MultiSelectOptionType) => React.ReactNode;
+  renderOption?: (option: MultiSelectOptionType, isChecked: boolean) => React.ReactNode;
   onRefetch?: () => void;
   onOpenChange?: (open: boolean) => void;
   onSearch?: (value: string) => void;
@@ -254,7 +254,7 @@ function MultiSelect({
                       <React.Fragment
                         key={typeof option.value === 'symbol' ? String(option.value) : option.value}
                       >
-                        {renderOption(option as MultiSelectOptionType)}
+                        {renderOption(option as MultiSelectOptionType, isChecked)}
                       </React.Fragment>
                     ) : (
                       <>
