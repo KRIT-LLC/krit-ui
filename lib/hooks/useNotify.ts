@@ -18,7 +18,7 @@ export interface ErrorResponse {
   timestamp: string;
 }
 
-export const getErrorData = (error: Error) =>
+export const getErrorData = (error: Error | Record<string, unknown>) =>
   (error as unknown as AxiosError<ErrorResponse>).response?.data;
 export const parseValueFromError = (key: string, error: string) =>
   error
@@ -57,17 +57,21 @@ export const useNotify = (text?: string) => {
     return '';
   };
 
-  const getErrorText = (error: Error) => {
+  const getErrorText = (error: Error | Record<string, unknown>) => {
     const data = getErrorData(error);
     const errorTitle = (data && 'title' in data ? data.title : undefined) as string | undefined;
     const errorMessage =
       data?.message || String(data && ('Message' in data ? data.Message : '')) || data?.detail;
+
+    const errorDescription = (error as unknown as Record<string, unknown>)?.errorDescription;
+    if (errorDescription) return errorDescription as string;
+
     const errorText = errorMessage || data?.error || errorTitle;
     const errorsText = getErrorsText(data);
     return text || errorsText || errorText;
   };
 
-  const onError = (error: Error) => {
+  const onError = (error: Error | Record<string, unknown>) => {
     const errorText = getErrorText(error);
     notifyError(errorText);
   };
@@ -77,7 +81,7 @@ export const useNotify = (text?: string) => {
   };
 
   const getErrorHandler = (errorMessageMap: Record<MessageFromServer, MessageForUser>) => {
-    return (error: Error) => {
+    return (error: Error | Record<string, unknown>) => {
       const errorText = getErrorText(error);
       const notifications: string[] = [];
       for (const [messageFromServer, messageForUser] of Object.entries(errorMessageMap)) {
