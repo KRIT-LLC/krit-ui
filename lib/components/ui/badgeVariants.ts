@@ -37,6 +37,8 @@ export const badgeVariants = cva(
           'bg-background-warning text-foreground-on-contrast hover:bg-background-warning_hover',
         'warning-fade':
           'bg-background-warning-fade text-foreground-warning hover:bg-background-warning-fade-hover',
+        contrast:
+          'bg-background-contrast text-foreground-on-contrast hover:bg-background-contrast/80',
       },
       size: {
         sm: 'h-[24px]',
