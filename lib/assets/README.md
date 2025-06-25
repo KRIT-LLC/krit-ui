@@ -132,6 +132,8 @@
 ![file_download.svg](file_download.svg)
 #### FirstPageIcon
 ![first_page.svg](first_page.svg)
+#### FlagIcon
+![flag.svg](flag.svg)
 #### FormatAlignLeftIcon
 ![format_align_left.svg](format_align_left.svg)
 #### GearsAlarmIcon
