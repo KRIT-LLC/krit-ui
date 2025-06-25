@@ -66,6 +66,7 @@ export { default as FileIcon } from '@/assets/file.svg?react';
 export { default as FileDownloadIcon } from '@/assets/file_download.svg?react';
 export { default as FirstPageIcon } from '@/assets/first_page.svg?react';
 export { default as FlagIcon } from '@/assets/flag.svg?react';
+export { default as FlagFillIcon } from '@/assets/flag_fill.svg?react';
 export { default as FormatAlignLeftIcon } from '@/assets/format_align_left.svg?react';
 export { default as GearsAlarmIcon } from '@/assets/gears_alarm.svg?react';
 export { default as HandPaperIcon } from '@/assets/hand_paper.svg?react';
