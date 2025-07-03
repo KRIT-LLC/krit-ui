@@ -177,7 +177,7 @@ function MultiSelect({
           {children || (
             <>
               {!value?.length && (
-                <span className='text-foreground text-sm'>
+                <span className='text-muted-foreground text-sm'>
                   {placeholder}
                   {required && <span className='text-foreground-error ml-1'>*</span>}
                 </span>
