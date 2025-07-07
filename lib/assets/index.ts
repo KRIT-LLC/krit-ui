@@ -94,6 +94,7 @@ export { default as PenOutlineIcon } from '@/assets/pen_outline.svg?react';
 export { default as PersonIcon } from '@/assets/person.svg?react';
 export { default as PersonOutlineIcon } from '@/assets/person_outline.svg?react';
 export { default as PlayIcon } from '@/assets/play.svg?react';
+export { default as PlaylistAddCheckIcon } from '@/assets/playlist_add_check.svg?react';
 export { default as PriorityIcon } from '@/assets/priority.svg?react';
 export { default as PublishIcon } from '@/assets/publish.svg?react';
 export { default as RectangleSplit4UnevenOutlineIcon } from '@/assets/rectangle_split_4_uneven_outline.svg?react';
