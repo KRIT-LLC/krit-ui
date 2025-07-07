@@ -190,6 +190,8 @@
 ![person_outline.svg](person_outline.svg)
 #### PlayIcon
 ![play.svg](play.svg)
+#### PlaylistAddCheckIcon
+![playlist_add_check.svg](playlist_add_check.svg)
 #### PriorityIcon
 ![priority.svg](priority.svg)
 #### PublishIcon
