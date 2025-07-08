@@ -90,7 +90,6 @@ export { default as MoreVertIcon } from '@/assets/more_vert.svg?react';
 export { default as NetworkErrorIcon } from '@/assets/network_error.svg?react';
 export { default as NoAssignmentIcon } from '@/assets/no_assignment.svg?react';
 export { default as NorthEastIcon } from '@/assets/north_east.svg?react';
-export { default as OutlinedIcon } from '@/assets/outlined.svg?react';
 export { default as OutputIcon } from '@/assets/output.svg?react';
 export { default as PenOutlineIcon } from '@/assets/pen_outline.svg?react';
 export { default as PersonIcon } from '@/assets/person.svg?react';
@@ -137,3 +136,4 @@ export { default as WatchLaterOutlineIcon } from '@/assets/watch_later_outline.s
 export { default as WhatshotIcon } from '@/assets/whatshot.svg?react';
 export { default as WorkspacesIcon } from '@/assets/workspaces.svg?react';
 export { default as WriteIcon } from '@/assets/write.svg?react';
+export { default as ZoomoutmapoutlinedIcon } from '@/assets/zoomOutMapOutlined.svg?react';

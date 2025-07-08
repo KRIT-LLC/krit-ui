@@ -182,8 +182,6 @@
 ![no_assignment.svg](no_assignment.svg)
 #### NorthEastIcon
 ![north_east.svg](north_east.svg)
-#### OutlinedIcon
-![outlined.svg](outlined.svg)
 #### OutputIcon
 ![output.svg](output.svg)
 #### PenOutlineIcon
@@ -276,3 +274,5 @@
 ![workspaces.svg](workspaces.svg)
 #### WriteIcon
 ![write.svg](write.svg)
+#### ZoomoutmapoutlinedIcon
+![zoomOutMapOutlined.svg](zoomOutMapOutlined.svg)
