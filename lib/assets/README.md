@@ -166,6 +166,8 @@
 ![local_fire_department.svg](local_fire_department.svg)
 #### LocationMapOutlineIcon
 ![location_map_outline.svg](location_map_outline.svg)
+#### LocationOnIcon
+![location_on.svg](location_on.svg)
 #### LockIcon
 ![lock.svg](lock.svg)
 #### LockOpenIcon
