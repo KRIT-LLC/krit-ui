@@ -82,6 +82,7 @@ export { default as LastPageIcon } from '@/assets/last_page.svg?react';
 export { default as LightModeIcon } from '@/assets/light_mode.svg?react';
 export { default as LocalFireDepartmentIcon } from '@/assets/local_fire_department.svg?react';
 export { default as LocationMapOutlineIcon } from '@/assets/location_map_outline.svg?react';
+export { default as LocationOnIcon } from '@/assets/location_on.svg?react';
 export { default as LockIcon } from '@/assets/lock.svg?react';
 export { default as LockOpenIcon } from '@/assets/lock_open.svg?react';
 export { default as MenuIcon } from '@/assets/menu.svg?react';
