@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { X } from 'lucide-react';
-
 import { cn } from '@/utils';
 
 const Dialog = DialogPrimitive.Root;
@@ -85,7 +84,7 @@ DialogHeader.displayName = 'DialogHeader';
 const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      'flex flex-col-reverse bg-background py-4 px-5 sm:flex-row sm:justify-start sm:space-x-4 sticky bottom-0',
+      'flex flex-col-reverse bg-background py-4 px-5 sm:!flex-row sm:justify-start sm:space-x-4 sticky bottom-0',
       className,
     )}
     {...props}
