@@ -55,7 +55,7 @@ export type DatePickerProps =
 export function DatePicker({ className, locale, ...props }: DatePickerProps) {
   const { t } = useTranslation();
   const placeholder = (
-    <span className='text-foreground-secondary font-normal'>
+    <span className='text-foreground-tertiary font-normal'>
       {props.placeholder || t('selectDate')}
     </span>
   );
