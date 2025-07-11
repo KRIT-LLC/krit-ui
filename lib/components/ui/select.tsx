@@ -21,6 +21,7 @@ export interface SelectProps extends React.ComponentPropsWithoutRef<typeof Selec
   isLoading?: boolean;
   isError?: boolean;
   error?: string | boolean;
+  renderValue?: (option: OptionType) => React.ReactNode;
   renderOption?: (option: OptionType) => React.ReactNode;
   onRefetch?: () => void;
   onChange?: (value: string, label: string) => void;
@@ -38,6 +39,7 @@ const Select = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Trigger>
       // TODO: Подумать над объединением isError и error
       isError,
       error,
+      renderValue = option => option.label,
       renderOption = option => option.label,
       onRefetch,
       onChange,
@@ -79,7 +81,7 @@ const Select = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Trigger>
           )}
         >
           <SelectValue placeholder={props.placeholder}>
-            {props.options.find(d => d.value === value)?.label ?? ''}
+            {renderValue(props.options.find(d => d.value === value) ?? { label: '', value: '' })}
           </SelectValue>
           {clearable && props.value && (
             <CancelOutline
