@@ -18,6 +18,8 @@
 ![account_box.svg](account_box.svg)
 #### AccountCircleIcon
 ![account_circle.svg](account_circle.svg)
+#### AccountTreeIcon
+![account_tree.svg](account_tree.svg)
 #### AddIcon
 ![add.svg](add.svg)
 #### AddBoxIcon

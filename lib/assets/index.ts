@@ -8,6 +8,7 @@ export { default as AccessDeniedLightIcon } from '@/assets/access_denied_light.s
 export { default as AccountBalanceIcon } from '@/assets/account_balance.svg?react';
 export { default as AccountBoxIcon } from '@/assets/account_box.svg?react';
 export { default as AccountCircleIcon } from '@/assets/account_circle.svg?react';
+export { default as AccountTreeIcon } from '@/assets/account_tree.svg?react';
 export { default as AddIcon } from '@/assets/add.svg?react';
 export { default as AddBoxIcon } from '@/assets/add_box.svg?react';
 export { default as AddCircleOutlineIcon } from '@/assets/add_circle_outline.svg?react';
