@@ -276,5 +276,5 @@
 ![workspaces.svg](workspaces.svg)
 #### WriteIcon
 ![write.svg](write.svg)
-#### ZoomoutmapoutlinedIcon
-![zoomOutMapOutlined.svg](zoomOutMapOutlined.svg)
+#### ZoomOutMapOutlinedIcon
+![zoom_out_map_outlined.svg](zoom_out_map_outlined.svg)

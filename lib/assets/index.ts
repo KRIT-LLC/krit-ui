@@ -137,4 +137,4 @@ export { default as WatchLaterOutlineIcon } from '@/assets/watch_later_outline.s
 export { default as WhatshotIcon } from '@/assets/whatshot.svg?react';
 export { default as WorkspacesIcon } from '@/assets/workspaces.svg?react';
 export { default as WriteIcon } from '@/assets/write.svg?react';
-export { default as ZoomoutmapoutlinedIcon } from '@/assets/zoomOutMapOutlined.svg?react';
+export { default as ZoomOutMapOutlinedIcon } from '@/assets/zoom_out_map_outlined.svg?react';
