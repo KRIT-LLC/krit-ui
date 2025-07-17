@@ -10,6 +10,7 @@ import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from '.
 import { NetworkErrorMessage } from './network-error-message';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 import { Separator } from './separator';
+import CloseIcon from '@/assets/close.svg?react';
 
 const ALL_VALUE = Symbol('all');
 
@@ -45,6 +46,8 @@ export interface MultiSelectProps {
   showAllOption?: boolean;
   showReset?: boolean;
   required?: boolean;
+  showBadge?: boolean;
+  maxVisibleRowsBadge?: number; 
   renderOption?: (option: MultiSelectOptionType, isChecked: boolean) => React.ReactNode;
   onRefetch?: () => void;
   onOpenChange?: (open: boolean) => void;
@@ -57,7 +60,8 @@ export interface MultiSelectProps {
 const MAX_HEIGHT = 340;
 const ITEM_SIZE = 36;
 
-function MultiSelect({
+const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
+  ({
   className,
   triggerClassName,
   variant = 'secondary-outline',
@@ -75,6 +79,8 @@ function MultiSelect({
   showAllOption = false,
   showReset,
   required,
+  showBadge = false,
+  maxVisibleRowsBadge,
   renderOption,
   onRefetch,
   onOpenChange,
@@ -83,7 +89,9 @@ function MultiSelect({
   onClick,
   onRemoveClick,
   ...props
-}: MultiSelectProps) {
+  }: MultiSelectProps,
+    ref
+  ) => {
   const { t } = useTranslation();
   const [search, setSearch] = React.useState('');
 
@@ -132,16 +140,6 @@ function MultiSelect({
     onOpenChange?.(maxSelected !== 1);
   };
 
-  const valueText = React.useMemo(() => {
-    if (isAllSelected && showAllOption) {
-      return t('all');
-    }
-
-    return value
-      .map(item => (options.find(({ value: optValue }) => optValue === item)?.label || item).trim())
-      .join(', ');
-  }, [value, options, isAllSelected, showAllOption, t]);
-
   const displayOptions = React.useMemo(() => {
     return showAllOption ? [allOption, ...internalOptions] : internalOptions;
   }, [showAllOption, allOption, internalOptions]);
@@ -162,16 +160,99 @@ function MultiSelect({
     return Math.min(totalHeight, MAX_HEIGHT);
   }, [filteredOptions]);
 
+ const valueText = React.useMemo(() => {
+    if (isAllSelected && showAllOption) {
+      return t('all');
+    }
+
+    return value
+      .map(item =>
+        (
+          filteredActualOptions.find(({ value: optValue }) => optValue === item)?.label || item
+        ).trim(),
+      )
+      .join(', ');
+  }, [value, filteredActualOptions, isAllSelected, showAllOption, t]);
+
+  const renderSelectedBadges = React.useCallback(() => {
+    if (!showBadge) {
+      return (
+        <div className='truncate text-nowrap whitespace-nowrap' title={valueText}>
+          {valueText}
+        </div>
+      );
+    }
+
+ const lineHeight = 28;
+    let visibleBadges = [...value];
+    let hiddenCount = 0;
+    let isOverflow = false;
+
+    if (maxVisibleRowsBadge) {
+      const avgBadgeWidth = 120; 
+      const containerWidth = 300;
+      const badgesPerRow = Math.floor(containerWidth / avgBadgeWidth) || 1;
+      
+      const maxVisibleBadges = maxVisibleRowsBadge * badgesPerRow;
+      
+      if (value.length > maxVisibleBadges) {
+        visibleBadges = value.slice(0, maxVisibleBadges);
+        hiddenCount = value.length - maxVisibleBadges;
+        isOverflow = true;
+      }
+    }
+
+    return (
+      <div 
+        className={cn(
+          'flex flex-wrap gap-1',
+          maxVisibleRowsBadge && `max-h-[${maxVisibleRowsBadge * lineHeight}px] overflow-hidden`
+        )}
+      >
+       {visibleBadges.map(selectedValue => {
+          const option = filteredActualOptions.find(opt => opt.value === selectedValue);
+          if (option) {
+            return (
+              <div
+                key={option.value}
+                className='flex items-center justify-center bg-background-secondary rounded-full p-1 pl-3 text-xs gap-2'
+              >
+                <span className='truncate whitespace-nowrap w-[100px]'>{option.label}</span>
+                <span
+                  className='w-5 h-5 flex items-center justify-center cursor-pointer rounded-full bg-background-primary'
+                  onClick={e => {
+                    e.stopPropagation();
+                    handleSelect(option);
+                  }}
+                >
+                  <CloseIcon className='w-4 h-4 bg-icon-tertiary text-foreground-tertiary' />
+                </span>
+              </div>
+            );
+          }
+          return null;
+        })}
+
+        {isOverflow && (
+          <div className='flex items-center justify-center bg-background-secondary rounded-full px-3 py-1 text-xs gap-2'>
+            +{hiddenCount}...
+          </div>
+        )}
+      </div>
+    );
+  }, [value, filteredActualOptions, handleSelect, showBadge, maxVisibleRowsBadge]);
+
   return (
     <Popover open={open} onOpenChange={onOpenChange} modal={true} {...props}>
       <PopoverTrigger asChild>
         <Button
+          ref={ref} 
           variant={variant}
           size='sm'
           role='combobox'
           aria-expanded={open}
           disabled={disabled}
-          className={cn('w-full justify-between px-3 overflow-hidden', triggerClassName)}
+          className={cn('w-full justify-between px-3 overflow-hidden', triggerClassName, {'h-auto overflow-visible hover:bg-[transparent] active:bg-[transparent]': showBadge})}
           onClick={onClick || (() => onOpenChange?.(!open))}
         >
           {children || (
@@ -182,9 +263,7 @@ function MultiSelect({
                   {required && <span className='text-foreground-error ml-1'>*</span>}
                 </span>
               )}
-              <div className='truncate text-nowrap whitespace-nowrap' title={valueText}>
-                {valueText}
-              </div>
+              {renderSelectedBadges()}
               <ArrowDropDown className='w-6 h-6 shrink-0 text-icon-fade-contrast ml-auto' />
               {(showReset || onRemoveClick) && valueText && (
                 <span className='flex items-center'>
@@ -229,8 +308,8 @@ function MultiSelect({
             <FixedSizeList
               height={getListHeight()}
               itemCount={filteredOptions.length}
-              itemSize={36}
-              width={'100%'}
+              itemSize={ITEM_SIZE}
+              width='100%'
             >
               {({ index, style }) => {
                 const option = filteredOptions[index];
@@ -276,7 +355,10 @@ function MultiSelect({
         </Command>
       </PopoverContent>
     </Popover>
-  );
-}
+   );
+  }
+);
+
+MultiSelect.displayName = 'MultiSelect';
 
 export { MultiSelect };
