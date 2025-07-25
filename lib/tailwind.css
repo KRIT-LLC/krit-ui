@@ -45,6 +45,7 @@
     --krit-foreground-primary-disabled: 222 8% 42%;
     --krit-foreground-secondary: 0 0% 55%;
     --krit-foreground-tertiary: 0 0% 66%;
+    --krit-foreground-quaternary: 224 10% 44%;
     --krit-foreground-theme: 241 58% 47%;
     --krit-foreground-on-contrast: var(--krit-background-primary);
     --krit-foreground-on-contrast-disabled: 233 5% 70%;
@@ -123,6 +124,7 @@
     --krit-foreground-primary-disabled: 0 0% 52%;
     --krit-foreground-secondary: 0 0% 83%;
     --krit-foreground-tertiary: 0 0% 58%;
+    --krit-foreground-quaternary: 224 10% 44%;
     --krit-foreground-theme: 241 100% 82%;
     --krit-foreground-on-contrast: var(--krit-background-primary);
     --krit-foreground-on-contrast-disabled: 224 18% 30%;

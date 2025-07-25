@@ -109,6 +109,7 @@ const translations = {
   pdfSizeLimitMB: 'PDF size limit',
   videoSizeLimitMB: 'Video size limit',
   maxSizeOfFilesMB: 'Max size of files',
+  mb: 'Mb',
 };
 
 export type Translations = keyof typeof translations;
