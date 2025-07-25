@@ -15,6 +15,7 @@ export interface AttachmentsSectionProps {
   addDescription?: string;
   visibleSections?: (string | number)[];
   orientation?: 'vertical' | 'horizontal';
+  previewsOrientation?: 'vertical' | 'horizontal';
   accepts?: ContentType[];
   maxSizes?: {
     image?: number;
@@ -32,6 +33,7 @@ export const AttachmentsSection = ({
   title,
   tabs = [],
   orientation,
+  previewsOrientation,
   visibleSections,
   accepts,
   maxSizes,
@@ -96,6 +98,7 @@ export const AttachmentsSection = ({
                 accepts={accepts}
                 maxSizes={maxSizes}
                 withCompress={withCompress}
+                orientation={previewsOrientation}
                 onRemove={onRemove ? index => onRemove?.(index, selected) : undefined}
                 onAdd={onAdd && item.canAdd ? files => add(files, getIndex(item.label)) : undefined}
               />

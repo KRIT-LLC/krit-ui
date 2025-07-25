@@ -62,6 +62,7 @@ module.exports = {
         'primary-disabled': 'hsl(var(--krit-foreground-primary-disabled))',
         secondary: 'hsl(var(--krit-foreground-secondary))',
         tertiary: 'hsl(var(--krit-foreground-tertiary))',
+        quaternary: 'hsl(var(--krit-foreground-quaternary))',
         theme: 'hsl(var(--krit-foreground-theme))',
         'on-contrast': 'hsl(var(--krit-foreground-on-contrast))',
         'on-contrast-disabled': 'hsl(var(--krit-foreground-on-contrast-disabled))',

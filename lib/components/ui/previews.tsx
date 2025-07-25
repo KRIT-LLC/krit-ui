@@ -15,7 +15,7 @@ import { Loader2 } from 'lucide-react';
 import { useNotify } from '@/hooks/useNotify';
 import { useTranslation } from '@/hooks/useTranslation';
 import { cn } from '@/utils';
-import { AudioFileIcon, CloseIcon, FileIcon, VideoFileIcon } from '@/assets';
+import { AudioFileIcon, CloseIcon, DeleteOutlineIcon, FileIcon, VideoFileIcon } from '@/assets';
 import AttachFile from '@/assets/attach_file.svg?react';
 import { useConfirm } from '../../hooks/useConfirm';
 import { Input } from './input';
@@ -31,6 +31,7 @@ export interface PreviewsProps {
   previewSize?: number;
   gap?: number;
   title?: string;
+  orientation?: 'vertical' | 'horizontal';
   maxSizes?: {
     image?: number;
     video?: number;
@@ -56,6 +57,7 @@ export const Previews = (props: PreviewsProps) => {
     previewSize = 130,
     gap = 2,
     title,
+    orientation = 'horizontal',
     maxSizes = {
       image: MAX_IMAGE_SIZE_MB,
       video: MAX_VIDEO_SIZE_MB,
@@ -90,6 +92,7 @@ export const Previews = (props: PreviewsProps) => {
   };
 
   const mbToBytes = (mb: number = 0) => mb * 1024 * 1024;
+  const bytesToMb = (bytes: number = 0) => (bytes / (1024 * 1024)).toFixed(2);
   const isImage = (file: File) => file.type.includes('image');
   const isAudio = (file: File) => file.type.includes('audio');
   const isPdf = (file: File) => file.type.includes('pdf');
@@ -174,9 +177,11 @@ export const Previews = (props: PreviewsProps) => {
   return (
     <div
       className={cn(
-        'grid grid-flow-col auto-cols-[130px] pt-1 overflow-x-auto overflow-y-hidden w-full',
-        `gap-${gap}`,
-        `auto-cols-[${previewSize}px]`,
+        orientation === 'vertical'
+          ? `flex flex-col gap-2 pt-1 overflow-y-auto overflow-x-hidden w-full`
+          : 'grid grid-flow-col auto-cols-[130px] pt-1 overflow-x-auto overflow-y-hidden w-full',
+        orientation === 'horizontal' ? `gap-${gap}` : '',
+        orientation === 'horizontal' ? `auto-cols-[${previewSize}px]` : '',
         className,
       )}
     >
@@ -217,10 +222,22 @@ export const Previews = (props: PreviewsProps) => {
       )}
       {data?.map((item, i) => {
         const fileType = getType(item);
+        const fileName =
+          item.fileName ||
+          item.url?.split('/').pop() +
+            `.${item.contentType?.split('/').pop() || (fileType === 'video' ? 'mp4' : fileType === 'audio' ? 'mp3' : 'pdf')}`;
+
         return (
           <div
             key={item.id}
-            className={cn('relative select-none cursor-pointer', getMinSizeClass(), getSizeClass())}
+            className={cn(
+              'relative select-none cursor-pointer',
+              orientation === 'vertical'
+                ? 'grid grid-cols-[130px_1fr] items-center gap-4 w-full h-full'
+                : '',
+              orientation === 'horizontal' ? getMinSizeClass() : '',
+              orientation === 'horizontal' ? getSizeClass() : '',
+            )}
           >
             <PreviewFull
               type={getType(currentPreview)}
@@ -237,7 +254,7 @@ export const Previews = (props: PreviewsProps) => {
                       src={item.url}
                       alt=''
                       className={cn(
-                        'rounded-lg object-cover border border-foreground/10',
+                        'rounded-lg object-cover border border-line-primary',
                         getSizeClass(),
                       )}
                       loading='lazy'
@@ -259,11 +276,11 @@ export const Previews = (props: PreviewsProps) => {
                     onClick={() => setCurrentPreview(item)}
                   >
                     <VideoFileIcon />
-                    <div className='text-sm mt-1 text-foreground-secondary w-full truncate text-center p-0.5'>
-                      {item.fileName ||
-                        item.url?.split('/').pop() +
-                          `.${item.contentType?.split('/').pop() || 'mp4'}`}
-                    </div>
+                    {orientation === 'horizontal' && (
+                      <div className='text-sm mt-1 text-foreground-secondary w-full truncate text-center p-0.5'>
+                        {fileName}
+                      </div>
+                    )}
                   </div>
                 )}
                 {fileType === 'audio' && (
@@ -275,11 +292,11 @@ export const Previews = (props: PreviewsProps) => {
                     onClick={() => setCurrentPreview(item)}
                   >
                     <AudioFileIcon />
-                    <div className='text-sm mt-1 text-foreground-secondary w-full truncate text-center p-0.5'>
-                      {item.fileName ||
-                        item.url?.split('/').pop() +
-                          `.${item.contentType?.split('/').pop() || 'mp3'}`}
-                    </div>
+                    {orientation === 'horizontal' && (
+                      <div className='text-sm mt-1 text-foreground-secondary w-full truncate text-center p-0.5'>
+                        {fileName}
+                      </div>
+                    )}
                   </div>
                 )}
                 {fileType === 'pdf' && (
@@ -293,16 +310,36 @@ export const Previews = (props: PreviewsProps) => {
                     )}
                   >
                     <FileIcon />
-                    <div className='text-sm mt-1 text-foreground-secondary w-full truncate text-center p-0.5'>
-                      {item.fileName ||
-                        item.url?.split('/').pop() +
-                          `.${item.contentType?.split('/').pop() || 'pdf'}`}
-                    </div>
+                    {orientation === 'horizontal' && (
+                      <div className='text-sm mt-1 text-foreground-secondary w-full truncate text-center p-0.5'>
+                        {fileName}
+                      </div>
+                    )}
                   </a>
                 )}
               </span>
             </PreviewFull>
-            {(onRemove || item.onRemove) && (
+            {orientation === 'vertical' && (
+              <div className='flex flex-col justify-start flex-1 h-full py-2 group min-w-0 overflow-hidden'>
+                <div className='flex flex-row gap-2 items-center gap-2 pb-2'>
+                  <span className='text-sm text-foreground-primary line-clamp-2' title={fileName}>
+                    {fileName}
+                  </span>
+                  {(onRemove || item.onRemove) && (
+                    <div
+                      onClick={() => onRemoveAttachment(item, i)}
+                      className='opacity-0 group-hover:opacity-100 transition-opacity'
+                    >
+                      <DeleteOutlineIcon className='bg-background text-icon-fade-contrast cursor-pointer' />
+                    </div>
+                  )}
+                </div>
+                <span className='text-sm text-foreground-quaternary'>
+                  {item.file?.size ? bytesToMb(item.file.size) : 0} {t('mb')}
+                </span>
+              </div>
+            )}
+            {orientation === 'horizontal' && (onRemove || item.onRemove) && (
               <div onClick={() => onRemoveAttachment(item, i)}>
                 <CloseIcon className='absolute top-[2px] right-[2px] rounded-full bg-background text-destructive-foreground cursor-pointer' />
               </div>
