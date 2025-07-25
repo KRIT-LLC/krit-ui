@@ -26,10 +26,33 @@ const DialogOverlay = React.forwardRef<
 ));
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
+// Тип для DialogSection
+interface DialogSectionProps extends React.HTMLAttributes<HTMLDivElement> {
+  scrollableSection?: boolean;
+}
+
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & { aside?: boolean }
->(({ className, children, aside, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
+    aside?: boolean;
+    scrollableSection?: boolean;
+  }
+>(({ className, children, aside, scrollableSection, ...props }, ref) => {
+  // Прокидываем scrollableSection в DialogSection
+  const enhancedChildren = React.Children.map(children, child => {
+    if (
+      React.isValidElement(child) &&
+      // @ts-expect-error: Тип ReactElement не совпадает из-за кастомного пропа scrollableSection
+      (child.type.displayName === 'DialogSection' || child.type.name === 'DialogSection')
+    ) {
+      // Явно указываем тип пропсов для DialogSection
+      return React.cloneElement(child as React.ReactElement<DialogSectionProps>, {
+        scrollableSection,
+      });
+    }
+    return child;
+  });
+
   return (
     <DialogPortal>
       <DialogOverlay className='bg-background-overlay/80' />
@@ -44,13 +67,16 @@ const DialogContent = React.forwardRef<
         <div
           ref={ref}
           className={cn(
-            'flex flex-col gap-[1px] bg-line-primary shadow-lg  scroll-smooth overflow-y-auto overflow-x-hidden dialog-scrollbar min-w-[460px] max-w-[80vw]',
+            'flex flex-col gap-[1px] bg-line-primary shadow-lg min-w-[460px] max-w-[80vw]',
             !aside && 'max-h-[90vh] rounded-lg',
             aside && 'h-[100vh]',
+            scrollableSection && 'overflow-hidden',
+            !scrollableSection &&
+              'scroll-smooth overflow-y-auto overflow-x-hidden dialog-scrollbar',
             className,
           )}
         >
-          {children}
+          {enhancedChildren}
         </div>
       </DialogPrimitive.Content>
     </DialogPortal>
@@ -116,9 +142,17 @@ const DialogDescription = React.forwardRef<
 ));
 DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
-const DialogSection = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn('flex flex-col space-y-4 bg-background p-5', className)} {...props} />
+const DialogSection = ({ className, scrollableSection, ...props }: DialogSectionProps) => (
+  <div
+    className={cn(
+      'flex flex-col space-y-4 bg-background p-5',
+      scrollableSection && 'overflow-y-auto overflow-x-hidden dialog-scrollbar flex-1',
+      className,
+    )}
+    {...props}
+  />
 );
+DialogSection.displayName = 'DialogSection';
 
 export {
   Dialog,
