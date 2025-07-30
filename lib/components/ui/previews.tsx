@@ -229,7 +229,7 @@ export const Previews = (props: PreviewsProps) => {
 
         return (
           <div
-            key={item.id}
+            key={item.fileName}
             className={cn(
               'relative select-none cursor-pointer',
               orientation === 'vertical'
