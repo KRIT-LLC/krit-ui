@@ -12,7 +12,7 @@ export interface TimePickerProps extends Omit<InputProps, 'onChange' | 'value' |
 }
 
 const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(
-  ({ value, onChange, placeholder, className, ...props }, ref) => {
+  ({ value, onChange, onBlur, placeholder, className, ...props }, ref) => {
     const [open, setOpen] = React.useState(false);
 
     const maskedRef = useMask({
@@ -46,16 +46,39 @@ const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(
       setInputValue(formatTime(value));
     }, [value]);
 
+    const formattedTime = (padded: string) => {
+      const hours = Math.min(23, parseInt(padded.slice(0, 2), 10) || 0);
+      const minutes = Math.min(59, parseInt(padded.slice(2, 4), 10) || 0);
+      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    };
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const val = e.target.value;
       setInputValue(val);
 
       const cleanValue = val.replace(/\D/g, '');
       if (cleanValue.length === 4) {
-        const hours = Math.min(23, parseInt(cleanValue.slice(0, 2), 10) || 0);
-        const minutes = Math.min(59, parseInt(cleanValue.slice(2, 4), 10) || 0);
-        const formatted = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+        const formatted = formattedTime(cleanValue);
         onChange?.(formatted);
+      }
+    };
+
+    const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+      const cleanValue = inputValue.replace(/\D/g, '');
+      if (cleanValue.length === 0) {
+        setInputValue('');
+        onChange?.('');
+        return;
+      }
+      const padded = cleanValue.padEnd(4, '0').slice(0, 4);
+      const formatted = formattedTime(padded);
+      if (formatted !== inputValue) {
+        setInputValue(formatted);
+        onChange?.(formatted);
+      }
+
+      if (onBlur) {
+        onBlur(e);
       }
     };
 
@@ -75,6 +98,7 @@ const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(
             ref={combinedRef}
             value={inputValue}
             onChange={handleInputChange}
+            onBlur={handleBlur}
             placeholder={placeholder}
             className='pr-10'
             type='text'
