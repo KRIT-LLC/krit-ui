@@ -53,6 +53,7 @@ export * from '@/hooks/useToast';
 export * from '@/hooks/useNotify';
 export * from '@/hooks/useTheme';
 export * from '@/hooks/useConfirm';
+export * from '@/hooks/useCombinedRefs';
 export * from '@/lib/file';
 export * from '@/lib/zod';
 export * from '@/hooks/useSidebar';

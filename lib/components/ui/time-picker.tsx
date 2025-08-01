@@ -1,27 +1,18 @@
 import * as React from 'react';
 import { useMask } from '@react-input/mask';
+import { useCombinedRefs } from '@/hooks/useCombinedRefs';
 import { cn } from '@/utils';
 import WatchLaterOutlineIcon from '@/assets/watch_later_outline.svg?react';
 import { Input, InputProps } from './input';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 
-const useCombinedRefs = (...refs: React.ForwardedRef<HTMLInputElement>[]) => {
-  return React.useCallback((node: HTMLInputElement | null) => {
-    refs.forEach(ref => {
-      if (!ref) return;
-      if (typeof ref === 'function') ref(node);
-      else (ref as React.MutableRefObject<HTMLInputElement | null>).current = node;
-    });
-  }, refs);
-};
-
 export interface TimePickerProps extends Omit<InputProps, 'onChange' | 'value' | 'type'> {
-  value?: string;
-  onChange?: (value: string) => void;
+  value: string;
+  onChange: (value: string) => void;
 }
 
 const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(
-  ({ value = '', onChange, placeholder, className, ...props }, ref) => {
+  ({ value, onChange, placeholder, className, ...props }, ref) => {
     const [open, setOpen] = React.useState(false);
 
     const maskedRef = useMask({
