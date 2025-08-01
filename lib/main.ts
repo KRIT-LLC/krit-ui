@@ -45,6 +45,7 @@ export * from '@/components/ui/segmented-control';
 export * from '@/components/ui/radio-group';
 export * from '@/components/ui/banner';
 export * from '@/components/ui/attachmentsSection';
+export * from '@/components/ui/time-picker';
 
 export * from '@/utils';
 
