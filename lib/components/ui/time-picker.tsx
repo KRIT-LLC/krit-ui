@@ -15,11 +15,9 @@ const useCombinedRefs = (...refs: React.ForwardedRef<HTMLInputElement>[]) => {
   }, refs);
 };
 
-export interface TimePickerProps
-  extends Omit<InputProps, 'onChange' | 'value' | 'type' | 'placeholder'> {
+export interface TimePickerProps extends Omit<InputProps, 'onChange' | 'value' | 'type'> {
   value?: string;
   onChange?: (value: string) => void;
-  placeholder?: string;
 }
 
 const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(
