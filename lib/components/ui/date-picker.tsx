@@ -22,6 +22,7 @@ export interface DatePickerSingleProps extends DayPickerSingleProps {
   onChange?: SelectSingleEventHandler;
   error?: string | boolean;
   readOnly?: boolean;
+  iconClassName?: string;
 }
 
 export interface DatePickerMultipleProps extends DayPickerMultipleProps {
@@ -30,6 +31,7 @@ export interface DatePickerMultipleProps extends DayPickerMultipleProps {
   onChange?: SelectMultipleEventHandler;
   error?: string | boolean;
   readOnly?: boolean;
+  iconClassName?: string;
 }
 
 export interface DateRange {
@@ -43,6 +45,7 @@ interface DatePickerRangeProps extends DayPickerRangeProps {
   onChange?: SelectRangeEventHandler;
   error?: string | boolean;
   readOnly?: boolean;
+  iconClassName?: string;
 }
 
 export type DatePickerProps =
@@ -52,7 +55,7 @@ export type DatePickerProps =
       locale?: Locale;
     });
 
-export function DatePicker({ className, locale, ...props }: DatePickerProps) {
+export function DatePicker({ className, locale, iconClassName, ...props }: DatePickerProps) {
   const { t } = useTranslation();
   const placeholder = (
     <span className='text-foreground-tertiary font-normal'>
@@ -81,10 +84,35 @@ export function DatePicker({ className, locale, ...props }: DatePickerProps) {
     }
   };
 
+  // Нормализация выбора диапазона дат
+  const createRangeHandler = (onChange?: SelectRangeEventHandler): SelectRangeEventHandler => {
+    return (range, selectedDay, activeModifiers, e) => {
+      if (!onChange || !selectedDay) return;
+
+      const currentValue = props.selected || props.value;
+
+      // Проверяем, что currentValue является DateRange
+      if (currentValue && typeof currentValue === 'object' && 'from' in currentValue) {
+        const dateRange = currentValue as DateRange;
+        const normalizedRange = {
+          from: dateRange.to ? selectedDay : dateRange.from,
+          to: dateRange.to ? undefined : selectedDay,
+        };
+
+        onChange(normalizedRange, selectedDay, activeModifiers, e);
+      } else {
+        // Если currentValue не является DateRange, используем исходный range
+        onChange(range, selectedDay, activeModifiers, e);
+      }
+    };
+  };
+
   const modifiedProps = {
     ...props,
     selected: props.selected || props.value,
-    onSelect: props.onSelect || props.onChange,
+    onSelect:
+      props.onSelect ||
+      (props.mode === 'range' ? createRangeHandler(props.onChange) : props.onChange),
   } as DatePickerProps;
 
   return (
@@ -102,7 +130,7 @@ export function DatePicker({ className, locale, ...props }: DatePickerProps) {
           )}
         >
           {formatValue()}
-          <CalendarOutline className='ml-auto text-foreground-secondary' />
+          <CalendarOutline className={cn('ml-auto text-foreground-secondary', iconClassName)} />
         </Button>
       </PopoverTrigger>
       <PopoverContent className='w-auto p-0 rounded-lg'>
