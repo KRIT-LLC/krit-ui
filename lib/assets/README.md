@@ -148,6 +148,8 @@
 ![handyman.svg](handyman.svg)
 #### HardwareIcon
 ![hardware.svg](hardware.svg)
+#### HideImageIcon
+![hide_image.svg](hide_image.svg)
 #### HideOutlineIcon
 ![hide_outline.svg](hide_outline.svg)
 #### HistoryIcon
