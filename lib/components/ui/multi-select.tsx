@@ -63,7 +63,7 @@ export interface MultiSelectProps {
 const MAX_HEIGHT = 340;
 const ITEM_SIZE = 36;
 
-function CommandAddItem({
+const CommandAddItem = ({
   search,
   onCreate,
   createLabel,
@@ -71,7 +71,7 @@ function CommandAddItem({
   search: string;
   onCreate: () => void;
   createLabel?: string;
-}) {
+}) => {
   return (
     <div
       tabIndex={0}
@@ -89,7 +89,7 @@ function CommandAddItem({
       {createLabel} {search}
     </div>
   );
-}
+};
 
 const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
   (
