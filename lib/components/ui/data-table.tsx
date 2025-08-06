@@ -11,6 +11,7 @@ import {
   SortingState,
   Table as TanTable,
   useReactTable,
+  VisibilityState,
 } from '@tanstack/react-table';
 import { useTranslation } from '@/hooks/useTranslation';
 import { cn } from '@/utils';
@@ -48,6 +49,8 @@ interface DataTableProps<TData, TValue> {
   skeletonClassName?: string;
   isStickyHeader?: boolean;
   headerClassName?: string;
+  columnVisibility?: VisibilityState;
+  onColumnVisibilityChange?: OnChangeFn<VisibilityState>;
 }
 
 export function DataTable<TData, TValue>({
@@ -76,6 +79,8 @@ export function DataTable<TData, TValue>({
   skeletonClassName = 'h-5',
   isStickyHeader,
   headerClassName,
+  columnVisibility,
+  onColumnVisibilityChange,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     getRowId,
@@ -84,7 +89,7 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     rowCount: rowCount,
-    state: { pagination, rowSelection: selection, sorting, expanded },
+    state: { pagination, rowSelection: selection, sorting, expanded, columnVisibility },
     manualSorting,
     enableRowSelection,
     enableMultiRowSelection,
@@ -92,6 +97,7 @@ export function DataTable<TData, TValue>({
     onRowSelectionChange,
     onSortingChange,
     onExpandedChange,
+    onColumnVisibilityChange,
     // @ts-ignore
     getSubRows: row => row.subRows,
   });
@@ -109,14 +115,11 @@ export function DataTable<TData, TValue>({
   };
 
   return (
-    <div
-      className={cn(
-        'relative flex flex-1 flex-col h-full',
-        className,
-      )}
-    >
+    <div className={cn('relative flex flex-1 flex-col h-full', className)}>
       <Table>
-        <TableHeader className={cn(isStickyHeader && 'sticky top-0 bg-background z-10', headerClassName)}>
+        <TableHeader
+          className={cn(isStickyHeader && 'sticky top-0 bg-background z-10', headerClassName)}
+        >
           {table.getHeaderGroups().map(headerGroup => (
             <TableRow key={headerGroup.id} className='border-line-primary'>
               {headerGroup.headers.map(header => {
