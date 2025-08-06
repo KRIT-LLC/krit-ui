@@ -73,6 +73,7 @@ export { default as GearsAlarmIcon } from '@/assets/gears_alarm.svg?react';
 export { default as HandPaperIcon } from '@/assets/hand_paper.svg?react';
 export { default as HandymanIcon } from '@/assets/handyman.svg?react';
 export { default as HardwareIcon } from '@/assets/hardware.svg?react';
+export { default as HideImageIcon } from '@/assets/hide_image.svg?react';
 export { default as HideOutlineIcon } from '@/assets/hide_outline.svg?react';
 export { default as HistoryIcon } from '@/assets/history.svg?react';
 export { default as HotelClassIcon } from '@/assets/hotel_class.svg?react';
