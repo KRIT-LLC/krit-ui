@@ -240,6 +240,8 @@
 ![stars.svg](stars.svg)
 #### StraightenIcon
 ![straighten.svg](straighten.svg)
+#### SubdirectoryArrowRightIcon
+![subdirectory_arrow_right.svg](subdirectory_arrow_right.svg)
 #### SupervisorAccountIcon
 ![supervisor_account.svg](supervisor_account.svg)
 #### TableChartIcon

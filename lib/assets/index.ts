@@ -119,6 +119,7 @@ export { default as SmsFailedIcon } from '@/assets/sms_failed.svg?react';
 export { default as Square4OutlineIcon } from '@/assets/square_4_outline.svg?react';
 export { default as StarsIcon } from '@/assets/stars.svg?react';
 export { default as StraightenIcon } from '@/assets/straighten.svg?react';
+export { default as SubdirectoryArrowRightIcon } from '@/assets/subdirectory_arrow_right.svg?react';
 export { default as SupervisorAccountIcon } from '@/assets/supervisor_account.svg?react';
 export { default as TableChartIcon } from '@/assets/table_chart.svg?react';
 export { default as TargetOutlineIcon } from '@/assets/target_outline.svg?react';
