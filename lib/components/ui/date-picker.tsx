@@ -86,23 +86,28 @@ export function DatePicker({ className, locale, iconClassName, ...props }: DateP
 
   // Нормализация выбора диапазона дат
   const createRangeHandler = (onChange?: SelectRangeEventHandler): SelectRangeEventHandler => {
-    return (range, selectedDay, activeModifiers, e) => {
+    return (_, selectedDay, activeModifiers, e) => {
       if (!onChange || !selectedDay) return;
 
       const currentValue = props.selected || props.value;
 
-      // Проверяем, что currentValue является DateRange
       if (currentValue && typeof currentValue === 'object' && 'from' in currentValue) {
         const dateRange = currentValue as DateRange;
-        const normalizedRange = {
-          from: dateRange.to ? selectedDay : dateRange.from,
-          to: dateRange.to ? undefined : selectedDay,
-        };
 
-        onChange(normalizedRange, selectedDay, activeModifiers, e);
+        if (!dateRange.from) {
+          onChange({ from: selectedDay, to: undefined }, selectedDay, activeModifiers, e);
+        } else if (!dateRange.to) {
+          const newRange =
+            selectedDay < dateRange.from
+              ? { from: selectedDay, to: dateRange.from }
+              : { from: dateRange.from, to: selectedDay };
+          onChange(newRange, selectedDay, activeModifiers, e);
+        } else {
+          onChange({ from: selectedDay, to: undefined }, selectedDay, activeModifiers, e);
+        }
       } else {
-        // Если currentValue не является DateRange, используем исходный range
-        onChange(range, selectedDay, activeModifiers, e);
+        // Fallback for initial state.
+        onChange({ from: selectedDay, to: undefined }, selectedDay, activeModifiers, e);
       }
     };
   };
