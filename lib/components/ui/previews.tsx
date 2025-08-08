@@ -308,6 +308,7 @@ export const Previews = (props: PreviewsProps) => {
                       'flex flex-col items-center justify-center h-full w-full text-icon-theme rounded-lg border-2 border-line-secondary',
                       getSizeClass(),
                     )}
+                    onClick={() => setCurrentPreview(item)}
                   >
                     <FileIcon />
                     {orientation === 'horizontal' && (

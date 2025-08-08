@@ -132,7 +132,12 @@ export const PreviewFull = ({
               )}
             >
               <FileIcon />
-              <div className='text-sm mt-1 text-foreground-secondary'>{name}</div>
+              <div
+                className='text-sm mt-1 text-foreground-secondary truncate w-full text-center p-0.5'
+                title={name}
+              >
+                {name}
+              </div>
             </a>
           )}
           {isLoading && (
