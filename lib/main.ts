@@ -47,6 +47,7 @@ export * from '@/components/ui/banner';
 export * from '@/components/ui/attachmentsSection';
 export * from '@/components/ui/time-picker';
 export * from '@/components/ui/carousel';
+export * from '@/components/ui/filters-column-header';
 
 export * from '@/utils';
 

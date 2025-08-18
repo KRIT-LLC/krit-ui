@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   ColumnDef,
+  ColumnFiltersState,
   ExpandedState,
   flexRender,
   getCoreRowModel,
@@ -51,6 +52,8 @@ interface DataTableProps<TData, TValue> {
   headerClassName?: string;
   columnVisibility?: VisibilityState;
   onColumnVisibilityChange?: OnChangeFn<VisibilityState>;
+  columnFilters?: ColumnFiltersState;
+  onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>;
 }
 
 export function DataTable<TData, TValue>({
@@ -81,6 +84,8 @@ export function DataTable<TData, TValue>({
   headerClassName,
   columnVisibility,
   onColumnVisibilityChange,
+  columnFilters,
+  onColumnFiltersChange,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     getRowId,
@@ -89,7 +94,14 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     rowCount: rowCount,
-    state: { pagination, rowSelection: selection, sorting, expanded, columnVisibility },
+    state: {
+      pagination,
+      rowSelection: selection,
+      sorting,
+      expanded,
+      columnVisibility,
+      columnFilters,
+    },
     manualSorting,
     enableRowSelection,
     enableMultiRowSelection,
@@ -98,6 +110,7 @@ export function DataTable<TData, TValue>({
     onSortingChange,
     onExpandedChange,
     onColumnVisibilityChange,
+    onColumnFiltersChange,
     // @ts-ignore
     getSubRows: row => row.subRows,
   });
