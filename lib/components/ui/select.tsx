@@ -87,7 +87,10 @@ const Select = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Trigger>
             <CancelOutline
               width={18}
               height={18}
-              className='text-icon-fade-contrast pointer-events-auto absolute z-50 right-9'
+              className={cn(
+                'text-icon-fade-contrast pointer-events-auto absolute z-50 right-9',
+                readOnly && 'cursor-not-allowed pointer-events-none opacity-95',
+              )}
               onClick={() => handleChange?.('')}
             />
           )}
