@@ -174,8 +174,14 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
         if (isAllSelected) {
           onChange([], []);
         } else {
-          const allValues = filteredActualOptions.map(opt => opt.value);
-          const allLabels = filteredActualOptions.map(opt => opt.label);
+          const [allValues, allLabels] = filteredActualOptions.reduce(
+            (acc, opt) => {
+              acc[0].push(opt.value);
+              acc[1].push(opt.label);
+              return acc;
+            },
+            [[], []] as [string[], string[]],
+          );
           onChange(allValues, allLabels);
         }
         onOpenChange?.(maxSelected !== 1);
