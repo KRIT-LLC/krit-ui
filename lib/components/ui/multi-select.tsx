@@ -55,7 +55,7 @@ export interface MultiSelectProps {
   onRefetch?: () => void;
   onOpenChange?: (open: boolean) => void;
   onSearch?: (value: string) => void;
-  onChange?: (value: string[]) => void;
+  onChange?: (value: string[], labels?: string[]) => void;
   onClick?: () => void;
   onRemoveClick?: () => void;
 }
@@ -172,10 +172,17 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
 
       if (option.value === ALL_VALUE) {
         if (isAllSelected) {
-          onChange([]);
+          onChange([], []);
         } else {
-          const allValues = filteredActualOptions.map(opt => opt.value);
-          onChange(allValues);
+          const [allValues, allLabels] = filteredActualOptions.reduce(
+            (acc, opt) => {
+              acc[0].push(opt.value);
+              acc[1].push(opt.label);
+              return acc;
+            },
+            [[], []] as [string[], string[]],
+          );
+          onChange(allValues, allLabels);
         }
         onOpenChange?.(maxSelected !== 1);
         return;
@@ -188,7 +195,11 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
       const isSelectedOverflow = maxSelected && newValues.length >= maxSelected;
       if (isSelectedOverflow) newValues = newValues.reverse().slice(0, maxSelected);
 
-      onChange(newValues);
+      const newLabels = newValues.map(item => {
+        const found = filteredActualOptions.find(({ value: optValue }) => optValue === item);
+        return (found?.label || String(item)).trim();
+      });
+      onChange(newValues, newLabels);
       onOpenChange?.(maxSelected !== 1);
     };
 
@@ -329,7 +340,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
                         if (onRemoveClick) {
                           onRemoveClick();
                         } else if (showReset && onChange) {
-                          onChange([]);
+                          onChange([], []);
                         }
                       }}
                     >
