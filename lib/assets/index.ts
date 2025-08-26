@@ -94,6 +94,7 @@ export { default as NoAssignmentIcon } from '@/assets/no_assignment.svg?react';
 export { default as NorthEastIcon } from '@/assets/north_east.svg?react';
 export { default as OutputIcon } from '@/assets/output.svg?react';
 export { default as PenOutlineIcon } from '@/assets/pen_outline.svg?react';
+export { default as PeopleAltOutlinedIcon } from '@/assets/people_alt_outlined.svg?react';
 export { default as PersonIcon } from '@/assets/person.svg?react';
 export { default as PersonOutlineIcon } from '@/assets/person_outline.svg?react';
 export { default as PlayIcon } from '@/assets/play.svg?react';

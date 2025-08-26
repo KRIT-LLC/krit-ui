@@ -190,6 +190,8 @@
 ![output.svg](output.svg)
 #### PenOutlineIcon
 ![pen_outline.svg](pen_outline.svg)
+#### PeopleAltOutlinedIcon
+![people_alt_outlined.svg](people_alt_outlined.svg)
 #### PersonIcon
 ![person.svg](person.svg)
 #### PersonOutlineIcon
