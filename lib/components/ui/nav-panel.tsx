@@ -1,4 +1,5 @@
 import React from 'react';
+import { Location } from 'react-router-dom';
 import { cn } from '@/utils';
 import { Nav, NavItem, NavSeparator } from './nav';
 
@@ -43,14 +44,22 @@ export interface NavPanelProps {
    *   LinkComponent={NavLink}
    * />*/
   expandableNavSlot: React.ReactNode;
+  location?: Location;
 }
 
 const NavPanel = (props: NavPanelProps) => {
-  const { isCollapsed, navItems, projectName, linkComponent, profileNavSlot, expandableNavSlot } =
-    props;
+  const {
+    isCollapsed,
+    navItems,
+    projectName,
+    linkComponent,
+    profileNavSlot,
+    expandableNavSlot,
+    location,
+  } = props;
 
   const getItemVariant = (item: NavItem) =>
-    location.pathname.includes(String(item.to)) ? 'secondary-contrast' : 'ghost';
+    location?.pathname === String(item.to) ? 'secondary-contrast' : 'ghost';
 
   const navBlocks = (navItems ?? []).map((block, index) => (
     <React.Fragment key={index}>
