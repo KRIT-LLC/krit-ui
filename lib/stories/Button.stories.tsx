@@ -1,74 +1,128 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { fn } from '@storybook/test';
-import { Button } from '@/components/ui/button';
-import { Check, Plus } from 'lucide-react';
-import DocumentListOutline from '@/assets/document_list_outline.svg?react';
+import { Download, Heart, Settings } from 'lucide-react';
+import { Button, ButtonProps } from '@/components/ui/button';
 
-const IconMap = {
-  Check: <Check />,
-  Plus: <Plus />,
-  DocumentListOutline: <DocumentListOutline />,
-};
-
-const meta = {
-  title: 'Button',
+const meta: Meta<typeof Button> = {
+  title: 'Components/UI/Button',
   component: Button,
-  parameters: {
-    layout: 'centered',
-  },
-  args: {
-    onClick: fn(),
-    icon: null,
-  },
   tags: ['autodocs'],
   argTypes: {
     variant: {
-      control: 'select',
-      options: ['default',
-        'primary',
-        'accent',
-        'pale',
-        'destructive',
-        'success',
-        'grey',
-        'secondary',
-        'contrast',
-        'outline',
-        'ghost',
-        'link',
-        'purple'],
-    },
-    icon: {
-      options: ['none', ...Object.keys(IconMap)],
-      mapping: {
-        none: null,
-        ...IconMap,
-      },
-      control: {
-        labels: {
-          none: 'No Icon',
-          ...Object.keys(IconMap),
-        },
-      },
+      control: 'radio',
+      options: ['default', 'primary', 'secondary', 'destructive', 'ghost', 'link'],
     },
     size: {
-      control: 'select',
-      options: ['default', 'xs', 'sm', 'lg', 'xl', 'icon'],
+      control: 'radio',
+      options: ['sm', 'md', 'lg'],
     },
     asChild: {
-      control: false,
+      control: 'boolean',
+      defaultValue: false,
     },
     asDropdown: {
-      control: false,
+      control: 'boolean',
+      defaultValue: false,
+    },
+    icon: {
+      control: 'select',
+      options: ['none', 'heart', 'settings', 'download'],
+      mapping: {
+        heart: <Heart className='h-4 w-4' />,
+        settings: <Settings className='h-4 w-4' />,
+        download: <Download className='h-4 w-4' />,
+        none: null,
+      },
+    },
+    children: {
+      control: 'text',
+      defaultValue: 'Button Label',
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'Универсальный компонент кнопки с поддержкой различных стилей, размеров и состояний',
+      },
     },
   },
 } satisfies Meta<typeof Button>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Button>;
 
-export const Demo: Story = {
+const Template: Story = {
+  render: args => <Button {...args} />,
+};
+
+export const Default = {
+  ...Template,
   args: {
-    children: 'Button',
+    variant: 'default',
+    size: 'md',
+  },
+};
+
+export const Primary = {
+  ...Template,
+  args: {
+    variant: 'primary',
+    children: 'Primary Action',
+  },
+};
+
+export const WithIcon = {
+  ...Template,
+  args: {
+    variant: 'primary',
+    icon: 'download',
+    children: 'Download File',
+  },
+};
+
+export const Dropdown = {
+  ...Template,
+  args: {
+    asDropdown: true,
+    children: 'Menu Options',
+    icon: 'settings',
+  },
+};
+
+export const AsChild = {
+  render: (args: ButtonProps) => (
+    <Button {...args}>
+      <a href='#link'>Link as Button</a>
+    </Button>
+  ),
+  args: {
+    asChild: true,
+    variant: 'link',
+  },
+};
+
+export const Destructive = {
+  ...Template,
+  args: {
+    variant: 'destructive',
+    children: 'Delete Item',
+  },
+};
+
+export const Disabled = {
+  ...Template,
+  args: {
+    disabled: true,
+    children: 'Disabled State',
+  },
+};
+
+export const LoadingState = {
+  ...Template,
+  args: {
+    'aria-label': 'Loading...',
+    children: 'Processing...',
+    disabled: true,
+    icon: <span className='animate-spin'>⟳</span>,
   },
 };

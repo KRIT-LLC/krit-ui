@@ -6,17 +6,21 @@ import { filesToAttachments } from '../../lib/file';
 import { NoDataBanner } from './banner';
 import { Previews } from './previews';
 
+/**
+ * Пропсы компонента секции вложений
+ */
 export interface AttachmentsSectionProps {
+  /** Заголовок секции */
   title?: string;
-  defaultExpanded?: boolean;
-  count?: number;
-  tabs?: Attachments;
-  placeholder?: string;
-  addDescription?: string;
-  visibleSections?: (string | number)[];
+  /** Ориентация контейнера (вертикальная/горизонтальная) */
   orientation?: 'vertical' | 'horizontal';
+  /** Ориентация превью файлов */
   previewsOrientation?: 'vertical' | 'horizontal';
+  /** Видимые секции по меткам или индексам */
+  visibleSections?: (string | number)[];
+  /** Доступные для загрузки MIME-типы */
   accepts?: ContentType[];
+  /** Максимальные размеры файлов по типам */
   maxSizes?: {
     image?: number;
     video?: number;
@@ -24,10 +28,30 @@ export interface AttachmentsSectionProps {
     audio?: number;
     pdf?: number;
   };
+  /** Включение сжатия изображений */
   withCompress?: boolean;
+  /** Колбэк добавления файлов */
   onAdd?: (attachments: AttachmentItem[], tabIndex: number) => Promise<void> | void;
+  /** Колбэк удаления файлов */
   onRemove?: (index: number, tabIndex: number) => Promise<void> | void;
+  /** Список вкладок с файлами */
+  tabs?: Attachments;
 }
+
+/**
+ * Компонент для управления и отображения вложений с группировкой по типам
+ *
+ * @component
+ * @param {AttachmentsSectionProps} props - Параметры компонента
+ * @returns {React.ReactElement} Секция с превью файлов и управлением
+ *
+ * @example
+ * <AttachmentsSection
+ *   title="Медиафайлы"
+ *   orientation="horizontal"
+ *   onAdd={(files) => handleUpload(files)}
+ * />
+ */
 
 export const AttachmentsSection = ({
   title,
