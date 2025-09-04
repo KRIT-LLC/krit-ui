@@ -157,6 +157,41 @@ const initialState: ThemeProviderState = {
 
 export const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
+/**
+ * Провайдер темы для приложения. Управляет цветовой темой, переводами и CSS-переменными.
+ * Обеспечивает контекст для дочерних компонентов к текущей теме и функциям её изменения.
+ * Поддерживает сохранение выбранной темы в localStorage и синхронизацию с системными настройками.
+ *
+ * @component
+ * @param {object} props - Параметры компонента
+ * @param {React.ReactNode} props.children - Дочерние компоненты
+ * @param {Theme} [props.defaultTheme='system'] - Тема по умолчанию
+ * @param {string} [props.storageKey='app-ui-theme'] - Ключ для сохранения темы в localStorage
+ * @param {Record<Translations, string>} [props.translations] - Кастомные переводы
+ * @param {Record<'dark' | 'light', Partial<ThemeVariables>>} [props.colors] - Кастомные цвета для тем
+ * @returns {React.ReactElement} Провайдер темы с контекстом
+ *
+ * @example
+ * <ThemeProvider defaultTheme="dark" storageKey="my-app-theme">
+ *   <App />
+ * </ThemeProvider>
+ *
+ * @example
+ * <ThemeProvider
+ *   colors={{
+ *     dark: {
+ *       '--krit-background-primary': '0 0% 10%',
+ *       '--krit-foreground-primary': '0 0% 100%'
+ *     },
+ *     light: {
+ *       '--krit-background-primary': '0 0% 100%',
+ *       '--krit-foreground-primary': '0 0% 10%'
+ *     }
+ *   }}
+ * >
+ *   <App />
+ * </ThemeProvider>
+ */
 export function ThemeProvider({
   children,
   defaultTheme = 'system',

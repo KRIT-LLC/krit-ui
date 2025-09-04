@@ -1,14 +1,25 @@
 import * as React from 'react';
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
 import { Check } from 'lucide-react';
-
 import { cn } from '@/utils';
 
+/**
+ * Кастомный чекбокс на базе Radix UI с поддержкой лейбла
+ *
+ * @component
+ * @param {React.ComponentProps<typeof CheckboxPrimitive.Root>} props - Пропсы компонента
+ * @param {string} [props.className] - Дополнительные классы стилей
+ * @param {React.ReactNode} [props.children] - Лейбл чекбокса
+ * @param {boolean} [props.checked] - Состояние выбора
+ * @param {function} [props.onCheckedChange] - Колбэк изменения состояния
+ * @param {boolean} [props.disabled] - Неактивное состояние
+ * @returns {React.ReactElement} Кастомный чекбокс
+ */
 const Checkbox = React.forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>
 >(({ className, ...props }, ref) => (
-  <span className="flex items-center space-x-1">
+  <span className='flex items-center space-x-1'>
     <CheckboxPrimitive.Root
       ref={ref}
       className={cn(
@@ -18,13 +29,13 @@ const Checkbox = React.forwardRef<
       {...props}
     >
       <CheckboxPrimitive.Indicator className={cn('flex items-center justify-center text-current')}>
-        <Check className="h-2.5 w-2.5 text-foreground-on-contrast" strokeWidth={2} />
+        <Check className='h-2.5 w-2.5 text-foreground-on-contrast' strokeWidth={2} />
       </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>
     {props.children && (
       <label
         htmlFor={props.id}
-        className="text-sm leading-none cursor-default peer-disabled:cursor-not-allowed peer-disabled:opacity-70 hover:opacity-90"
+        className='text-sm leading-none cursor-default peer-disabled:cursor-not-allowed peer-disabled:opacity-70 hover:opacity-90'
       >
         {props.children}
       </label>
@@ -32,7 +43,19 @@ const Checkbox = React.forwardRef<
   </span>
 ));
 Checkbox.displayName = CheckboxPrimitive.Root.displayName;
-
+/**
+ * Чекбокс с кликабельным лейблом
+ *
+ * @component
+ * @extends Checkbox
+ * @param {Object} props - Пропсы компонента
+ * @param {string} [props.className] - Дополнительные классы стилей
+ * @param {React.ReactNode} props.children - Текст лейбла
+ * @param {boolean} [props.checked] - Состояние выбора
+ * @param {function} [props.onCheckedChange] - Колбэк изменения состояния
+ * @param {boolean} [props.disabled] - Неактивное состояние
+ * @returns {React.ReactElement} Чекбокс с интерактивным лейблом
+ */
 const CheckboxWithLabel = React.forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>

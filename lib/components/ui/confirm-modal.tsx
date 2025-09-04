@@ -29,7 +29,28 @@ interface ConfirmModalProps extends PromptOptions {
   onConfirm?: (input?: string) => void;
   onCancel?: () => void;
 }
-
+/**
+ * Модальное окно подтверждения действия с поддержкой кастомного ввода
+ * @component
+ * @param {Object} props - Параметры компонента
+ * @param {string} [props.title] - Заголовок модального окна
+ * @param {string} [props.description] - Описание действия
+ * @param {'contrast' | 'destructive'} [props.confirmType='contrast'] - Стиль кнопки подтверждения
+ * @param {string} [props.confirmText='OK'] - Текст кнопки подтверждения
+ * @param {boolean} [props.confirmHidden] - Скрыть кнопку подтверждения
+ * @param {string} [props.cancelText] - Текст кнопки отмены
+ * @param {boolean} [props.cancelHidden] - Скрыть кнопку отмены
+ * @param {React.ElementType} [props.input] - Кастомный компонент ввода
+ * @param {string} [props.inputPlaceholder] - Плейсхолдер для поля ввода
+ * @param {string} [props.inputRequiredLabel] - Сообщение при обязательном поле
+ * @param {number} [props.inputMaxLength] - Максимальная длина ввода
+ * @param {boolean} [props.inputRequired] - Обязательность заполнения поля
+ * @param {ReactNode} [props.children] - Триггер для открытия модального окна
+ * @param {boolean} [props.visible] - Состояние видимости модального окна
+ * @param {function} [props.onVisibleChange] - Колбэк изменения видимости
+ * @param {function} [props.onConfirm] - Колбэк подтверждения
+ * @param {function} [props.onCancel] - Колбэк отмены
+ */
 export const ConfirmModal = (props: ConfirmModalProps) => {
   const {
     title,

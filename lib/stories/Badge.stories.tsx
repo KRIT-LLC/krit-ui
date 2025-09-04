@@ -1,143 +1,357 @@
+// Badge.stories.tsx
+import { action } from '@storybook/addon-actions';
 import type { Meta, StoryObj } from '@storybook/react';
-import { AlertTriangle, Bell, CheckCircle } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Badge, BadgeProps } from '@/components/ui/badge';
+
+// Импортируем иконки для демонстрации
+const StarIcon = () => <span>⭐</span>;
+const CheckIcon = () => <span>✅</span>;
+const CloseIcon = () => <span>❌</span>;
 
 const meta: Meta<typeof Badge> = {
   title: 'Components/UI/Badge',
   component: Badge,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'Стилизованный компонент бейджа с поддержкой различных вариантов оформления, размеров и иконок.',
+      },
+    },
+  },
   argTypes: {
     variant: {
-      control: 'radio',
+      control: 'select',
       options: [
         'default',
         'gradient',
         'secondary',
+        'secondary-contrast',
         'accent',
         'theme',
+        'theme-fade',
         'pale',
+        'pale-primary',
         'destructive',
+        'destructive-fade',
+        'destructive-primary',
         'success',
+        'success-fade',
+        'success-primary',
         'grey',
+        'grey-primary',
         'outline',
+        'outline-success',
+        'warning',
+        'warning-fade',
+        'contrast',
       ],
+      description: 'Стиль оформления бейджа',
     },
     size: {
-      control: 'radio',
-      options: ['sm', 'md', 'lg'],
+      control: 'select',
+      options: ['sm', 'default', 'lg'],
+      description: 'Размер бейджа',
     },
     iconVariant: {
-      control: 'radio',
-      options: ['square', 'circle'],
-      if: { arg: 'variant', eq: 'secondary' },
+      control: 'select',
+      options: ['default', 'secondary', 'black'],
+      description: 'Стиль иконки (только для variant="secondary")',
     },
     layout: {
-      control: 'radio',
-      options: ['row', 'col'],
+      control: 'select',
+      options: ['default', 'truncate'],
+      description: 'Распределение внутренних элементов',
+    },
+    className: {
+      control: 'text',
+      description: 'Дополнительные CSS-классы',
     },
     icon: {
-      control: 'select',
-      options: ['none', 'bell', 'alert', 'check'],
-      mapping: {
-        bell: <Bell className='h-3.5 w-3.5' />,
-        alert: <AlertTriangle className='h-3.5 w-3.5' />,
-        check: <CheckCircle className='h-3.5 w-3.5' />,
-        none: null,
-      },
+      control: 'object',
+      description: 'Иконка слева от содержимого',
     },
     iconRight: {
-      control: 'select',
-      options: ['none', 'bell', 'alert', 'check'],
-      mapping: {
-        bell: <Bell className='h-3.5 w-3.5' />,
-        alert: <AlertTriangle className='h-3.5 w-3.5' />,
-        check: <CheckCircle className='h-3.5 w-3.5' />,
-        none: null,
-      },
+      control: 'object',
+      description: 'Иконка справа от содержимого',
     },
-    children: {
+    title: {
       control: 'text',
-      defaultValue: 'Status Label',
+      description: 'Текст тултипа (используется если children не строка)',
+    },
+    onClick: {
+      action: 'clicked',
+      description: 'Callback при клике на бейдж',
     },
   },
-  parameters: {
-    docs: {
-      description: {
-        component: 'Индикатор для отображения статусов, уведомлений и меток с поддержкой иконок',
-      },
-    },
-  },
-};
+} satisfies Meta<typeof Badge>;
 
 export default meta;
 type Story = StoryObj<typeof Badge>;
 
+// Базовая история
 export const Default: Story = {
   args: {
-    children: 'New Feature',
+    children: 'Бейдж',
+    variant: 'default',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Базовый бейдж с текстовым содержимым.',
+      },
+    },
   },
 };
 
-export const WithIcons: Story = {
+// Бейдж с иконкой слева
+export const WithLeftIcon: Story = {
   args: {
-    icon: 'bell',
-    iconRight: 'check',
-    children: 'Notifications',
+    children: 'С иконкой',
+    variant: 'default',
+    icon: <StarIcon />,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Бейдж с иконкой слева от текста.',
+      },
+    },
   },
 };
 
-export const SecondaryVariant: Story = {
+// Бейдж с иконкой справа
+export const WithRightIcon: Story = {
   args: {
-    variant: 'secondary',
-    iconVariant: 'secondary',
-    children: 'Security Alert',
-    icon: 'alert',
+    children: 'С иконкой',
+    variant: 'default',
+    iconRight: <CheckIcon />,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Бейдж с иконкой справа от текста.',
+      },
+    },
   },
 };
 
-export const OutlineBadge: Story = {
+// Бейдж с обеими иконками
+export const WithBothIcons: Story = {
   args: {
-    variant: 'outline',
-    children: 'Draft Version',
+    children: 'С иконками',
+    variant: 'default',
+    icon: <StarIcon />,
+    iconRight: <CheckIcon />,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Бейдж с иконками с обеих сторон текста.',
+      },
+    },
   },
 };
 
-export const SmallSize: Story = {
-  args: {
-    size: 'sm',
-    children: 'Compact',
+// Все варианты бейджей
+export const AllVariants: Story = {
+  render: () => {
+    const variants = [
+      'default',
+      'gradient',
+      'secondary',
+      'secondary-contrast',
+      'accent',
+      'theme',
+      'theme-fade',
+      'pale',
+      'pale-primary',
+      'destructive',
+      'destructive-fade',
+      'destructive-primary',
+      'success',
+      'success-fade',
+      'success-primary',
+      'grey',
+      'grey-primary',
+      'outline',
+      'outline-success',
+      'warning',
+      'warning-fade',
+      'contrast',
+    ];
+
+    return (
+      <div className='flex flex-col gap-4'>
+        {variants.map(variant => (
+          <div key={variant} className='flex gap-2 items-center'>
+            <span className='w-32 text-sm text-muted-foreground'>{variant}:</span>
+            <Badge variant={variant as BadgeProps['variant']}>{variant}</Badge>
+          </div>
+        ))}
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Все доступные варианты оформления бейджей.',
+      },
+    },
   },
 };
 
-export const VerticalLayout: Story = {
-  args: {
-    layout: 'truncate',
-    children: 'Multi\nLine',
-    icon: 'check',
+// Разные размеры
+export const Sizes: Story = {
+  render: () => (
+    <div className='flex gap-2 items-center'>
+      <Badge size='sm' variant='default'>
+        Маленький
+      </Badge>
+      <Badge size='default' variant='default'>
+        Средний
+      </Badge>
+      <Badge size='lg' variant='default'>
+        Большой
+      </Badge>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Бейджи разных размеров: маленький, средний и большой.',
+      },
+    },
   },
 };
 
+// Кликабельный бейдж
 export const Clickable: Story = {
   args: {
-    children: 'Clickable Badge',
-    onClick: () => console.log('Badge clicked!'),
+    children: 'Кликабельный бейдж',
+    variant: 'default',
+    onClick: action('badgeClicked'),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Бейдж с обработчиком клика. При клике меняет курсор и вызывает callback.',
+      },
+    },
   },
 };
 
-export const SuccessState: Story = {
+// Бейдж только с иконкой
+export const IconOnly: Story = {
   args: {
-    variant: 'success',
-    iconVariant: 'default',
-    icon: 'check',
-    children: 'Payment Successful',
+    icon: <StarIcon />,
+    variant: 'default',
+    title: 'Только иконка',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Бейдж, содержащий только иконку. Для отображения подсказки используется свойство title.',
+      },
+    },
   },
 };
 
-export const ErrorState: Story = {
-  args: {
-    variant: 'destructive',
-    iconVariant: 'default',
-    icon: 'alert',
-    children: 'Connection Error',
+// Варианты layout
+export const Layouts: Story = {
+  render: () => (
+    <div className='flex flex-col gap-4'>
+      <div className='flex gap-2 items-center'>
+        <Badge layout='default' variant='default' icon={<StarIcon />}>
+          Default layout
+        </Badge>
+        <Badge layout='truncate' variant='default' icon={<StarIcon />}>
+          Truncate layout with long text that will be truncated
+        </Badge>
+      </div>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Бейджи с разными вариантами расположения элементов.',
+      },
+    },
+  },
+};
+
+// Варианты иконок для secondary бейджа
+export const SecondaryIconVariants: Story = {
+  render: () => (
+    <div className='flex flex-col gap-4'>
+      <div className='flex gap-2 items-center'>
+        <Badge variant='secondary' iconVariant='default' icon={<StarIcon />}>
+          Default icon
+        </Badge>
+        <Badge variant='secondary' iconVariant='secondary' icon={<StarIcon />}>
+          Secondary icon
+        </Badge>
+        <Badge variant='secondary' iconVariant='black' icon={<StarIcon />}>
+          Black icon
+        </Badge>
+      </div>
+      <div className='flex gap-2 items-center'>
+        <Badge variant='secondary' iconVariant='default' iconRight={<CheckIcon />}>
+          Default icon (right)
+        </Badge>
+        <Badge variant='secondary' iconVariant='secondary' iconRight={<CheckIcon />}>
+          Secondary icon (right)
+        </Badge>
+        <Badge variant='secondary' iconVariant='black' iconRight={<CheckIcon />}>
+          Black icon (right)
+        </Badge>
+      </div>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Бейджи со secondary вариантом и разными стилями иконок.',
+      },
+    },
+  },
+};
+
+// Комбинированный пример
+export const CombinedExample: Story = {
+  render: () => (
+    <div className='flex flex-col gap-4'>
+      <div className='flex gap-2 items-center'>
+        <Badge variant='success' icon={<CheckIcon />}>
+          Успех
+        </Badge>
+        <Badge variant='destructive' icon={<CloseIcon />}>
+          Ошибка
+        </Badge>
+        <Badge variant='warning'>Предупреждение</Badge>
+      </div>
+      <div className='flex gap-2 items-center'>
+        <Badge variant='theme' icon={<StarIcon />} iconRight={<CheckIcon />}>
+          С двумя иконками
+        </Badge>
+        <Badge variant='outline' size='lg'>
+          Большой контурный
+        </Badge>
+      </div>
+      <div className='flex gap-2 items-center'>
+        <Badge variant='pale' layout='truncate' icon={<StarIcon />}>
+          Длинный текст, который будет обрезан при truncate layout
+        </Badge>
+      </div>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Комбинированный пример различных вариантов использования бейджей.',
+      },
+    },
   },
 };

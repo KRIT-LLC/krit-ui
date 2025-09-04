@@ -1,6 +1,16 @@
 import * as React from 'react';
 import { cn } from '@/utils';
 
+/**
+ * Контейнер таблицы с поддержкой прокрутки и базовой стилизацией.
+ *
+ * @component
+ * @param {object} props - Параметры компонента
+ * @param {string} [props.className] - Дополнительные CSS-классы для элемента table
+ * @param {string} [props.rootClassName] - Дополнительные CSS-классы для контейнера
+ * @param {React.Ref<HTMLTableElement>} ref - Реф для доступа к DOM-элементу таблицы
+ * @returns {React.ReactElement} Контейнер таблицы с вложенной таблицей
+ */
 const Table = React.forwardRef<
   HTMLTableElement,
   React.HTMLAttributes<HTMLTableElement> & {
@@ -13,6 +23,15 @@ const Table = React.forwardRef<
 ));
 Table.displayName = 'Table';
 
+/**
+ * Заголовок таблицы. Содержит элементы TableHead.
+ *
+ * @component
+ * @param {object} props - Параметры компонента
+ * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {React.Ref<HTMLTableSectionElement>} ref - Реф для доступа к DOM-элементу
+ * @returns {React.ReactElement} Секция заголовка таблицы
+ */
 const TableHeader = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
@@ -21,6 +40,15 @@ const TableHeader = React.forwardRef<
 ));
 TableHeader.displayName = 'TableHeader';
 
+/**
+ * Тело таблицы. Содержит основные данные таблицы в виде TableRow и TableCell.
+ *
+ * @component
+ * @param {object} props - Параметры компонента
+ * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {React.Ref<HTMLTableSectionElement>} ref - Реф для доступа к DOM-элементу
+ * @returns {React.ReactElement} Секция тела таблицы
+ */
 const TableBody = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
@@ -29,6 +57,15 @@ const TableBody = React.forwardRef<
 ));
 TableBody.displayName = 'TableBody';
 
+/**
+ * Подвал таблицы. Обычно содержит итоги или дополнительную информацию.
+ *
+ * @component
+ * @param {object} props - Параметры компонента
+ * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {React.Ref<HTMLTableSectionElement>} ref - Реф для доступа к DOM-элементу
+ * @returns {React.ReactElement} Секция подвала таблицы
+ */
 const TableFooter = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
@@ -41,6 +78,15 @@ const TableFooter = React.forwardRef<
 ));
 TableFooter.displayName = 'TableFooter';
 
+/**
+ * Строка таблицы. Содержит ячейки TableHead или TableCell.
+ *
+ * @component
+ * @param {object} props - Параметры компонента
+ * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {React.Ref<HTMLTableRowElement>} ref - Реф для доступа к DOM-элементу
+ * @returns {React.ReactElement} Строка таблицы
+ */
 const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTMLTableRowElement>>(
   ({ className, ...props }, ref) => (
     <tr
@@ -55,6 +101,15 @@ const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTML
 );
 TableRow.displayName = 'TableRow';
 
+/**
+ * Заголовочная ячейка таблицы. Используется в TableHeader.
+ *
+ * @component
+ * @param {object} props - Параметры компонента
+ * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {React.Ref<HTMLTableCellElement>} ref - Реф для доступа к DOM-элементу
+ * @returns {React.ReactElement} Заголовочная ячейка таблицы
+ */
 const TableHead = React.forwardRef<
   HTMLTableCellElement,
   React.ThHTMLAttributes<HTMLTableCellElement>
@@ -70,6 +125,15 @@ const TableHead = React.forwardRef<
 ));
 TableHead.displayName = 'TableHead';
 
+/**
+ * Ячейка таблицы с данными. Используется в TableBody.
+ *
+ * @component
+ * @param {object} props - Параметры компонента
+ * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {React.Ref<HTMLTableCellElement>} ref - Реф для доступа к DOM-элементу
+ * @returns {React.ReactElement} Ячейка таблицы с данными
+ */
 const TableCell = React.forwardRef<
   HTMLTableCellElement,
   React.TdHTMLAttributes<HTMLTableCellElement>
@@ -82,6 +146,15 @@ const TableCell = React.forwardRef<
 ));
 TableCell.displayName = 'TableCell';
 
+/**
+ * Заголовок таблицы. Описывает содержание таблицы.
+ *
+ * @component
+ * @param {object} props - Параметры компонента
+ * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {React.Ref<HTMLTableCaptionElement>} ref - Реф для доступа к DOM-элементу
+ * @returns {React.ReactElement} Заголовок таблицы
+ */
 const TableCaption = React.forwardRef<
   HTMLTableCaptionElement,
   React.HTMLAttributes<HTMLTableCaptionElement>

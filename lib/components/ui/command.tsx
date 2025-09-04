@@ -5,6 +5,11 @@ import { Search } from 'lucide-react';
 import { cn } from '@/utils';
 import { Dialog, DialogContent } from './dialog';
 
+/**
+ * Командное меню с поиском и навигацией по типу Spotlight
+ * @component
+ * @see {@link https://cmdk.paco.me/ Документация CMDK}
+ */
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive>
@@ -22,6 +27,11 @@ Command.displayName = CommandPrimitive.displayName;
 
 interface CommandDialogProps extends DialogProps {}
 
+/**
+ * Модальное окно с командным меню
+ * @component
+ * @param {DialogProps} props - Пропсы диалога Radix UI
+ */
 const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
   return (
     <Dialog {...props}>
@@ -34,6 +44,11 @@ const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
   );
 };
 
+/**
+ * Поле ввода для поиска по командам
+ * @component
+ * @param {React.ComponentProps<typeof CommandPrimitive.Input>} props - Пропсы инпута
+ */
 const CommandInput = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Input>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
@@ -53,6 +68,11 @@ const CommandInput = React.forwardRef<
 
 CommandInput.displayName = CommandPrimitive.Input.displayName;
 
+/**
+ * Контейнер для списка команд
+ * @component
+ * @param {React.ComponentProps<typeof CommandPrimitive.List>} props - Пропсы списка
+ */
 const CommandList = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.List>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.List>

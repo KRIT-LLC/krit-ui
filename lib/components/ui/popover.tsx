@@ -1,12 +1,33 @@
 import * as React from 'react';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
-
 import { cn } from '@/utils';
 
+/**
+ * Popover компонент на основе Radix UI
+ * @see https://www.radix-ui.com/docs/primitives/components/popover
+ */
+
+/**
+ * Основной контейнер Popover
+ * @component
+ */
 const Popover = PopoverPrimitive.Root;
 
+/**
+ * Триггер для открытия/закрытия Popover
+ * @component
+ */
 const PopoverTrigger = PopoverPrimitive.Trigger;
 
+/**
+ * Содержимое Popover
+ * @component
+ * @param {Object} props - Свойства компонента
+ * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {'start'|'center'|'end'} [props.align='center'] - Выравнивание содержимого относительно триггера
+ * @param {number} [props.sideOffset=4] - Отступ от стороны триггера
+ * @param {React.Ref} ref - Ref для содержимого Popover
+ */
 const PopoverContent = React.forwardRef<
   React.ElementRef<typeof PopoverPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>

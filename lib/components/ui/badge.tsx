@@ -16,12 +16,12 @@ export interface BadgeProps
  *
  * @component
  * @param {object} props - Параметры компонента
- * @param {'secondary' | 'outline' | 'default'} [props.variant] - Стиль оформления
- * @param {'sm' | 'md' | 'lg'} [props.size] - Размер компонента
+ * @param {'default' | 'gradient' | 'secondary' | 'secondary-contrast' | 'accent' | 'theme' | 'theme-fade' | 'pale' | 'pale-primary' | 'destructive' | 'destructive-fade' | 'destructive-primary' | 'success' | 'success-fade' | 'success-primary' | 'grey' | 'grey-primary' | 'outline' | 'outline-success' | 'warning' | 'warning-fade' | 'contrast',} [props.variant] - Стиль оформления
+ * @param {'sm' | 'default' | 'lg'} [props.size] - Размер компонента
  * @param {React.ReactNode} [props.icon] - Иконка слева от содержимого
  * @param {React.ReactNode} [props.iconRight] - Иконка справа от содержимого
- * @param {'square' | 'circle'} [props.iconVariant] - Стиль иконки (только для variant='secondary')
- * @param {'row' | 'col'} [props.layout] - Распределение внутренних элементов
+ * @param {'default' | 'secondary' | 'black'} [props.iconVariant] - Стиль иконки (только для variant='secondary')
+ * @param {'default' | 'truncate'} [props.layout] - Распределение внутренних элементов
  * @param {string} [props.className] - Дополнительные CSS-классы
  * @param {React.ReactNode} props.children - Основное содержимое бейджа
  * @param {string} [props.title] - Текст тултипа (используется если children не строка)

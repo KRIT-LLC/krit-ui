@@ -33,22 +33,29 @@ export interface ButtonProps
  * <Button variant="primary" size="lg">Нажми меня</Button>
  */
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, asDropdown, icon, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, asDropdown, icon, children, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';
-    const children = (
-      <>
-        {icon ? icon : null}
-        {props.children}
-      </>
-    );
+
+    // Если asChild=true, мы не можем добавлять дополнительные элементы (иконки, стрелки)
+    // так как Slot ожидает только одного потомка
+    if (asChild) {
+      return (
+        <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props}>
+          {children}
+        </Comp>
+      );
+    }
+
+    // Для обычного случая (не asChild) рендерим все элементы
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }), asDropdown && 'gap-1')}
         ref={ref}
         {...props}
       >
+        {icon && <span className='mr-2'>{icon}</span>}
         {children}
-        {asDropdown && <ArrowDropDown />}
+        {asDropdown && <ArrowDropDown className='ml-2' />}
       </Comp>
     );
   },

@@ -55,6 +55,26 @@ export type DatePickerProps =
       locale?: Locale;
     });
 
+/**
+ * Универсальный компонент выбора даты с поддержкой различных режимов
+ * @component
+ * @param {Object} props - Свойства компонента
+ * @param {'single' | 'multiple' | 'range'} [props.mode] - Режим выбора даты
+ * @param {Date | Date[] | DateRange} [props.value] - Выбранные даты в зависимости от режима
+ * @param {string} [props.placeholder] - Плейсхолдер для пустого состояния
+ * @param {Function} [props.onChange] - Обработчик изменения даты
+ * @param {string | boolean} [props.error] - Ошибка валидации
+ * @param {boolean} [props.readOnly] - Режим только для чтения
+ * @param {string} [props.iconClassName] - Дополнительные классы для иконки календаря
+ * @param {Locale} [props.locale] - Локализация календаря
+ * @example
+ * <DatePicker
+ *   mode="single"
+ *   value={new Date()}
+ *   placeholder="Выберите дату"
+ *   onChange={(date) => console.log(date)}
+ * />
+ */
 export function DatePicker({ className, locale, iconClassName, ...props }: DatePickerProps) {
   const { t } = useTranslation();
   const placeholder = (

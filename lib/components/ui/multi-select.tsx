@@ -93,7 +93,54 @@ const CommandAddItem = ({
     </div>
   );
 };
-
+/**
+ * Компонент для множественного выбора опций с поддержкой поиска, группировки и создания новых опций.
+ * Поддерживает различные варианты отображения выбранных значений, включая бейджи.
+ *
+ * @component
+ * @param {MultiSelectProps} props - Параметры компонента
+ * @param {string} [props.className] - Дополнительные CSS-классы для контейнера
+ * @param {string} [props.triggerClassName] - Дополнительные CSS-классы для триггера
+ * @param {ButtonVariant} [props.variant='secondary-outline'] - Вариант стиля кнопки-триггера
+ * @param {string} [props.placeholder] - Текст-заполнитель при отсутствии выбранных значений
+ * @param {MultiSelectOptionType[]} props.options - Опции для выбора
+ * @param {string[]} props.value - Выбранные значения
+ * @param {number} [props.maxSelected] - Максимальное количество выбираемых элементов
+ * @param {boolean} [props.shouldFilter=true] - Флаг включения фильтрации опций
+ * @param {boolean} [props.open] - Контролируемое состояние открытия попапа
+ * @param {React.ReactNode} [props.children] - Кастомное содержимое триггера
+ * @param {boolean} [props.isLoading] - Флаг состояния загрузки
+ * @param {boolean} [props.isError] - Флаг состояния ошибки
+ * @param {boolean} [props.disabled] - Флаг неактивного состояния
+ * @param {string} [props.searchPlaceholder] - Текст-заполнитель для поля поиска
+ * @param {boolean} [props.showAllOption=false] - Флаг отображения опции "Выбрать все"
+ * @param {boolean} [props.showReset] - Флаг отображения кнопки сброса
+ * @param {boolean} [props.required] - Флаг обязательного поля
+ * @param {boolean} [props.showBadge=false] - Флаг отображения выбранных значений в виде бейджей
+ * @param {number} [props.maxVisibleRowsBadge] - Максимальное количество строк для отображения бейджей
+ * @param {string} [props.defaultSearchedValue] - Значение поиска по умолчанию
+ * @param {string} [props.createLabel] - Текст для создания новой опции
+ * @param {Function} [props.onCreate] - Callback создания новой опции
+ * @param {Function} [props.renderOption] - Кастомный рендер опции
+ * @param {Function} [props.onRefetch] - Callback повторной загрузки данных
+ * @param {Function} [props.onOpenChange] - Callback изменения состояния открытия попапа
+ * @param {Function} [props.onSearch] - Callback поиска
+ * @param {Function} [props.onChange] - Callback изменения выбранных значений
+ * @param {Function} [props.onClick] - Callback клика по триггеру
+ * @param {Function} [props.onRemoveClick] - Callback клика по кнопке удаления
+ * @returns {React.ReactElement} Компонент множественного выбора
+ *
+ * @example
+ * <MultiSelect
+ *   options={[
+ *     { label: 'Option 1', value: '1' },
+ *     { label: 'Option 2', value: '2' }
+ *   ]}
+ *   value={['1']}
+ *   onChange={(values) => console.log(values)}
+ *   placeholder="Select options"
+ * />
+ */
 const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
   (
     {

@@ -9,7 +9,7 @@ import {
   RotateLeftIcon,
   RotateRightIcon,
 } from '@/assets';
-import { Dialog, DialogContent, DialogTrigger } from './dialog';
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from './dialog';
 import { Preloader } from './preloader';
 
 interface PreviewFullProps {
@@ -22,6 +22,19 @@ interface PreviewFullProps {
   onRemove?: () => Promise<void>;
 }
 
+/**
+ * Внутренний компонент для отображения панели действий с медиа-контентом.
+ * Содержит кнопки навигации, поворота и удаления.
+ *
+ * @component
+ * @param {object} props - Параметры компонента
+ * @param {function} props.onRotate - Функция поворота изображения
+ * @param {function} [props.onPrev] - Функция перехода к предыдущему элементу
+ * @param {function} [props.onNext] - Функция перехода к следующему элементу
+ * @param {function} [props.onRemove] - Функция удаления элемента
+ * @param {boolean} [props.isImage] - Флаг, указывающий что контент является изображением
+ * @returns {React.ReactElement} Панель действий с медиа-контентом
+ */
 const Action = ({
   onRotate,
   onPrev,
@@ -62,6 +75,33 @@ const Action = ({
   );
 };
 
+/**
+ * Компонент для полноэкранного просмотра медиа-контента с поддержкой навигации, поворота и управления.
+ * Поддерживает изображения, видео, аудио и PDF файлы.
+ *
+ * @component
+ * @param {PreviewFullProps} props - Параметры компонента
+ * @param {ReactNode} [props.children] - Элемент, который будет триггером открытия модального окна
+ * @param {string} [props.src] - URL источника медиа-контента
+ * @param {string} [props.name] - Название файла (особенно важно для PDF)
+ * @param {ContentType} [props.type] - Тип контента (image, video, audio, pdf)
+ * @param {function} [props.onPrev] - Функция перехода к предыдущему элементу в галерее
+ * @param {function} [props.onNext] - Функция перехода к следующему элементу в галерее
+ * @param {function} [props.onRemove] - Функция удаления текущего элемента
+ * @returns {React.ReactElement} Модальное окно для просмотра медиа-контента
+ *
+ * @example
+ * <PreviewFull
+ *   src="/path/to/image.jpg"
+ *   type="image"
+ *   name="Image.jpg"
+ *   onPrev={() => console.log('Previous')}
+ *   onNext={() => console.log('Next')}
+ *   onRemove={() => console.log('Remove')}
+ * >
+ *   <button>Open Preview</button>
+ * </PreviewFull>
+ */
 export const PreviewFull = ({
   children,
   src,
@@ -89,6 +129,9 @@ export const PreviewFull = ({
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className='bg-[transparent] shadow-none flex flex-col gap-12 overflow-hidden'>
+        {/* Скрытый заголовок для доступности */}
+        <DialogTitle className='sr-only'>{name || ''}</DialogTitle>
+
         <div className='flex items-center justify-center max-h-[90vh]'>
           {type === 'image' && (
             <img
@@ -98,6 +141,7 @@ export const PreviewFull = ({
               className='object-cover w-full h-full max-w-full max-h-[calc(90vh-150px)]'
               onError={() => setIsLoading(false)}
               onLoad={() => setIsLoading(false)}
+              alt={name || 'Изображение для просмотра'}
             />
           )}
           {type === 'video' && (

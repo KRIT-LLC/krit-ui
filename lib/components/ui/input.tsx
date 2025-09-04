@@ -5,12 +5,33 @@ import Search from '@/assets/search.svg?react';
 import ViewOutline from '@/assets/view_outline.svg?react';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  /** Сообщение об ошибке или флаг наличия ошибки */
   error?: string | boolean;
+  /** Режим поискового поля с иконкой поиска */
   asSearch?: boolean;
+  /** Иконка справа от поля ввода */
   rightIcon?: React.ReactNode;
+  /** Отображение счетчика символов */
   withCount?: boolean;
+  /** Callback при нажатии клавиши Enter */
   onEnter?: (value: string) => void;
 }
+
+/**
+ * Компонент поля ввода с поддержкой различных состояний и дополнительных элементов.
+ * Поддерживает валидацию, иконки, счетчик символов и режим поиска.
+ *
+ * @component
+ * @param {InputProps} props - Параметры компонента
+ * @param {React.Ref<HTMLInputElement>} ref - Реф для доступа к DOM-элементу
+ * @returns {React.ReactElement} Поле ввода с заданными свойствами
+ *
+ * @example
+ * <Input placeholder="Введите текст" />
+ * <Input asSearch placeholder="Поиск" />
+ * <Input type="password" withCount />
+ * <Input error="Обязательное поле" />
+ */
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   (

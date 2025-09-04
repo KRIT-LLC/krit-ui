@@ -56,6 +56,30 @@ interface DataTableProps<TData, TValue> {
   onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>;
 }
 
+/**
+ * Расширенная таблица данных с пагинацией, сортировкой и виртуализацией
+ * @component
+ * @template TData - Тип элементов данных
+ * @template TValue - Тип значений колонок
+ * @param {Object} props - Параметры компонента
+ * @param {ColumnDef<TData, TValue>[]} props.columns - Конфигурация колонок
+ * @param {TData[]} props.data - Данные для отображения
+ * @param {'small' | 'medium' | 'large'} [props.horizontalPadding='medium'] - Горизонтальные отступы
+ * @param {number} [props.rowCount] - Общее количество строк (для серверной пагинации)
+ * @param {string} [props.noResultsText='No results.'] - Текст при отсутствии данных
+ * @param {boolean} [props.enableRowSelection=false] - Разрешить выбор строк
+ * @param {boolean} [props.enableMultiRowSelection=false] - Разрешить множественный выбор
+ * @param {RowSelectionState} [props.selection] - Состояние выбранных строк
+ * @param {PaginationState} [props.pagination] - Состояние пагинации
+ * @param {SortingState} [props.sorting] - Состояние сортировки
+ * @param {boolean} [props.manualSorting=true] - Ручное управление сортировкой
+ * @param {PaginationProps} [props.paginationProps] - Свойства пагинации
+ * @param {string} [props.className] - Дополнительные классы
+ * @param {function} [props.onRowClick] - Обработчик клика по строке
+ * @param {boolean} [props.loading] - Состояние загрузки
+ * @param {boolean} [props.isStickyHeader] - Фиксированный заголовок
+ */
+
 export function DataTable<TData, TValue>({
   columns,
   data,

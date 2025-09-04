@@ -23,6 +23,25 @@ interface CollapsibleSectionProps {
   onAdd?: () => void;
 }
 
+/**
+ * Раскрывающаяся секция с поддержкой состояний загрузки, ошибок и динамическим контентом
+ *
+ * @component
+ * @param {Object} props - Параметры компонента
+ * @param {string} props.title - Заголовок секции
+ * @param {ReactNode} [props.icon] - Иконка перед заголовком
+ * @param {boolean} [props.defaultExpanded] - Начальное состояние раскрытия
+ * @param {boolean} [props.showExpanderButton] - Показать кнопку "Развернуть"
+ * @param {boolean} [props.expandOnAdd=true] - Автораскрытие при добавлении
+ * @param {number} [props.count] - Счетчик элементов
+ * @param {string} [props.placeholder] - Текст при отсутствии элементов
+ * @param {ReactNode} [props.right] - Дополнительные элементы справа
+ * @param {ReactNode} [props.children] - Контент секции
+ * @param {boolean} [props.isLoading] - Состояние загрузки
+ * @param {boolean} [props.isError] - Состояние ошибки
+ * @param {function} [props.onRefetch] - Колбэк повторной загрузки
+ * @param {function} [props.onAdd] - Колбэк добавления элемента
+ */
 export const CollapsibleSection = (props: CollapsibleSectionProps) => {
   const {
     title,

@@ -10,8 +10,21 @@ import { Label } from './label';
 import { MultiSelect, MultiSelectProps } from './multi-select';
 import { Select, SelectProps } from './select';
 
+/**
+ * Провайдер формы, оборачивающий react-hook-form FormProvider
+ * @component
+ * @see https://react-hook-form.com/api/useform/formprovider
+ */
 const Form = FormProvider;
 
+/**
+ * Компонент поля формы, оборачивающий Controller из react-hook-form
+ * @component
+ * @template TFieldValues - Тип значений формы
+ * @template TName - Имя поля в форме
+ * @param {ControllerProps<TFieldValues, TName>} props - Свойства Controller
+ * @returns {JSX.Element}
+ */
 const FormField = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
@@ -26,28 +39,43 @@ const FormField = <
 };
 
 interface FormItemProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** Расположение элементов по горизонтали */
   horizontal?: boolean;
 }
 
-const FormItem = React.forwardRef<HTMLDivElement, FormItemProps>(({ className, ...props }, ref) => {
-  const id = React.useId();
+/**
+ * Контейнер для элементов формы
+ * @component
+ * @param {FormItemProps} props - Свойства компонента
+ * @returns {JSX.Element}
+ */
+const FormItem = React.forwardRef<HTMLDivElement, FormItemProps>(
+  ({ className, horizontal, ...props }, ref) => {
+    const id = React.useId();
 
-  return (
-    <FormItemContext.Provider value={{ id }}>
-      <div
-        ref={ref}
-        className={cn(
-          'flex text-sm',
-          props.horizontal ? 'space-x-3 items-center' : 'space-y-2 flex-col',
-          className,
-        )}
-        {...props}
-      />
-    </FormItemContext.Provider>
-  );
-});
+    return (
+      <FormItemContext.Provider value={{ id }}>
+        <div
+          ref={ref}
+          className={cn(
+            'flex text-sm',
+            horizontal ? 'space-x-3 items-center' : 'space-y-2 flex-col',
+            className,
+          )}
+          {...props}
+        />
+      </FormItemContext.Provider>
+    );
+  },
+);
 FormItem.displayName = 'FormItem';
 
+/**
+ * Метка для поля формы
+ * @component
+ * @param {React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> & { required?: boolean }} props - Свойства компонента
+ * @returns {JSX.Element}
+ */
 const FormLabel = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> & { required?: boolean }
@@ -66,6 +94,12 @@ const FormLabel = React.forwardRef<
 });
 FormLabel.displayName = 'FormLabel';
 
+/**
+ * Контроллер для управления состоянием поля формы
+ * @component
+ * @param {React.ComponentPropsWithoutRef<typeof Slot>} props - Свойства компонента
+ * @returns {JSX.Element}
+ */
 const FormControl = React.forwardRef<
   React.ElementRef<typeof Slot>,
   React.ComponentPropsWithoutRef<typeof Slot>
@@ -84,6 +118,12 @@ const FormControl = React.forwardRef<
 });
 FormControl.displayName = 'FormControl';
 
+/**
+ * Компонент для отображения описания поля формы
+ * @component
+ * @param {React.HTMLAttributes<HTMLParagraphElement>} props - Свойства компонента
+ * @returns {JSX.Element}
+ */
 const FormDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
@@ -101,6 +141,12 @@ const FormDescription = React.forwardRef<
 });
 FormDescription.displayName = 'FormDescription';
 
+/**
+ * Компонент для отображения сообщений об ошибках формы
+ * @component
+ * @param {React.HTMLAttributes<HTMLParagraphElement>} props - Свойства компонента
+ * @returns {JSX.Element | null}
+ */
 const FormMessage = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
@@ -135,6 +181,12 @@ const FormItemInput = React.forwardRef<HTMLInputElement, InputProps>((props, ref
   );
 });
 
+/**
+ * Композитный компонент: поле ввода в контейнере формы
+ * @component
+ * @param {InputProps} props - Свойства компонента Input
+ * @returns {JSX.Element}
+ */
 const FormItemSelect = React.forwardRef<React.ElementRef<typeof Select>, SelectProps>(
   (props, ref) => {
     return (
@@ -148,25 +200,39 @@ const FormItemSelect = React.forwardRef<React.ElementRef<typeof Select>, SelectP
 );
 FormItemSelect.displayName = 'FormItemSelect';
 
-const FormItemMultiSelect = (props: MultiSelectProps) => {
+/**
+ * Композитный компонент: выпадающий список в контейнере формы
+ * @component
+ * @param {SelectProps} props - Свойства компонента Select
+ * @returns {JSX.Element}
+ */
+const FormItemMultiSelect = React.forwardRef<HTMLDivElement, MultiSelectProps>((props, ref) => {
   return (
-    <FormItem>
+    <FormItem ref={ref}>
       <FormControl>
         <MultiSelect {...props} />
       </FormControl>
     </FormItem>
   );
-};
+});
+FormItemMultiSelect.displayName = 'FormItemMultiSelect';
 
-const FormItemDatePicker = (props: DatePickerProps) => {
+/**
+ * Композитный компонент: выбор даты в контейнере формы
+ * @component
+ * @param {DatePickerProps} props - Свойства компонента DatePicker
+ * @returns {JSX.Element}
+ */
+const FormItemDatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref) => {
   return (
-    <FormItem>
+    <FormItem ref={ref}>
       <FormControl>
         <DatePicker {...props} />
       </FormControl>
     </FormItem>
   );
-};
+});
+FormItemDatePicker.displayName = 'FormItemDatePicker';
 
 export {
   Form,

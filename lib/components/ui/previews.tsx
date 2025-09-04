@@ -46,6 +46,42 @@ export interface PreviewsProps {
   onRemove?: (index: number) => void;
 }
 
+/**
+ * Компонент для отображения и управления вложениями различных типов (изображения, видео, аудио, PDF).
+ * Поддерживает предпросмотр, добавление, удаление и сжатие файлов с проверкой ограничений по размеру.
+ *
+ * @component
+ * @param {PreviewsProps} props - Параметры компонента
+ * @param {string} [props.className] - Дополнительные CSS-классы для контейнера
+ * @param {string} [props.placeholder] - Текст-заполнитель при отсутствии вложений
+ * @param {AttachmentItem[]} [props.data=[]] - Массив вложений для отображения
+ * @param {ContentType[]} [props.accepts=defaultAccepts] - Разрешенные типы файлов
+ * @param {boolean} [props.multiple=true] - Разрешить множественный выбор файлов
+ * @param {number} [props.max=10] - Максимальное количество файлов
+ * @param {number} [props.previewSize=130] - Размер превью в пикселях
+ * @param {number} [props.gap=2] - Отступ между элементами
+ * @param {string} [props.title] - Заголовок для изображений
+ * @param {'vertical' | 'horizontal'} [props.orientation='horizontal'] - Ориентация элементов
+ * @param {object} [props.maxSizes] - Максимальные размеры файлов по типам
+ * @param {number} [props.maxSizes.image=MAX_IMAGE_SIZE_MB] - Макс. размер изображений (МБ)
+ * @param {number} [props.maxSizes.video=MAX_VIDEO_SIZE_MB] - Макс. размер видео (МБ)
+ * @param {number} [props.maxSizes.total=MAX_TOTAL_SIZE_MB] - Макс. общий размер (МБ)
+ * @param {number} [props.maxSizes.audio=MAX_AUDIO_SIZE_MB] - Макс. размер аудио (МБ)
+ * @param {number} [props.maxSizes.pdf=MAX_PDF_SIZE_MB] - Макс. размер PDF (МБ)
+ * @param {boolean} [props.withCompress=true] - Включить сжатие файлов
+ * @param {function} [props.onAdd] - Обработчик добавления файлов
+ * @param {function} [props.onRemove] - Обработчик удаления файлов
+ * @returns {React.ReactElement} Компонент для управления вложениями
+ *
+ * @example
+ * <Previews
+ *   data={attachments}
+ *   onAdd={(files) => console.log('Added files:', files)}
+ *   onRemove={(index) => console.log('Remove file at index:', index)}
+ *   max={5}
+ *   orientation="vertical"
+ * />
+ */
 export const Previews = (props: PreviewsProps) => {
   const {
     className,

@@ -1,4 +1,5 @@
 import React, { FunctionComponent } from 'react';
+import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { LucideIcon } from 'lucide-react';
 import { cn } from '@/utils';
 import { ButtonVariant } from './button';
@@ -6,6 +7,17 @@ import { buttonVariants } from './buttonVariants';
 import { Separator } from './separator';
 import { Tooltip, TooltipContent, TooltipTrigger } from './tooltip';
 
+/**
+ * Интерфейс для элемента навигации
+ * @interface NavItem
+ * @property {string} title - Заголовок элемента навигации
+ * @property {string} [label] - Дополнительная метка элемента
+ * @property {LucideIcon|FunctionComponent} [icon] - Иконка элемента (Lucide или React компонент)
+ * @property {string} [to] - Ссылка для перехода
+ * @property {ButtonVariant} [variant] - Вариант стиля кнопки
+ * @property {string} [className] - Дополнительные CSS-классы
+ * @property {function} [onClick] - Обработчик клика
+ */
 export interface NavItem {
   title: string;
   label?: string;
@@ -18,6 +30,14 @@ export interface NavItem {
   onClick?: () => void;
 }
 
+/**
+ * Пропсы компонента навигации
+ * @interface NavProps
+ * @property {boolean} isCollapsed - Состояние сворачивания навигации
+ * @property {NavItem[]} items - Массив элементов навигации
+ * @property {function} [itemVariant] - Функция для определения варианта стиля элемента
+ * @property {React.ElementType} LinkComponent - Компонент для отображения ссылок
+ */
 interface NavProps {
   isCollapsed: boolean;
   items: NavItem[];
@@ -25,6 +45,12 @@ interface NavProps {
   LinkComponent: React.ElementType;
 }
 
+/**
+ * Компонент навигации с поддержкой сворачивания и тултипов
+ * @component
+ * @param {NavProps} props - Пропсы компонента
+ * @returns {JSX.Element} Элемент навигации
+ */
 export function Nav(props: NavProps) {
   const {
     items,
@@ -41,29 +67,33 @@ export function Nav(props: NavProps) {
       <nav className='grid gap-3 px-3 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-3'>
         {items.map((item, index) =>
           isCollapsed ? (
-            <Tooltip key={index} delayDuration={0}>
-              <TooltipTrigger asChild>
-                <LinkComponent
-                  to={item.to ?? '#'}
-                  className={cn(
-                    buttonVariants({ variant: item.variant || itemVariant(item), size: 'icon' }),
-                    'h-9 w-14',
-                    item.className,
+            <TooltipProvider key={index}>
+              <Tooltip delayDuration={0}>
+                <TooltipTrigger asChild>
+                  <LinkComponent
+                    to={item.to ?? '#'}
+                    className={cn(
+                      buttonVariants({ variant: item.variant || itemVariant(item), size: 'icon' }),
+                      'h-9 w-14',
+                      item.className,
+                    )}
+                    onClick={(e: React.MouseEvent) => {
+                      if (!item.to) e.preventDefault();
+                      item.onClick?.();
+                    }}
+                  >
+                    {item.icon && <item.icon className='h-6 w-6' />}
+                    <span className='sr-only'>{item.title}</span>
+                  </LinkComponent>
+                </TooltipTrigger>
+                <TooltipContent side='right' className='flex items-center gap-4'>
+                  {item.title}
+                  {item.label && (
+                    <span className='ml-auto text-muted-foreground'>{item.label}</span>
                   )}
-                  onClick={(e: React.MouseEvent) => {
-                    if (!item.to) e.preventDefault();
-                    item.onClick?.();
-                  }}
-                >
-                  {item.icon && <item.icon className='h-6 w-6' />}
-                  <span className='sr-only'>{item.title}</span>
-                </LinkComponent>
-              </TooltipTrigger>
-              <TooltipContent side='right' className='flex items-center gap-4'>
-                {item.title}
-                {item.label && <span className='ml-auto text-muted-foreground'>{item.label}</span>}
-              </TooltipContent>
-            </Tooltip>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           ) : (
             <LinkComponent
               key={index}
@@ -99,6 +129,11 @@ export function Nav(props: NavProps) {
   );
 }
 
+/**
+ * Разделитель для навигации
+ * @component
+ * @returns {JSX.Element} Элемент разделителя
+ */
 export function NavSeparator() {
   return <Separator className='w-[calc(100%_-_24px)] ml-3 bg-line-primary' />;
 }
