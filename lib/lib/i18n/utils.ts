@@ -1,4 +1,5 @@
 import { defaultTranslations } from './defaultTranslations';
+import { TranslationResource } from './i18nContext';
 
 export type InterpolationValues = Record<string, string | number | boolean | null | undefined>;
 
@@ -27,44 +28,36 @@ export const interpolate = (text: string, values: InterpolationValues = {}): str
 
 export const getTranslation = (
   key: string,
-  translations: Record<string, string>,
+  translations: TranslationResource,
   language: string,
   values?: InterpolationValues,
 ): string => {
   let finalKey = key;
   const count = values?.count;
 
-  // Определяем плюральную форму если есть count
   if (count !== undefined && typeof count === 'number') {
     const getSuffix = pluralRules[language] || pluralRules.en;
     const suffix = getSuffix(count);
 
-    // Пробуем найти ключ с суффиксом
     const pluralKey = `${key}${suffix}`;
-    if (translations[pluralKey] !== undefined) {
+    if (translations[pluralKey as keyof TranslationResource] !== undefined) {
       finalKey = pluralKey;
     }
   }
 
-  // Ищем перевод в порядке приоритета
-  const text =
-    translations[finalKey] ||
-    defaultTranslations[language]?.[finalKey] ||
-    defaultTranslations.en?.[finalKey] ||
-    finalKey;
-
+  const text = translations[finalKey as keyof TranslationResource] || finalKey;
   return values ? interpolate(text, values) : text;
 };
 
-// Тип для вложенных объектов переводов
 export type NestedTranslations = {
   [key: string]: string | NestedTranslations;
 };
 
-// Валидация переводов в development mode
-export const validateTranslations = (translations: Record<string, Record<string, string>>) => {
+export const validateTranslations = (
+  translations: Record<string, Partial<TranslationResource>>,
+) => {
   Object.keys(translations).forEach(language => {
-    const defaultKeys = Object.keys(defaultTranslations.en || {});
+    const defaultKeys = Object.keys(defaultTranslations.en) as Array<keyof TranslationResource>;
     const missingKeys = defaultKeys.filter(key => !translations[language]?.[key]);
 
     if (missingKeys.length > 0) {
@@ -78,20 +71,19 @@ export const validateTranslations = (translations: Record<string, Record<string,
 export const flattenTranslations = (
   obj: NestedTranslations,
   prefix = '',
-): Record<string, string> => {
-  return Object.keys(obj).reduce(
-    (acc, key) => {
-      const pre = prefix.length ? prefix + '.' : '';
-      const value = obj[key];
+): Partial<TranslationResource> => {
+  return Object.keys(obj).reduce((acc, key) => {
+    const pre = prefix.length ? prefix + '.' : '';
+    const value = obj[key];
 
-      if (typeof value === 'object' && value !== null) {
-        Object.assign(acc, flattenTranslations(value, pre + key));
-      } else if (typeof value === 'string') {
-        acc[pre + key] = value;
-      }
+    if (typeof value === 'object' && value !== null) {
+      Object.assign(acc, flattenTranslations(value, pre + key));
+    } else if (typeof value === 'string') {
+      // Приводим ключи к типу TranslationResource
+      const translationKey = (pre + key) as keyof TranslationResource;
+      acc[translationKey] = value;
+    }
 
-      return acc;
-    },
-    {} as Record<string, string>,
-  );
+    return acc;
+  }, {} as Partial<TranslationResource>);
 };
