@@ -82,38 +82,6 @@ export type ThemeVariables = {
   '--krit-radius': `${number}rem`;
 };
 
-const translations = {
-  expand: 'Expand',
-  empty: 'Empty',
-  confirmAction: 'Confirm action',
-  warning: 'Warning',
-  maxNChars: 'Max charts',
-  cancellation: 'Cancel',
-  displayBy: 'Display by',
-  selected: 'Selected',
-  all: 'All',
-  of: 'of',
-  selectDate: 'Select date',
-  search: 'Search...',
-  notFound: 'Not found',
-  networkError: 'Network error',
-  refetch: 'Refetch',
-  attachFile: 'Attach file',
-  errorOccurred: 'Error occurred',
-  noMediaFiles: 'No media files',
-  networkErrorDescription: 'Network error description',
-  confirmDeleteMedia: 'Are you sure you want to delete the file?',
-  delete: 'Delete',
-  imageSizeLimitMB: 'Image size limit',
-  audioSizeLimitMB: 'Audio size limit',
-  pdfSizeLimitMB: 'PDF size limit',
-  videoSizeLimitMB: 'Video size limit',
-  maxSizeOfFilesMB: 'Max size of files',
-  mb: 'Mb',
-};
-
-export type Translations = keyof typeof translations;
-
 export type ThemeProviderProps = {
   children: React.ReactNode;
   /**
@@ -129,11 +97,6 @@ export type ThemeProviderProps = {
    */
   storageKey?: string;
   /**
-   * Переводы для текстов.
-   * Ключи объекта — это идентификаторы переводов, значения — сами переводы.
-   */
-  translations?: Record<Translations, string>;
-  /**
    * Цвета для тем. Объект, где ключи — это названия тем (`dark` или `light`),
    * а значения — объекты с CSS-переменными (необязательными).
    * Позволяет кастомизировать цвета для каждой темы.
@@ -145,20 +108,18 @@ export type ThemeProviderState = {
   theme: Theme;
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
-  translations: Record<Translations, string>;
 };
 
 const initialState: ThemeProviderState = {
   theme: 'system',
   setTheme: () => null,
   toggleTheme: () => null,
-  translations,
 };
 
 export const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
 /**
- * Провайдер темы для приложения. Управляет цветовой темой, переводами и CSS-переменными.
+ * Провайдер темы для приложения. Управляет цветовой темой и CSS-переменными.
  * Обеспечивает контекст для дочерних компонентов к текущей теме и функциям её изменения.
  * Поддерживает сохранение выбранной темы в localStorage и синхронизацию с системными настройками.
  *
@@ -167,7 +128,6 @@ export const ThemeProviderContext = createContext<ThemeProviderState>(initialSta
  * @param {React.ReactNode} props.children - Дочерние компоненты
  * @param {Theme} [props.defaultTheme='system'] - Тема по умолчанию
  * @param {string} [props.storageKey='app-ui-theme'] - Ключ для сохранения темы в localStorage
- * @param {Record<Translations, string>} [props.translations] - Кастомные переводы
  * @param {Record<'dark' | 'light', Partial<ThemeVariables>>} [props.colors] - Кастомные цвета для тем
  * @returns {React.ReactElement} Провайдер темы с контекстом
  *
@@ -197,7 +157,6 @@ export function ThemeProvider({
   defaultTheme = 'system',
   storageKey = 'app-ui-theme',
   colors,
-  ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(
     () => (localStorage.getItem(storageKey) as Theme) || defaultTheme,
@@ -237,15 +196,7 @@ export function ThemeProvider({
       const nextTheme = theme === 'light' ? 'dark' : 'light';
       value.setTheme(nextTheme);
     },
-    translations: {
-      ...initialState.translations,
-      ...props.translations,
-    },
   };
 
-  return (
-    <ThemeProviderContext.Provider {...props} value={value}>
-      {children}
-    </ThemeProviderContext.Provider>
-  );
+  return <ThemeProviderContext.Provider value={value}>{children}</ThemeProviderContext.Provider>;
 }
