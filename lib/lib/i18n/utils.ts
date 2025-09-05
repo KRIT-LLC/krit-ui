@@ -63,18 +63,16 @@ export type NestedTranslations = {
 
 // Валидация переводов в development mode
 export const validateTranslations = (translations: Record<string, Record<string, string>>) => {
-  if (process.env.NODE_ENV === 'development') {
-    Object.keys(translations).forEach(language => {
-      const defaultKeys = Object.keys(defaultTranslations.en || {});
-      const missingKeys = defaultKeys.filter(key => !translations[language]?.[key]);
+  Object.keys(translations).forEach(language => {
+    const defaultKeys = Object.keys(defaultTranslations.en || {});
+    const missingKeys = defaultKeys.filter(key => !translations[language]?.[key]);
 
-      if (missingKeys.length > 0) {
-        console.warn(
-          `Missing translation keys for ${language}: ${missingKeys.join(', ')}. Using default values.`,
-        );
-      }
-    });
-  }
+    if (missingKeys.length > 0) {
+      console.warn(
+        `Missing translation keys for ${language}: ${missingKeys.join(', ')}. Using default values.`,
+      );
+    }
+  });
 };
 
 export const flattenTranslations = (
