@@ -1,19 +1,41 @@
 import * as React from 'react';
-import { cn } from '@/utils';
-import ImageBoxFull from '@/assets/img_box_fill.svg?react';
-import CloseIcon from '@/assets/close.svg?react';
-import { Input } from './input';
 import { validateFile } from '@/lib/file';
+import { cn } from '@/utils';
+import CloseIcon from '@/assets/close.svg?react';
+import ImageBoxFull from '@/assets/img_box_fill.svg?react';
+import { Input } from './input';
 
 export interface FileInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  /** Callback при добавлении файла */
   onAdd: (file: File, error?: { fileSizeError?: string; fileTypeError?: string }) => void;
+  /** Callback при удалении файла */
   onFileRemove?: (onConfirmCallback?: () => void) => void;
+  /** Callback при клике на поле ввода */
   onClick?: () => void;
+  /** Текст ошибки или флаг наличия ошибки */
   error?: string | boolean;
+  /** Максимальный размер файла в байтах */
   maxFileSize: number;
+  /** Значение по умолчанию для имени файла */
   defaultValue?: string;
 }
 
+/**
+ * Компонент для выбора файла с валидацией и превью.
+ * Поддерживает кастомизацию через стандартные атрибуты input.
+ *
+ * @component
+ * @param {FileInputProps} props - Пропсы компонента
+ * @returns {JSX.Element}
+ *
+ * @example
+ * <FileInput
+ *   onAdd={(file) => console.log(file)}
+ *   maxFileSize={5242880}
+ *   accept="image/*"
+ *   placeholder="Выберите файл"
+ * />
+ */
 const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(
   (
     { className, onAdd, onClick, onFileRemove, error, accept, maxFileSize, defaultValue, ...props },

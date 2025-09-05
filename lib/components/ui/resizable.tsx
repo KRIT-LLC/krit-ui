@@ -1,8 +1,29 @@
-import { GripVertical } from 'lucide-react';
 import * as ResizablePrimitive from 'react-resizable-panels';
-
+import { GripVertical } from 'lucide-react';
 import { cn } from '@/utils';
 
+/**
+ * Контейнер для группы изменяемых панелей. Позволяет создавать интерфейсы с изменяемыми размерами панелей.
+ * Основан на react-resizable-panels с дополнительными стилями.
+ *
+ * @component
+ * @param {object} props - Параметры компонента
+ * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {'horizontal' | 'vertical'} [props.direction] - Направление размещения панелей
+ * @param {React.ComponentProps<typeof ResizablePrimitive.PanelGroup>} props - Стандартные свойства PanelGroup из react-resizable-panels
+ * @returns {React.ReactElement} Контейнер для группы изменяемых панелей
+ *
+ * @example
+ * <ResizablePanelGroup direction="horizontal">
+ *   <ResizablePanel defaultSize={50}>
+ *     <div>Левая панель</div>
+ *   </ResizablePanel>
+ *   <ResizableHandle withHandle />
+ *   <ResizablePanel defaultSize={50}>
+ *     <div>Правая панель</div>
+ *   </ResizablePanel>
+ * </ResizablePanelGroup>
+ */
 const ResizablePanelGroup = ({
   className,
   ...props
@@ -13,8 +34,26 @@ const ResizablePanelGroup = ({
   />
 );
 
+/**
+ * Изменяемая панель, которая может быть перетаскиваема для изменения размера.
+ * Прямой ре-экспорт Panel из react-resizable-panels.
+ */
 const ResizablePanel = ResizablePrimitive.Panel;
 
+/**
+ * Элемент для изменения размера панелей. Может отображаться с ручкой для перетаскивания.
+ * Основан на PanelResizeHandle из react-resizable-panels с дополнительными стилями.
+ *
+ * @component
+ * @param {object} props - Параметры компонента
+ * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {boolean} [props.withHandle] - Отображать ли видимую ручку для перетаскивания
+ * @param {React.ComponentProps<typeof ResizablePrimitive.PanelResizeHandle>} props - Стандартные свойства PanelResizeHandle из react-resizable-panels
+ * @returns {React.ReactElement} Элемент для изменения размера панелей
+ *
+ * @example
+ * <ResizableHandle withHandle />
+ */
 const ResizableHandle = ({
   withHandle,
   className,

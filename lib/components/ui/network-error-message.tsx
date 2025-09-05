@@ -2,6 +2,17 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { cn } from '@/utils';
 import { Preloader } from './preloader';
 
+/**
+ * Пропсы компонента NetworkErrorMessage
+ * @interface NetworkErrorMessageProps
+ * @property {string} [className] - Дополнительные CSS-классы для контейнера
+ * @property {'base'|'sm'} [textSize='base'] - Размер текста
+ * @property {boolean} [isLoading] - Флаг состояния загрузки
+ * @property {boolean} [isError] - Флаг состояния ошибки
+ * @property {boolean} [center] - Выравнивание по центру
+ * @property {boolean} [inline] - Inline-режим отображения
+ * @property {function} [onRefetch] - Функция для повторной попытки загрузки
+ */
 export interface NetworkErrorMessageProps {
   className?: string;
   textSize?: 'base' | 'sm';
@@ -11,6 +22,32 @@ export interface NetworkErrorMessageProps {
   inline?: boolean;
   onRefetch?: () => void;
 }
+
+/**
+ * Компонент для отображения состояния загрузки или ошибки сети
+ * @component
+ * @param {NetworkErrorMessageProps} props - Пропсы компонента
+ * @returns {JSX.Element|null} Компонент сообщения об ошибке или состоянии загрузки, либо null если не активен
+ *
+ * @example
+ * // Базовое использование
+ * <NetworkErrorMessage
+ *   isLoading={isLoading}
+ *   isError={isError}
+ *   onRefetch={refetchData}
+ * />
+ *
+ * @example
+ * // Inline-режим
+ * <div>
+ *   Загрузка данных
+ *   <NetworkErrorMessage
+ *     isLoading={isLoading}
+ *     isError={isError}
+ *     inline
+ *   />
+ * </div>
+ */
 
 export const NetworkErrorMessage = ({
   className,

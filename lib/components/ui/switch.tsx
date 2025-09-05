@@ -1,12 +1,29 @@
 import * as React from 'react';
 import * as SwitchPrimitives from '@radix-ui/react-switch';
-
 import { cn } from '@/utils';
 
 export interface SwitchProps extends React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root> {
   className?: string;
 }
 
+/**
+ * Переключатель (switch) для изменения состояния между включенным и выключенным.
+ * Основан на Radix UI Switch с кастомизацией стилей и поддержкой доступности.
+ *
+ * @component
+ * @param {SwitchProps} props - Параметры компонента
+ * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {boolean} [props.checked] - Состояние переключателя (включен/выключен)
+ * @param {boolean} [props.disabled] - Флаг отключения переключателя
+ * @param {function} [props.onCheckedChange] - Callback при изменении состояния
+ * @param {React.Ref<React.ElementRef<typeof SwitchPrimitives.Root>>} ref - Реф для доступа к DOM-элементу
+ * @returns {React.ReactElement} Переключатель с заданными свойствами
+ *
+ * @example
+ * <Switch />
+ * <Switch checked onChange={handleChange} />
+ * <Switch disabled />
+ */
 const Switch = React.forwardRef<React.ElementRef<typeof SwitchPrimitives.Root>, SwitchProps>(
   ({ className, ...props }, ref) => (
     <SwitchPrimitives.Root

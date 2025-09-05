@@ -7,6 +7,35 @@ export interface TextAreaProps extends React.InputHTMLAttributes<HTMLTextAreaEle
   onEnter?: (value: string) => void;
 }
 
+/**
+ * Компонент текстовой области с расширенной функциональностью, включая подсчет символов,
+ * обработку нажатия Enter и отображение ошибок.
+ *
+ * @component
+ * @param {object} props - Параметры компонента
+ * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {string|boolean} [props.error] - Флаг или сообщение об ошибке
+ * @param {number} props.rows - Количество видимых строк текста
+ * @param {function} [props.onEnter] - Callback-функция при нажатии Enter
+ * @param {React.InputHTMLAttributes<HTMLTextAreaElement>} props - Стандартные свойства textarea
+ * @param {React.Ref<HTMLTextAreaElement>} ref - Реф для доступа к DOM-элементу
+ * @returns {React.ReactElement} Текстовая область с дополнительной функциональностью
+ *
+ * @example
+ * <TextArea
+ *   placeholder="Введите текст"
+ *   rows={4}
+ *   maxLength={500}
+ *   onEnter={(value) => console.log(value)}
+ * />
+ *
+ * @example
+ * <TextArea
+ *   placeholder="Введите текст"
+ *   rows={4}
+ *   error="Обязательное поле"
+ * />
+ */
 const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
   ({ className, error, rows, onEnter, ...props }, ref) => {
     const [valueLength, setValueLength] = React.useState(props.value?.toString().length ?? 0);

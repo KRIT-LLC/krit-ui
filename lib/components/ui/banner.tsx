@@ -6,16 +6,29 @@ import NetworkError from '@/assets/network_error.svg?react';
 import SearchEmpty from '@/assets/search_empty.svg?react';
 import { Button } from './button';
 
+/**
+ * Пропсы компонента Banner
+ */
 interface BannerProps {
+  /** Дополнительные классы стилей */
   className?: string;
+  /** Заголовок баннера */
   title?: string;
+  /** Подзаголовок/описание */
   subtitle?: string;
+  /** Стиль оформления */
   variant?: 'default' | 'secondary';
+  /** Тип отображаемой иконки */
   icon?: 'bill-empty' | 'search-empty' | 'network-error';
+  /** Текст кнопки действия */
   actionText?: string;
+  /** Обработчик клика по кнопке */
   onActionClick?: () => void;
 }
 
+/**
+ * Универсальный компонент для отображения информационных баннеров
+ */
 export const Banner = ({
   className,
   title,
@@ -65,10 +78,23 @@ export const Banner = ({
   );
 };
 
+/**
+ * Пропсы компонента ErrorBanner
+ */
 interface ErrorBannerProps {
+  /** Дополнительные классы стилей */
   className?: string;
+  /** Обработчик повторной загрузки */
   onRefetchClick?: () => Promise<unknown> | unknown;
 }
+
+/**
+ * Специализированный баннер для отображения ошибок сети
+ *
+ * @component
+ * @param {ErrorBannerProps} props - Параметры компонента
+ * @returns {React.ReactElement} Баннер ошибки сети
+ */
 
 export const ErrorBanner = ({ className, onRefetchClick }: ErrorBannerProps) => {
   const { t } = useTranslation();
@@ -85,10 +111,25 @@ export const ErrorBanner = ({ className, onRefetchClick }: ErrorBannerProps) => 
   );
 };
 
+/**
+ * Баннер для ошибок маршрутизации с автоматической перезагрузкой
+ *
+ * @component
+ * @returns {React.ReactElement} Баннер ошибки маршрутизации
+ */
+
 export const RouteErrorBanner = () => (
   <ErrorBanner onRefetchClick={() => window.location.reload()} />
 );
 
+/**
+ * Компонент для отображения состояния отсутствия данных
+ *
+ * @component
+ * @param {Object} props - Параметры компонента
+ * @param {ReactNode} props.children - Контент для отображения
+ * @returns {React.ReactElement} Баннер пустого состояния
+ */
 export const NoDataBanner = ({ children }: { children?: ReactNode }) => (
   <div className='w-full bg-background-secondary rounded-lg flex items-center justify-center h-12 text-foreground-secondary text-xs select-none'>
     {children}

@@ -16,7 +16,22 @@ const labelVariants = cva(
     },
   },
 );
-
+/**
+ * Компонент метки для полей ввода с поддержкой обозначения обязательных полей.
+ * Основан на Radix UI Label с дополнительными стилями и функциональностью.
+ *
+ * @component
+ * @param {object} props - Параметры компонента
+ * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {boolean} [props.required] - Флаг обязательного поля
+ * @param {React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>} props - Стандартные свойства Label из Radix UI
+ * @param {React.Ref<React.ElementRef<typeof LabelPrimitive.Root>>} ref - Реф для доступа к DOM-элементу
+ * @returns {React.ReactElement} Метка с заданными свойствами
+ *
+ * @example
+ * <Label htmlFor="email">Email адрес</Label>
+ * <Label required htmlFor="password">Пароль</Label>
+ */
 const Label = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> & VariantProps<typeof labelVariants>

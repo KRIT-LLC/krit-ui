@@ -29,6 +29,40 @@ export interface SelectProps extends React.ComponentPropsWithoutRef<typeof Selec
   readOnly?: boolean;
 }
 
+/**
+ * Расширенный компонент выбора (select) с поддержкой виртуализации, загрузки, ошибок и кастомного рендеринга.
+ * Основан на Radix UI Select с дополнительными функциями и стилями.
+ *
+ * @component
+ * @param {object} props - Параметры компонента
+ * @param {string} [props.placeholder] - Текст-заполнитель при отсутствии выбора
+ * @param {OptionType[]} props.options - Массив опций для выбора
+ * @param {string} [props.triggerClassName] - Дополнительные классы для триггера
+ * @param {boolean} [props.clearable] - Возможность очистки выбора
+ * @param {boolean} [props.borderless] - Стиль без границ
+ * @param {boolean} [props.isLoading] - Флаг загрузки данных
+ * @param {boolean} [props.isError] - Флаг ошибки загрузки
+ * @param {string|boolean} [props.error] - Сообщение об ошибке
+ * @param {function} [props.renderValue] - Функция кастомного рендеринга выбранного значения
+ * @param {function} [props.renderOption] - Функция кастомного рендеринга опций
+ * @param {function} [props.onRefetch] - Обработчик повторной загрузки данных
+ * @param {function} [props.onChange] - Обработчик изменения значения
+ * @param {function} [props.onClick] - Обработчик клика по триггеру
+ * @param {boolean} [props.readOnly] - Режим только для чтения
+ * @param {React.Ref<React.ElementRef<typeof SelectPrimitive.Trigger>>} ref - Реф для доступа к DOM-элементу
+ * @returns {React.ReactElement} Компонент выбора с расширенными возможностями
+ *
+ * @example
+ * <Select
+ *   options={[
+ *     { value: "option1", label: "Option 1" },
+ *     { value: "option2", label: "Option 2" }
+ *   ]}
+ *   placeholder="Select an option"
+ *   clearable
+ *   onChange={(value, label) => console.log(value, label)}
+ * />
+ */
 const Select = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Trigger>, SelectProps>(
   (
     {
@@ -36,7 +70,6 @@ const Select = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Trigger>
       clearable,
       borderless,
       isLoading,
-      // TODO: Подумать над объединением isError и error
       isError,
       error,
       renderValue = option => option.label,
@@ -130,6 +163,10 @@ const Select = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Trigger>
 );
 Select.displayName = 'Select';
 
+/**
+ * Компонент для отображения выбранного значения в Select.
+ * Основан на Radix UI SelectValue.
+ */
 const SelectValue = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Value>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Value>
@@ -138,6 +175,10 @@ const SelectValue = React.forwardRef<
 ));
 SelectValue.displayName = 'SelectValue';
 
+/**
+ * Триггер для открытия выпадающего списка Select.
+ * Основан на Radix UI SelectTrigger с кастомными стилями.
+ */
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
@@ -158,6 +199,10 @@ const SelectTrigger = React.forwardRef<
 ));
 SelectTrigger.displayName = 'SelectTrigger';
 
+/**
+ * Контейнер для выпадающего списка опций Select.
+ * Основан на Radix UI SelectContent с кастомными стилями.
+ */
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
@@ -188,6 +233,10 @@ const SelectContent = React.forwardRef<
 ));
 SelectContent.displayName = 'SelectContent';
 
+/**
+ * Компонент для группировки опций в Select.
+ * Основан на Radix UI SelectLabel.
+ */
 const SelectLabel = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Label>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Label>
@@ -200,6 +249,10 @@ const SelectLabel = React.forwardRef<
 ));
 SelectLabel.displayName = 'SelectLabel';
 
+/**
+ * Элемент опции в выпадающем списке Select.
+ * Основан на Radix UI SelectItem с кастомными стилями.
+ */
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
@@ -222,6 +275,10 @@ const SelectItem = React.forwardRef<
 ));
 SelectItem.displayName = 'SelectItem';
 
+/**
+ * Разделитель для группировки опций в Select.
+ * Основан на Radix UI SelectSeparator.
+ */
 const SelectSeparator = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Separator>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Separator>

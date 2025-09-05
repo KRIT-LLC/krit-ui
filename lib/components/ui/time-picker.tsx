@@ -11,6 +11,27 @@ export interface TimePickerProps extends Omit<InputProps, 'onChange' | 'value' |
   onChange: (value: string) => void;
 }
 
+/**
+ * Компонент выбора времени с маской ввода и выпадающим списком для удобного выбора.
+ * Поддерживает ручной ввод через клавиатуру и выбор через интерфейс с колонками часов и минут.
+ * Автоматически форматирует введенное время и валидирует значения.
+ *
+ * @component
+ * @param {object} props - Параметры компонента
+ * @param {string} props.value - Текущее значение времени в формате HH:MM
+ * @param {function} props.onChange - Callback-функция при изменении значения
+ * @param {string} [props.placeholder] - Текст-подсказка
+ * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {React.Ref<HTMLInputElement>} ref - Реф для доступа к DOM-элементу input
+ * @returns {React.ReactElement} Компонент выбора времени
+ *
+ * @example
+ * <TimePicker
+ *   value="14:30"
+ *   onChange={(time) => console.log(time)}
+ *   placeholder="Выберите время"
+ * />
+ */
 const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(
   ({ value, onChange, onBlur, placeholder, className, ...props }, ref) => {
     const [open, setOpen] = React.useState(false);
@@ -143,6 +164,17 @@ interface TimeColumnProps {
   onSelect: (value: string) => void;
 }
 
+/**
+ * Вспомогательный компонент для отображения колонки с выбором значений (часов или минут).
+ * Поддерживает прокрутку колесом мыши и автоматическую прокрутку к выбранному значению.
+ *
+ * @component
+ * @param {object} props - Параметры компонента
+ * @param {string[]} props.items - Массив значений для отображения
+ * @param {string} props.value - Текущее выбранное значение
+ * @param {function} props.onSelect - Callback-функция при выборе значения
+ * @returns {React.ReactElement} Колонка для выбора значений времени
+ */
 const TimeColumn: React.FC<TimeColumnProps> = ({ items, value, onSelect }) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
 

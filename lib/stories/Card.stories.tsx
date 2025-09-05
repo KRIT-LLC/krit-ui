@@ -1,29 +1,109 @@
-import type { Meta, StoryFn } from '@storybook/react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardEditActions,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 
-const meta = {
-  title: 'Card',
+const meta: Meta<typeof Card> = {
+  title: 'Components/UI/Card',
   component: Card,
   tags: ['autodocs'],
-  argTypes: {},
-} satisfies Meta<typeof Card>;
+  parameters: {
+    docs: {
+      description: {
+        component: 'Интерактивная карточка с поддержкой различных состояний и действий',
+      },
+    },
+    controls: {
+      include: ['showArrow', 'checked', 'onClick'],
+    },
+  },
+  argTypes: {
+    showArrow: { control: 'boolean' },
+    checked: { control: 'boolean' },
+    onClick: { action: 'clicked' },
+  },
+};
 
 export default meta;
 
-export const Demo: StoryFn = () => {
-  return <Card className="p-3 border-none bg-background-secondary">
-    <CardHeader
-      className="p-1 cursor-pointer w-full"
-      right={<>CardHeader right</>}
-      onClick={() => {}}
-    >
-      CardHeader
-    </CardHeader>
-    <CardTitle>CardTitle</CardTitle>
-    <CardDescription>CardDescription</CardDescription>
-    <CardContent>CardContent</CardContent>
-    <CardFooter>
-      CardFooter
-    </CardFooter>
-  </Card>;
+export const Default: StoryObj<typeof Card> = {
+  render: args => (
+    <Card {...args} className='w-[400px]'>
+      <CardHeader>
+        <CardTitle>Default Card</CardTitle>
+      </CardHeader>
+      <CardContent>Basic card content</CardContent>
+    </Card>
+  ),
+};
+
+export const WithArrow: StoryObj<typeof Card> = {
+  args: { showArrow: true },
+  render: args => (
+    <Card {...args} className='w-[400px]'>
+      <CardTitle showArrow>Card with Arrow</CardTitle>
+      <CardContent>Hover to see arrow interaction</CardContent>
+    </Card>
+  ),
+};
+
+export const SelectableCard: StoryObj<typeof Card> = {
+  args: { showArrow: true },
+  render: args => {
+    const [checked, setChecked] = React.useState(false);
+    return (
+      <Card {...args} checked={checked} onSelect={setChecked} className='w-[400px]'>
+        <CardHeader checked={checked} onSelect={setChecked}>
+          <CardTitle>Selectable Card</CardTitle>
+        </CardHeader>
+        <CardContent>Current state: {checked ? 'selected' : 'unselected'}</CardContent>
+      </Card>
+    );
+  },
+};
+
+export const WithEditActions: StoryObj<typeof Card> = {
+  render: () => (
+    <Card className='w-[400px] relative'>
+      <CardEditActions
+        onSave={async () => console.log('Save clicked')}
+        onRemove={async () => console.log('Remove clicked')}
+      />
+      <CardHeader>
+        <CardTitle>Editable Card</CardTitle>
+      </CardHeader>
+      <CardContent>Card with edit actions in top-right corner</CardContent>
+    </Card>
+  ),
+};
+
+export const FullFeaturedCard: StoryObj<typeof Card> = {
+  render: () => (
+    <Card className='w-[500px]'>
+      <CardHeader right={<span>🆕 New item</span>}>
+        <CardTitle leftOffset>Featured Card</CardTitle>
+        <CardDescription>Detailed description</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className='space-y-2'>
+          <p>Main content section</p>
+          <ul className='list-disc pl-4'>
+            <li>Feature 1</li>
+            <li>Feature 2</li>
+          </ul>
+        </div>
+      </CardContent>
+      <CardFooter>
+        <span>Created: 2024-03-15</span>
+        <span>Author: John Doe</span>
+      </CardFooter>
+    </Card>
+  ),
 };

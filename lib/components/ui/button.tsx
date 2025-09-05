@@ -7,27 +7,55 @@ import { buttonVariants } from './buttonVariants';
 
 export type ButtonVariant = VariantProps<typeof buttonVariants>['variant'];
 
+/**
+ * Пропсы компонента Button
+ */
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
+  /** Кастомный элемент вместо стандартной кнопки */
   asChild?: boolean;
+  /** Отображение стрелки выпадающего списка */
   asDropdown?: boolean;
+  /** Иконка перед текстом кнопки */
   icon?: React.ReactNode;
 }
 
+/**
+ * Интерактивный элемент интерфейса с поддержкой разных стилей и состояний
+ *
+ * @component
+ * @param {ButtonProps} props - Параметры компонента
+ * @param {React.Ref<HTMLButtonElement>} ref - Реф для доступа к DOM-элементу
+ * @returns {React.ReactElement} Кнопка с заданными свойствами
+ *
+ * @example
+ * <Button variant="primary" size="lg">Нажми меня</Button>
+ */
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, asDropdown, icon, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, asDropdown, icon, children, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';
-    const children = (
-      <>
-        {icon ? icon : null}
-        {props.children}
-      </>
-    );
+
+    // Если asChild=true, мы не можем добавлять дополнительные элементы (иконки, стрелки)
+    // так как Slot ожидает только одного потомка
+    if (asChild) {
+      return (
+        <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props}>
+          {children}
+        </Comp>
+      );
+    }
+
+    // Для обычного случая (не asChild) рендерим все элементы
     return (
-      <Comp className={cn(buttonVariants({ variant, size, className }), asDropdown && 'gap-1')} ref={ref} {...props}>
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }), asDropdown && 'gap-1')}
+        ref={ref}
+        {...props}
+      >
+        {icon && <span className='mr-2'>{icon}</span>}
         {children}
-        {asDropdown && <ArrowDropDown />}
+        {asDropdown && <ArrowDropDown className='ml-2' />}
       </Comp>
     );
   },

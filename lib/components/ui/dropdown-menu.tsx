@@ -1,9 +1,14 @@
 import * as React from 'react';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import { Check, ChevronRight, Circle } from 'lucide-react';
-import MoreVert from '@/assets/more_vert.svg?react';
 import { cn } from '@/utils';
+import MoreVert from '@/assets/more_vert.svg?react';
 
+/**
+ * Составной компонент выпадающего меню с поддержкой различных типов элементов
+ * @component
+ * @see https://www.radix-ui.com/primitives/docs/components/dropdown-menu
+ */
 const DropdownMenu = DropdownMenuPrimitive.Root;
 
 const DropdownMenuTrigger = React.forwardRef<
@@ -25,8 +30,8 @@ const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
 const DropdownMenuSubTrigger = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.SubTrigger>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubTrigger> & {
-  inset?: boolean;
-}
+    inset?: boolean;
+  }
 >(({ className, inset, children, ...props }, ref) => (
   <DropdownMenuPrimitive.SubTrigger
     ref={ref}
@@ -38,7 +43,7 @@ const DropdownMenuSubTrigger = React.forwardRef<
     {...props}
   >
     {children}
-    <ChevronRight className="ml-auto h-4 w-4" />
+    <ChevronRight className='ml-auto h-4 w-4' />
   </DropdownMenuPrimitive.SubTrigger>
 ));
 DropdownMenuSubTrigger.displayName = DropdownMenuPrimitive.SubTrigger.displayName;
@@ -79,8 +84,8 @@ DropdownMenuContent.displayName = DropdownMenuPrimitive.Content.displayName;
 const DropdownMenuItem = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> & {
-  inset?: boolean;
-}
+    inset?: boolean;
+  }
 >(({ className, inset, ...props }, ref) => (
   <DropdownMenuPrimitive.Item
     ref={ref}
@@ -90,7 +95,7 @@ const DropdownMenuItem = React.forwardRef<
       className,
     )}
     {...props}
-    onClick={(e) => {
+    onClick={e => {
       e.stopPropagation();
       props.onClick?.(e);
     }}
@@ -98,6 +103,11 @@ const DropdownMenuItem = React.forwardRef<
 ));
 DropdownMenuItem.displayName = DropdownMenuPrimitive.Item.displayName;
 
+/**
+ * Элемент меню с поддержкой чекбокса
+ * @component
+ * @param {boolean} checked - Состояние чекбокса
+ */
 const DropdownMenuCheckboxItem = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.CheckboxItem>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.CheckboxItem>
@@ -111,9 +121,9 @@ const DropdownMenuCheckboxItem = React.forwardRef<
     checked={checked}
     {...props}
   >
-    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+    <span className='absolute left-2 flex h-3.5 w-3.5 items-center justify-center'>
       <DropdownMenuPrimitive.ItemIndicator>
-        <Check className="h-4 w-4" />
+        <Check className='h-4 w-4' />
       </DropdownMenuPrimitive.ItemIndicator>
     </span>
     {children}
@@ -121,6 +131,11 @@ const DropdownMenuCheckboxItem = React.forwardRef<
 ));
 DropdownMenuCheckboxItem.displayName = DropdownMenuPrimitive.CheckboxItem.displayName;
 
+/**
+ * Элемент меню с поддержкой радио-кнопки
+ * @component
+ * @param {string} value - Значение радио-кнопки
+ */
 const DropdownMenuRadioItem = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.RadioItem>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.RadioItem>
@@ -133,9 +148,9 @@ const DropdownMenuRadioItem = React.forwardRef<
     )}
     {...props}
   >
-    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+    <span className='absolute left-2 flex h-3.5 w-3.5 items-center justify-center'>
       <DropdownMenuPrimitive.ItemIndicator>
-        <Circle className="h-2 w-2 fill-current" />
+        <Circle className='h-2 w-2 fill-current' />
       </DropdownMenuPrimitive.ItemIndicator>
     </span>
     {children}
@@ -146,8 +161,8 @@ DropdownMenuRadioItem.displayName = DropdownMenuPrimitive.RadioItem.displayName;
 const DropdownMenuLabel = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Label>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Label> & {
-  inset?: boolean;
-}
+    inset?: boolean;
+  }
 >(({ className, inset, ...props }, ref) => (
   <DropdownMenuPrimitive.Label
     ref={ref}
@@ -161,12 +176,18 @@ const DropdownMenuSeparator = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Separator>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Separator>
 >(({ className, ...props }, ref) => (
-  <DropdownMenuPrimitive.Separator ref={ref} className={cn('-mx-1 my-1 h-px bg-muted', className)} {...props} />
+  <DropdownMenuPrimitive.Separator
+    ref={ref}
+    className={cn('-mx-1 my-1 h-px bg-muted', className)}
+    {...props}
+  />
 ));
 DropdownMenuSeparator.displayName = DropdownMenuPrimitive.Separator.displayName;
 
 const DropdownMenuShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => {
-  return <span className={cn('ml-auto text-xs tracking-widest opacity-60', className)} {...props} />;
+  return (
+    <span className={cn('ml-auto text-xs tracking-widest opacity-60', className)} {...props} />
+  );
 };
 DropdownMenuShortcut.displayName = 'DropdownMenuShortcut';
 
@@ -183,19 +204,39 @@ interface DropdownActionsProps {
   renderItem?: (item: DropdownActionItem) => React.ReactNode;
 }
 
-export const DropdownActions = ({ triggerClassName, actions, children, renderItem }: DropdownActionsProps) => {
+/**
+ * Кастомный элемент меню действий с иконками и обработчиками
+ * @component
+ * @param {Object} props - Свойства компонента
+ * @param {DropdownActionItem[]} props.actions - Массив элементов меню
+ * @param {string} [props.triggerClassName] - Дополнительные классы для триггера
+ * @param {React.ReactNode} [props.children] - Кастомный элемент триггера
+ * @param {Function} [props.renderItem] - Функция кастомного рендера элемента
+ * @example
+ * <DropdownActions actions={[{ label: 'Edit', onClick: handleEdit }]}>
+ *   <Button>Actions</Button>
+ * </DropdownActions>
+ */
+export const DropdownActions = ({
+  triggerClassName,
+  actions,
+  children,
+  renderItem,
+}: DropdownActionsProps) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className={triggerClassName}>{children || <MoreVert />}</DropdownMenuTrigger>
+      <DropdownMenuTrigger className={triggerClassName}>
+        {children || <MoreVert />}
+      </DropdownMenuTrigger>
       <DropdownMenuContent>
-        {actions.map((action) =>
+        {actions.map(action =>
           action
             ? renderItem?.(action) || (
-            <DropdownMenuItem key={action.label} onClick={action.onClick}>
-              {action.icon}
-              {action.label}
-            </DropdownMenuItem>
-          )
+                <DropdownMenuItem key={action.label} onClick={action.onClick}>
+                  {action.icon}
+                  {action.label}
+                </DropdownMenuItem>
+              )
             : null,
         )}
       </DropdownMenuContent>

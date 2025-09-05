@@ -41,6 +41,18 @@ const useCarousel = () => {
   return context;
 };
 
+/**
+ * Кастомная карусель на базе Embla Carousel с поддержкой миниатюр и навигации
+ * @component
+ * @subcomponent CarouselContent - Контейнер для слайдов
+ * @subcomponent CarouselItem - Отдельный слайд карусели
+ * @subcomponent CarouselPrevious - Кнопка "Назад"
+ * @subcomponent CarouselNext - Кнопка "Вперед"
+ * @subcomponent CarouselThumbs - Контейнер для миниатюр
+ * @subcomponent CarouselThumbItem - Миниатюра слайда
+ * @subcomponent GalleryImages - Галерея изображений
+ */
+
 const Carousel = ({
   orientation = 'horizontal',
   opts,
@@ -272,6 +284,16 @@ const CarouselThumbItem = ({ index, className, children, ...props }: CarouselThu
   );
 };
 
+/**
+ * Галерея изображений с превью и навигацией
+ * @template T - Тип элементов галереи
+ * @param {Object} props - Параметры компонента
+ * @param {T[]} [props.items] - Массив элементов галереи
+ * @param {(item: T) => string} props.getUrl - Функция получения URL изображения
+ * @param {(item: T) => string | number} props.getId - Функция получения уникального идентификатора
+ * @param {string} [props.classNameMainImage] - Дополнительные классы для основного изображения
+ * @param {string} [props.classNameOtherImages] - Дополнительные классы для миниатюр
+ */
 export const GalleryImages = <T,>({
   items = [],
   getUrl,

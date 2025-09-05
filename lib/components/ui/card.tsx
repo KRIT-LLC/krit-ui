@@ -1,21 +1,41 @@
 import * as React from 'react';
-
 import { cn } from '@/utils';
 import ChevronRight from '@/assets/chevron_right.svg?react';
-import Save from '@/assets/save.svg?react';
 import Delete from '@/assets/delete.svg?react';
+import Save from '@/assets/save.svg?react';
 import { Checkbox } from './checkbox';
 import { Dot } from './dot';
 
 export interface CardProps {
+  /** CSS-классы для кастомизации внешнего вида */
   className?: string;
+  /**
+   * Дочерние элементы карточки
+   * @default null
+   */
   children?: React.ReactNode;
+  /** Отображать стрелку в правой части */
   showArrow?: boolean;
+  /** Состояние выбора (для контролируемого режима) */
   checked?: boolean;
+  /**
+   * Хэндлер изменения состояния выбора
+   * @param checked - новое состояние выбора
+   */
   onSelect?: (checked: boolean) => void;
+  /** Хэндлер клика по карточке */
   onClick?: () => void;
 }
-
+/**
+ * Стилизованная карточка с поддержкой выбора, действий и кастомизации
+ *
+ * @component
+ * @example
+ * <Card showArrow checked={isChecked} onSelect={setIsChecked}>
+ *   <CardHeader>Заголовок</CardHeader>
+ *   <CardContent>Контент</CardContent>
+ * </Card>
+ */
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ className, showArrow, checked, onSelect, onClick, ...props }, ref) => {
     return (
@@ -24,14 +44,15 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         className={cn(
           'relative rounded-lg border border-line-primary transition duration-100 ease-in-out',
           onClick && 'cursor-pointer',
-          checked && 'ring-[3px] ring-primary bg-background-primary-selected border-b-line-secondary',
+          checked &&
+            'ring-[3px] ring-primary bg-background-primary-selected border-b-line-secondary',
           className,
         )}
         onClick={checked ? () => onSelect?.(false) : onClick}
         {...props}
       >
         {props.children}
-        <div className="text-foreground/50 absolute top-1/2 right-5 transform -translate-y-1/2">
+        <div className='text-foreground/50 absolute top-1/2 right-5 transform -translate-y-1/2'>
           {showArrow && <ChevronRight />}
         </div>
       </div>
@@ -48,7 +69,12 @@ interface CardHeaderProps {
   onSelect?: (checked: boolean) => void;
   onClick?: () => void;
 }
-
+/**
+ * Заголовок карточки с возможностью выбора
+ * @typedef {Object} CardHeaderProps
+ * @property {React.ReactNode} [right] - Элементы справа от заголовка
+ * @extends CardProps
+ */
 const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
   ({ className, children, checked, right, onSelect, ...props }, ref) => {
     return (
@@ -57,18 +83,18 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
         className={cn('flex flex-col space-y-1.5 px-5 pt-3 pb-1 text-sm font-normal', className)}
         {...props}
       >
-        <div className="flex items-center">
+        <div className='flex items-center'>
           {onSelect && (
-            <div className="w-6 h-6 p-[2px] mr-2">
+            <div className='w-6 h-6 p-[2px] mr-2'>
               <Checkbox
                 checked={checked}
-                onClick={(e) => e.stopPropagation()}
-                onCheckedChange={(checked) => onSelect(!!checked)}
+                onClick={e => e.stopPropagation()}
+                onCheckedChange={checked => onSelect(!!checked)}
               />
             </div>
           )}
-          <div className="w-full flex justify-between items-center">
-            <div className="flex gap-3 text-foreground/50 items-center">
+          <div className='w-full flex justify-between items-center'>
+            <div className='flex gap-3 text-foreground/50 items-center'>
               {React.Children.toArray(children)
                 .filter(Boolean)
                 .map((child, i) => (
@@ -88,17 +114,26 @@ interface CardTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
   leftOffset?: boolean;
   showArrow?: boolean;
 }
-
+/**
+ * Основной заголовок карточки
+ * @typedef {Object} CardTitleProps
+ * @property {boolean} [leftOffset] - Сдвиг вправо для выравнивания
+ * @property {boolean} [showArrow] - Показать стрелку справа
+ */
 const CardTitle = React.forwardRef<HTMLParagraphElement, CardTitleProps>(
   ({ className, leftOffset, showArrow, children, ...props }, ref) => (
     <h3
       ref={ref}
-      className={cn('px-5 pr-10 text-sm flex gap-2 font-normal leading-6', leftOffset && 'ml-8', className)}
+      className={cn(
+        'px-5 pr-10 text-sm flex gap-2 font-normal leading-6',
+        leftOffset && 'ml-8',
+        className,
+      )}
       {...props}
     >
-      <div className="w-full flex justify-between items-center">
-        <div className="w-full break-words inline-block">{children}</div>
-        <div className="text-foreground/50">{showArrow && <ChevronRight />}</div>
+      <div className='w-full flex justify-between items-center'>
+        <div className='w-full break-words inline-block'>{children}</div>
+        <div className='text-foreground/50'>{showArrow && <ChevronRight />}</div>
       </div>
     </h3>
   ),
@@ -114,12 +149,16 @@ const CardDescription = React.forwardRef<HTMLParagraphElement, CardDescriptionPr
   ({ className, leftOffset, showArrow, children, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('px-5 pr-10 pt-0 text-sm font-normal text-foreground/60', leftOffset && 'ml-8', className)}
+      className={cn(
+        'px-5 pr-10 pt-0 text-sm font-normal text-foreground/60',
+        leftOffset && 'ml-8',
+        className,
+      )}
       {...props}
     >
-      <div className="flex justify-between items-center">
-        <div className="w-full">{children}</div>
-        <div className="text-foreground/50">{showArrow && <ChevronRight />}</div>
+      <div className='flex justify-between items-center'>
+        <div className='w-full'>{children}</div>
+        <div className='text-foreground/50'>{showArrow && <ChevronRight />}</div>
       </div>
     </div>
   ),
@@ -133,10 +172,14 @@ interface CardContentProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
   ({ className, leftOffset, showArrow, children, ...props }, ref) => (
-    <div ref={ref} className={cn('px-5 pt-0 text-sm font-normal', leftOffset && 'ml-8', className)} {...props}>
-      <div className="flex justify-between items-center">
+    <div
+      ref={ref}
+      className={cn('px-5 pt-0 text-sm font-normal', leftOffset && 'ml-8', className)}
+      {...props}
+    >
+      <div className='flex justify-between items-center'>
         <div>{children}</div>
-        <div className="text-foreground/50">{showArrow && <ChevronRight />}</div>
+        <div className='text-foreground/50'>{showArrow && <ChevronRight />}</div>
       </div>
     </div>
   ),
@@ -149,8 +192,12 @@ interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
   ({ className, leftOffset, children, ...props }, ref) => (
-    <div ref={ref} className={cn('flex items-center p-5 pt-1 pb-3', leftOffset && 'ml-8', className)} {...props}>
-      <div className="flex gap-3 text-sm text-foreground-secondary items-center">
+    <div
+      ref={ref}
+      className={cn('flex items-center p-5 pt-1 pb-3', leftOffset && 'ml-8', className)}
+      {...props}
+    >
+      <div className='flex gap-3 text-sm text-foreground-secondary items-center'>
         {React.Children.toArray(children)
           .filter(Boolean)
           .map((child, i, array) => (
@@ -171,7 +218,12 @@ interface CardEditActionsProps {
   onSave?: (e: ActionClickEvent) => Promise<void> | void;
   onRemove?: (e: ActionClickEvent) => Promise<void> | void;
 }
-
+/**
+ * Действия редактирования карточки (сохранение/удаление)
+ * @typedef {Object} CardEditActionsProps
+ * @property {(e: ActionClickEvent) => Promise<void> | void} [onSave] - Колбэк сохранения
+ * @property {(e: ActionClickEvent) => Promise<void> | void} [onRemove] - Колбэк удаления
+ */
 const CardEditActions = ({ onSave, onRemove }: CardEditActionsProps) => {
   const [isSaving, setIsSaving] = React.useState(false);
   const [isRemoving, setIsRemoving] = React.useState(false);
@@ -195,10 +247,13 @@ const CardEditActions = ({ onSave, onRemove }: CardEditActionsProps) => {
   };
 
   return (
-    <div className="absolute right-1 top-1 flex gap-3">
+    <div className='absolute right-1 top-1 flex gap-3'>
       {onSave && (
         <Save
-          className={cn('w-7 h-7 text-primary', isSaving ? 'opacity-20 pointer-events-none' : 'cursor-pointer')}
+          className={cn(
+            'w-7 h-7 text-primary',
+            isSaving ? 'opacity-20 pointer-events-none' : 'cursor-pointer',
+          )}
           onClick={handleSaveClick}
         />
       )}

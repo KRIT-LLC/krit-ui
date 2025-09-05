@@ -30,7 +30,22 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 interface DialogSectionProps extends React.HTMLAttributes<HTMLDivElement> {
   scrollableSection?: boolean;
 }
-
+/**
+ * Диалоговое окно с поддержкой различных секций и режимов отображения
+ * @component
+ * @param {boolean} [aside] - Режим боковой панели
+ * @param {boolean} [scrollableSection] - Включение прокрутки в секции содержимого
+ * @param {React.ReactNode} children - Дочерние элементы (Header, Section, Footer)
+ * @example
+ * <Dialog>
+ *   <DialogTrigger>Open</DialogTrigger>
+ *   <DialogContent>
+ *     <DialogHeader>Title</DialogHeader>
+ *     <DialogSection>Content</DialogSection>
+ *     <DialogFooter>Actions</DialogFooter>
+ *   </DialogContent>
+ * </Dialog>
+ */
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
@@ -62,6 +77,7 @@ const DialogContent = React.forwardRef<
           !aside && 'max-h-[90vh] left-[50%] translate-x-[-50%] top-[8%] max-w-fit w-full',
           aside && 'right-[0] top-0 translate-x-0, h-[100vh]',
         )}
+        aria-describedby={undefined}
         {...props}
       >
         <div
@@ -83,7 +99,12 @@ const DialogContent = React.forwardRef<
   );
 });
 DialogContent.displayName = DialogPrimitive.Content.displayName;
-
+/**
+ * Шапка диалогового окна
+ * @component
+ * @param {boolean} [hideCloseButton] - Скрыть кнопку закрытия
+ * @param {React.ReactNode} children - Заголовок и дополнительный контент
+ */
 const DialogHeader = ({
   className,
   hideCloseButton,
@@ -106,7 +127,11 @@ const DialogHeader = ({
   </div>
 );
 DialogHeader.displayName = 'DialogHeader';
-
+/**
+ * Футер диалогового окна для действий
+ * @component
+ * @param {React.ReactNode} children - Кнопки или другие интерактивные элементы
+ */
 const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
@@ -141,7 +166,11 @@ const DialogDescription = React.forwardRef<
   />
 ));
 DialogDescription.displayName = DialogPrimitive.Description.displayName;
-
+/**
+ * Секция содержимого диалога с поддержкой прокрутки
+ * @component
+ * @param {boolean} [scrollableSection] - Активировать прокрутку содержимого
+ */
 const DialogSection = ({ className, scrollableSection, ...props }: DialogSectionProps) => (
   <div
     className={cn(

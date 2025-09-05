@@ -9,6 +9,16 @@ import { SelectContent, SelectItem, SelectTrigger, SelectValue } from './select'
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
+/**
+ * Календарь для выбора дат с настраиваемыми стилями и элементами управления
+ *
+ * @component
+ * @param {Object} props - Пропсы компонента календаря
+ * @param {string} [props.className] - Дополнительные классы CSS для стилизации
+ * @param {Object} [props.classNames] - Дополнительные классы для элементов календаря
+ * @param {boolean} [props.showOutsideDays=true] - Показывать дни из соседних месяцев
+ * @returns {JSX.Element} Компонент календаря
+ */
 function Calendar({ className, classNames, showOutsideDays = true, ...props }: CalendarProps) {
   return (
     <DayPicker
@@ -60,6 +70,10 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
       components={{
         IconLeft: () => <ChevronLeftOutline />,
         IconRight: () => <ChevronRightOutline />,
+        /**
+         * Кастомный компонент Dropdown для выбора месяца/года
+         * @param {DropdownProps} props - Пропсы dropdown компонента
+         */
         Dropdown: ({ children, ...props }: DropdownProps) => {
           return (
             <SelectPrimitive.Root

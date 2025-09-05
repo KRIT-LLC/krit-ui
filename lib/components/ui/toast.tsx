@@ -2,13 +2,30 @@ import * as React from 'react';
 import * as ToastPrimitives from '@radix-ui/react-toast';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { X } from 'lucide-react';
-import ErrorOutline from '@/assets/error_outline.svg?react';
-import CheckCircleOutline from '@/assets/check_circle_outline.svg?react';
-
 import { cn } from '@/utils';
+import CheckCircleOutline from '@/assets/check_circle_outline.svg?react';
+import ErrorOutline from '@/assets/error_outline.svg?react';
 
+/**
+ * Провайдер для системы уведомлений Toast.
+ * Обеспечивает контекст и управление состоянием для всех Toast-компонентов.
+ *
+ * @component
+ * @param {React.ComponentProps<typeof ToastPrimitives.Provider>} props - Свойства провайдера
+ * @returns {React.ReactElement} Провайдер системы уведомлений
+ */
 const ToastProvider = ToastPrimitives.Provider;
 
+/**
+ * Контейнер для отображения Toast-уведомлений.
+ * Фиксирует позицию и стилизацию области показа уведомлений.
+ *
+ * @component
+ * @param {object} props - Свойства компонента
+ * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {React.Ref<React.ElementRef<typeof ToastPrimitives.Viewport>>} ref - React ref
+ * @returns {React.ReactElement} Контейнер для уведомлений
+ */
 const ToastViewport = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Viewport>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Viewport>
@@ -30,8 +47,10 @@ const toastVariants = cva(
     variants: {
       variant: {
         default: 'bg-background text-foreground',
-        destructive: 'destructive group bg-background-error-fade text-foreground-error border border-line-primary',
-        success: 'success group bg-background-success-fade text-foreground-success border border-line-primary',
+        destructive:
+          'destructive group bg-background-error-fade text-foreground-error border border-line-primary',
+        success:
+          'success group bg-background-success-fade text-foreground-success border border-line-primary',
       },
     },
     defaultVariants: {
@@ -40,15 +59,30 @@ const toastVariants = cva(
   },
 );
 
+/**
+ * Основной компонент Toast-уведомления.
+ * Поддерживает различные варианты отображения (default, destructive, success).
+ *
+ * @component
+ * @param {object} props - Свойства компонента
+ * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {'default' | 'destructive' | 'success'} [props.variant] - Вариант стилизации
+ * @param {React.Ref<React.ElementRef<typeof ToastPrimitives.Root>>} ref - React ref
+ * @returns {React.ReactElement} Компонент уведомления
+ */
 const Toast = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Root>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> & VariantProps<typeof toastVariants>
 >(({ className, variant, children, ...props }, ref) => {
   return (
-    <ToastPrimitives.Root ref={ref} className={cn(toastVariants({ variant }), className)} {...props}>
-      <div className="flex gap-2 whitespace-pre-line">
-        {variant === 'destructive' && <ErrorOutline className="min-w-6 h-6" />}
-        {variant === 'success' && <CheckCircleOutline className="min-w-6 h-6" />}
+    <ToastPrimitives.Root
+      ref={ref}
+      className={cn(toastVariants({ variant }), className)}
+      {...props}
+    >
+      <div className='flex gap-2 whitespace-pre-line'>
+        {variant === 'destructive' && <ErrorOutline className='min-w-6 h-6' />}
+        {variant === 'success' && <CheckCircleOutline className='min-w-6 h-6' />}
         {children}
       </div>
     </ToastPrimitives.Root>
@@ -56,6 +90,15 @@ const Toast = React.forwardRef<
 });
 Toast.displayName = ToastPrimitives.Root.displayName;
 
+/**
+ * Кнопка действия внутри Toast-уведомления.
+ *
+ * @component
+ * @param {object} props - Свойства компонента
+ * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {React.Ref<React.ElementRef<typeof ToastPrimitives.Action>>} ref - React ref
+ * @returns {React.ReactElement} Кнопка действия
+ */
 const ToastAction = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Action>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Action>
@@ -71,6 +114,15 @@ const ToastAction = React.forwardRef<
 ));
 ToastAction.displayName = ToastPrimitives.Action.displayName;
 
+/**
+ * Кнопка закрытия Toast-уведомления.
+ *
+ * @component
+ * @param {object} props - Свойства компонента
+ * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {React.Ref<React.ElementRef<typeof ToastPrimitives.Close>>} ref - React ref
+ * @returns {React.ReactElement} Кнопка закрытия
+ */
 const ToastClose = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Close>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Close>
@@ -81,27 +133,53 @@ const ToastClose = React.forwardRef<
       'absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600',
       className,
     )}
-    toast-close=""
+    toast-close=''
     {...props}
   >
-    <X className="h-4 w-4" />
+    <X className='h-4 w-4' />
   </ToastPrimitives.Close>
 ));
 ToastClose.displayName = ToastPrimitives.Close.displayName;
 
+/**
+ * Заголовок Toast-уведомления.
+ *
+ * @component
+ * @param {object} props - Свойства компонента
+ * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {React.Ref<React.ElementRef<typeof ToastPrimitives.Title>>} ref - React ref
+ * @returns {React.ReactElement} Заголовок уведомления
+ */
 const ToastTitle = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Title>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Title>
 >(({ className, ...props }, ref) => (
-  <ToastPrimitives.Title ref={ref} className={cn('text-sm leading-5 tracking-[0.25px]', className)} {...props} />
+  <ToastPrimitives.Title
+    ref={ref}
+    className={cn('text-sm leading-5 tracking-[0.25px]', className)}
+    {...props}
+  />
 ));
 ToastTitle.displayName = ToastPrimitives.Title.displayName;
 
+/**
+ * Описание/содержание Toast-уведомления.
+ *
+ * @component
+ * @param {object} props - Свойства компонента
+ * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {React.Ref<React.ElementRef<typeof ToastPrimitives.Description>>} ref - React ref
+ * @returns {React.ReactElement} Описание уведомления
+ */
 const ToastDescription = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Description>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Description>
 >(({ className, ...props }, ref) => (
-  <ToastPrimitives.Description ref={ref} className={cn('text-sm opacity-90', className)} {...props} />
+  <ToastPrimitives.Description
+    ref={ref}
+    className={cn('text-sm opacity-90', className)}
+    {...props}
+  />
 ));
 ToastDescription.displayName = ToastPrimitives.Description.displayName;
 

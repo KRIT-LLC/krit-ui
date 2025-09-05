@@ -1,10 +1,27 @@
 import * as React from 'react';
 import * as TabsPrimitive from '@radix-ui/react-tabs';
-
 import { cn } from '@/utils';
 
+/**
+ * Контейнер для компонентов вкладок. Обеспечивает базовую функциональность и состояние вкладок.
+ * Основан на Radix UI Tabs.
+ *
+ * @component
+ * @param {React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root>} props - Свойства компонента
+ * @returns {React.ReactElement} Контейнер вкладок
+ */
 const Tabs = TabsPrimitive.Root;
 
+/**
+ * Контейнер для переключателей вкладок. Обеспечивает группировку и стилизацию кнопок переключения.
+ *
+ * @component
+ * @param {object} props - Параметры компонента
+ * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>} props - Стандартные свойства List из Radix UI
+ * @param {React.Ref<React.ElementRef<typeof TabsPrimitive.List>>} ref - Реф для доступа к DOM-элементу
+ * @returns {React.ReactElement} Контейнер переключателей вкладок
+ */
 const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
@@ -20,6 +37,16 @@ const TabsList = React.forwardRef<
 ));
 TabsList.displayName = TabsPrimitive.List.displayName;
 
+/**
+ * Переключатель отдельной вкладки. Управляет отображением связанного контента.
+ *
+ * @component
+ * @param {object} props - Параметры компонента
+ * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>} props - Стандартные свойства Trigger из Radix UI
+ * @param {React.Ref<React.ElementRef<typeof TabsPrimitive.Trigger>>} ref - Реф для доступа к DOM-элементу
+ * @returns {React.ReactElement} Переключатель вкладки
+ */
 const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
@@ -35,6 +62,16 @@ const TabsTrigger = React.forwardRef<
 ));
 TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 
+/**
+ * Контейнер для контента вкладки. Отображается при активации связанного переключателя.
+ *
+ * @component
+ * @param {object} props - Параметры компонента
+ * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>} props - Стандартные свойства Content из Radix UI
+ * @param {React.Ref<React.ElementRef<typeof TabsPrimitive.Content>>} ref - Реф для доступа к DOM-элементу
+ * @returns {React.ReactElement} Контейнер контента вкладки
+ */
 const TabsContent = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
