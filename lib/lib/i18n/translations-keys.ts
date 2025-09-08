@@ -1,0 +1,33 @@
+// translations-keys.ts
+export const TRANSLATION_KEYS = {
+  expand: 'expand',
+  empty: 'empty',
+  confirmAction: 'confirmAction',
+  warning: 'warning',
+  maxNChars: 'maxNChars',
+  cancellation: 'cancellation',
+  displayBy: 'displayBy',
+  selected: 'selected',
+  all: 'all',
+  of: 'of',
+  selectDate: 'selectDate',
+  search: 'search',
+  notFound: 'notFound',
+  networkError: 'networkError',
+  refetch: 'refetch',
+  attachFile: 'attachFile',
+  errorOccurred: 'errorOccurred',
+  noMediaFiles: 'noMediaFiles',
+  networkErrorDescription: 'networkErrorDescription',
+  confirmDeleteMedia: 'confirmDeleteMedia',
+  delete: 'delete',
+  imageSizeLimitMB: 'imageSizeLimitMB',
+  audioSizeLimitMB: 'audioSizeLimitMB',
+  pdfSizeLimitMB: 'pdfSizeLimitMB',
+  videoSizeLimitMB: 'videoSizeLimitMB',
+  maxSizeOfFilesMB: 'maxSizeOfFilesMB',
+  mb: 'mb',
+  attachmentsTask: 'attachmentsTask',
+} as const;
+
+export type TranslationKey = keyof typeof TRANSLATION_KEYS;

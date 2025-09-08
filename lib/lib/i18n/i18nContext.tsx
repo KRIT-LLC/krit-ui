@@ -1,49 +1,18 @@
+// i18nContext.tsx
 import React, { createContext, ReactNode, useContext, useMemo } from 'react';
+import { useTranslation as useI18nextTranslation } from 'react-i18next';
 import { defaultTranslations } from './defaultTranslations';
-
-export interface TranslationResource {
-  expand: string;
-  empty: string;
-  confirmAction: string;
-  warning: string;
-  maxNChars: string;
-  cancellation: string;
-  displayBy: string;
-  selected: string;
-  all: string;
-  of: string;
-  selectDate: string;
-  search: string;
-  notFound: string;
-  networkError: string;
-  refetch: string;
-  attachFile: string;
-  errorOccurred: string;
-  noMediaFiles: string;
-  networkErrorDescription: string;
-  confirmDeleteMedia: string;
-  delete: string;
-  imageSizeLimitMB: string;
-  audioSizeLimitMB: string;
-  pdfSizeLimitMB: string;
-  videoSizeLimitMB: string;
-  maxSizeOfFilesMB: string;
-  mb: string;
-}
-
-export type PartialTranslationResource = Partial<TranslationResource>;
-
-export type TranslationOptions = Record<string, string | number | boolean | null | undefined>;
+import { BaseTranslationKey, ValidParams } from './types';
 
 export interface I18nContextType {
-  t: (key: keyof TranslationResource, options?: TranslationOptions) => string;
+  t: <K extends BaseTranslationKey>(key: K, options?: ValidParams<K>) => string;
   language: string;
   availableLanguages: readonly string[];
   setLanguage: (lang: string) => Promise<void>;
 }
 
 export const I18nContext = createContext<I18nContextType>({
-  t: (key: keyof TranslationResource) => key,
+  t: (key: BaseTranslationKey) => key,
   language: 'en',
   availableLanguages: ['en'],
   setLanguage: () => Promise.resolve(),
@@ -52,8 +21,8 @@ export const I18nContext = createContext<I18nContextType>({
 export const useI18n = () => useContext(I18nContext);
 
 interface I18nProviderProps {
-  i18n: {
-    t: (key: string, options?: TranslationOptions) => string;
+  i18n?: {
+    t: (key: string, options?: Record<string, unknown>) => string;
     language: string;
     languages: readonly string[];
     changeLanguage: (lang: string) => Promise<any>;
@@ -61,41 +30,61 @@ interface I18nProviderProps {
   children: ReactNode;
 }
 
-export const I18nProvider: React.FC<I18nProviderProps> = ({ i18n, children }) => {
-  // Обертка для changeLanguage, которая преобразует Promise<any> в Promise<void>
-  const changeLanguageWrapper = (lang: string): Promise<void> => {
-    return i18n.changeLanguage(lang).then(() => {
-      // Игнорируем возвращаемое значение
-    });
+export const I18nProvider: React.FC<I18nProviderProps> = ({ i18n: externalI18n, children }) => {
+  const { t: i18nextT, i18n: i18nextInstance } = useI18nextTranslation();
+
+  const i18n = externalI18n || {
+    t: i18nextT,
+    language: i18nextInstance.language,
+    languages: i18nextInstance.languages,
+    changeLanguage: i18nextInstance.changeLanguage.bind(i18nextInstance),
   };
 
-  // Функция для получения перевода с fallback на дефолтные значения
-  const getTranslation = (key: keyof TranslationResource, options?: TranslationOptions): string => {
-    // Пытаемся получить перевод из i18next
-    const i18nTranslation = i18n.t(key, options);
+  const setLanguageWrapper = (lang: string): Promise<void> => {
+    return i18n.changeLanguage(lang).then(() => {});
+  };
 
-    // Если перевод получен и он не равен ключу (что означает, что перевод существует),
-    // возвращаем его
-    if (i18nTranslation !== key) {
-      return i18nTranslation;
-    }
-
-    // Если перевод не найден в i18next, используем дефолтный перевод
-    const defaultTranslation =
-      defaultTranslations[i18n.language]?.[key] || defaultTranslations.en[key];
-
-    // Если есть options, интерполируем значения в дефолтный перевод
-    if (options && defaultTranslation) {
-      return Object.keys(options).reduce((result, optionKey) => {
-        const value = options[optionKey];
-        return result.replace(
-          `{{${optionKey}}}`,
-          value !== null && value !== undefined ? String(value) : '',
+  const getTranslation = <K extends BaseTranslationKey>(
+    key: K,
+    options?: ValidParams<K>,
+  ): string => {
+    if (externalI18n) {
+      try {
+        const translationOptions: Record<string, unknown> = {
+          ns: 'krit',
+          ...options,
+        };
+        if (options?.count !== undefined) {
+          translationOptions.count = options.count;
+        }
+        const translation = externalI18n.t(
+          key,
+          translationOptions as Parameters<typeof externalI18n.t>[1],
         );
-      }, defaultTranslation);
+        if (translation !== key) {
+          return translation;
+        }
+      } catch (error) {
+        console.warn('Error getting translation from external i18n:', error);
+      }
     }
 
-    return defaultTranslation || key;
+    const language = i18n.language.split('-')[0];
+    // Для плюрализации используем встроенные возможности i18next
+    // i18next автоматически добавит нужный суффикс (_plural, _one, и т.д.)
+    const defaultTranslation = defaultTranslations[language]?.[key] || defaultTranslations.en[key];
+
+    if (!defaultTranslation) return key as string;
+
+    // Интерполяция параметров
+    if (options) {
+      return Object.entries(options).reduce(
+        (result, [param, value]) => result.replace(`{{${param}}}`, String(value)),
+        defaultTranslation,
+      );
+    }
+
+    return defaultTranslation;
   };
 
   const contextValue: I18nContextType = useMemo(
@@ -103,9 +92,9 @@ export const I18nProvider: React.FC<I18nProviderProps> = ({ i18n, children }) =>
       t: getTranslation,
       language: i18n.language,
       availableLanguages: i18n.languages,
-      setLanguage: changeLanguageWrapper,
+      setLanguage: setLanguageWrapper,
     }),
-    [i18n],
+    [i18n.language, i18n.languages, externalI18n],
   );
 
   return <I18nContext.Provider value={contextValue}>{children}</I18nContext.Provider>;
