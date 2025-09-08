@@ -65,6 +65,5 @@ export * from '@/hooks/useTableStates';
 export * from '@/hooks/useStoredFields';
 export * from '@/lib/attachments';
 export * from '@/lib/i18n/i18nContext';
-export * from '@/lib/i18n/defaultTranslations';
 
 export * from '@/assets';
