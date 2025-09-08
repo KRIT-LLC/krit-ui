@@ -103,7 +103,7 @@ export const ErrorBanner = ({ className, onRefetchClick }: ErrorBannerProps) => 
     <Banner
       className={className}
       icon='network-error'
-      title={t('attachmentsTask', { count: 10 })}
+      title={t('networkError')}
       subtitle={t('networkErrorDescription')}
       actionText={t('refetch')}
       onActionClick={onRefetchClick}
