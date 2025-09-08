@@ -25,6 +25,7 @@ export { default as BgDarkIcon } from '@/assets/bg_dark.svg?react';
 export { default as BgLightIcon } from '@/assets/bg_light.svg?react';
 export { default as BillEmptyIcon } from '@/assets/bill_empty.svg?react';
 export { default as BuildIcon } from '@/assets/build.svg?react';
+export { default as BuildCircleIcon } from '@/assets/build_circle.svg?react';
 export { default as CalendarOutlineIcon } from '@/assets/calendar_outline.svg?react';
 export { default as CancelIcon } from '@/assets/cancel.svg?react';
 export { default as CancelCircleOutlineIcon } from '@/assets/cancel_circle_outline.svg?react';

@@ -52,6 +52,8 @@
 ![bill_empty.svg](bill_empty.svg)
 #### BuildIcon
 ![build.svg](build.svg)
+#### BuildCircleIcon
+![build_circle.svg](build_circle.svg)
 #### CalendarOutlineIcon
 ![calendar_outline.svg](calendar_outline.svg)
 #### CancelIcon
