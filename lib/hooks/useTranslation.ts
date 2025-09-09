@@ -1,21 +1,12 @@
-import { useContext } from 'react';
-import { ThemeProviderContext, Translations } from '@/components/ui/theme-provider';
+import { useI18n } from '@/lib/i18n/i18nContext';
 
 export const useTranslation = () => {
-  const context = useContext(ThemeProviderContext);
+  const { t, language, availableLanguages, setLanguage } = useI18n();
 
-  const t = (key: Translations) => {
-    if (!context.translations) {
-      console.warn('KRIT-UI: Translations not found');
-      return key;
-    }
-    if (context.translations?.[key] === undefined) {
-      console.warn(`KRIT-UI: Translation for key ${key} not found`);
-      return key;
-    }
-
-    return context.translations[key];
+  return {
+    t,
+    language,
+    availableLanguages,
+    setLanguage,
   };
-
-  return { t };
 };
