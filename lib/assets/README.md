@@ -50,10 +50,14 @@
 ![bg_light.svg](bg_light.svg)
 #### BillEmptyIcon
 ![bill_empty.svg](bill_empty.svg)
+#### BlockIcon
+![block.svg](block.svg)
 #### BuildIcon
 ![build.svg](build.svg)
 #### BuildCircleIcon
 ![build_circle.svg](build_circle.svg)
+#### BuildCircleOutlineIcon
+![build_circle_outline.svg](build_circle_outline.svg)
 #### CalendarOutlineIcon
 ![calendar_outline.svg](calendar_outline.svg)
 #### CancelIcon
@@ -90,6 +94,10 @@
 ![close_circle.svg](close_circle.svg)
 #### CoinsIcon
 ![coins.svg](coins.svg)
+#### ConstructionIcon
+![construction.svg](construction.svg)
+#### ContentPasteSearchIcon
+![content_paste_search.svg](content_paste_search.svg)
 #### ControlPointIcon
 ![control_point.svg](control_point.svg)
 #### CorporateFareIcon
@@ -104,6 +112,8 @@
 ![delete.svg](delete.svg)
 #### DeleteOutlineIcon
 ![delete_outline.svg](delete_outline.svg)
+#### DoNotDisturbIcon
+![do_not_disturb.svg](do_not_disturb.svg)
 #### DocumentArrowUpOutlineIcon
 ![document_arrow_up_outline.svg](document_arrow_up_outline.svg)
 #### DocumentListOutlineIcon
@@ -126,12 +136,22 @@
 ![edit_outline.svg](edit_outline.svg)
 #### ErrorOutlineIcon
 ![error_outline.svg](error_outline.svg)
+#### EventAvailableIcon
+![event_available.svg](event_available.svg)
 #### EventNoteIcon
 ![event_note.svg](event_note.svg)
 #### ExpandMoreIcon
 ![expand_more.svg](expand_more.svg)
+#### FactCheckOutlineIcon
+![fact_check_outline.svg](fact_check_outline.svg)
+#### FactoryIcon
+![factory.svg](factory.svg)
+#### FeaturedPlayListIcon
+![featured_play_list.svg](featured_play_list.svg)
 #### FileIcon
 ![file.svg](file.svg)
+#### FileCopyIcon
+![file_copy.svg](file_copy.svg)
 #### FileDownloadIcon
 ![file_download.svg](file_download.svg)
 #### FirstPageIcon
@@ -144,12 +164,16 @@
 ![format_align_left.svg](format_align_left.svg)
 #### GearsAlarmIcon
 ![gears_alarm.svg](gears_alarm.svg)
+#### GroupWorkIcon
+![group_work.svg](group_work.svg)
 #### HandPaperIcon
 ![hand_paper.svg](hand_paper.svg)
 #### HandymanIcon
 ![handyman.svg](handyman.svg)
 #### HardwareIcon
 ![hardware.svg](hardware.svg)
+#### HelpCenterIcon
+![help_center.svg](help_center.svg)
 #### HideImageIcon
 ![hide_image.svg](hide_image.svg)
 #### HideOutlineIcon
@@ -160,12 +184,20 @@
 ![hotel_class.svg](hotel_class.svg)
 #### ImageIcon
 ![image.svg](image.svg)
+#### ImageOutlineIcon
+![image_outline.svg](image_outline.svg)
 #### ImgBoxFillIcon
 ![img_box_fill.svg](img_box_fill.svg)
 #### InfoIcon
 ![info.svg](info.svg)
+#### InventoryIcon
+![inventory.svg](inventory.svg)
+#### LanIcon
+![lan.svg](lan.svg)
 #### LastPageIcon
 ![last_page.svg](last_page.svg)
+#### LegendToggleIcon
+![legend_toggle.svg](legend_toggle.svg)
 #### LightModeIcon
 ![light_mode.svg](light_mode.svg)
 #### LocalFireDepartmentIcon
@@ -182,14 +214,20 @@
 ![menu.svg](menu.svg)
 #### MoreVertIcon
 ![more_vert.svg](more_vert.svg)
+#### MyLocationIcon
+![my_location.svg](my_location.svg)
 #### NetworkErrorIcon
 ![network_error.svg](network_error.svg)
+#### NextWeekIcon
+![next_week.svg](next_week.svg)
 #### NoAssignmentIcon
 ![no_assignment.svg](no_assignment.svg)
 #### NorthEastIcon
 ![north_east.svg](north_east.svg)
 #### OutputIcon
 ![output.svg](output.svg)
+#### PauseCircleOutlineIcon
+![pause_circle_outline.svg](pause_circle_outline.svg)
 #### PenOutlineIcon
 ![pen_outline.svg](pen_outline.svg)
 #### PeopleAltOutlinedIcon
@@ -202,6 +240,8 @@
 ![play.svg](play.svg)
 #### PlaylistAddCheckIcon
 ![playlist_add_check.svg](playlist_add_check.svg)
+#### PortraitIcon
+![portrait.svg](portrait.svg)
 #### PriorityIcon
 ![priority.svg](priority.svg)
 #### PublishIcon
@@ -212,8 +252,14 @@
 ![rectangles_outline.svg](rectangles_outline.svg)
 #### RefreshIcon
 ![refresh.svg](refresh.svg)
+#### RemoveCircleOutlineIcon
+![remove_circle_outline.svg](remove_circle_outline.svg)
+#### ReportProblemOutlineIcon
+![report_problem_outline.svg](report_problem_outline.svg)
 #### RestartAltIcon
 ![restart_alt.svg](restart_alt.svg)
+#### RestoreIcon
+![restore.svg](restore.svg)
 #### RoomIcon
 ![room.svg](room.svg)
 #### RotateLeftIcon
@@ -236,10 +282,16 @@
 ![shopping_basket.svg](shopping_basket.svg)
 #### SignInBackgroundIcon
 ![sign_in_background.png](sign_in_background.png)
+#### SimCardDownloadIcon
+![sim_card_download.svg](sim_card_download.svg)
 #### SmsFailedIcon
 ![sms_failed.svg](sms_failed.svg)
+#### SouthIcon
+![south.svg](south.svg)
 #### Square4OutlineIcon
 ![square_4_outline.svg](square_4_outline.svg)
+#### StarIcon
+![star.svg](star.svg)
 #### StarsIcon
 ![stars.svg](stars.svg)
 #### StraightenIcon
@@ -252,6 +304,10 @@
 ![table_chart.svg](table_chart.svg)
 #### TargetOutlineIcon
 ![target_outline.svg](target_outline.svg)
+#### ThermostatIcon
+![thermostat.svg](thermostat.svg)
+#### TodayIcon
+![today.svg](today.svg)
 #### TollIcon
 ![toll.svg](toll.svg)
 #### TourIcon
@@ -278,6 +334,8 @@
 ![watch_later.svg](watch_later.svg)
 #### WatchLaterOutlineIcon
 ![watch_later_outline.svg](watch_later_outline.svg)
+#### WebStoriesIcon
+![web_stories.svg](web_stories.svg)
 #### WhatshotIcon
 ![whatshot.svg](whatshot.svg)
 #### WorkspacesIcon
