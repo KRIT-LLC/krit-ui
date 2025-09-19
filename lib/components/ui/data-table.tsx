@@ -49,6 +49,7 @@ interface DataTableProps<TData, TValue> {
   loading?: boolean;
   skeletonClassName?: string;
   isStickyHeader?: boolean;
+  children?: React.ReactNode;
   headerClassName?: string;
   columnVisibility?: VisibilityState;
   onColumnVisibilityChange?: OnChangeFn<VisibilityState>;
@@ -95,6 +96,7 @@ export function DataTable<TData, TValue>({
   manualSorting = true,
   paginationProps,
   className,
+  children,
   selectedRowClassName,
   onSortingChange,
   getRowId,
@@ -237,6 +239,7 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
+      {children}
       {pagination && (
         <DataTablePagination
           paginationProps={paginationProps}
