@@ -6,7 +6,7 @@ import { AttachmentsSection } from '@/components/ui/attachmentsSection';
 const exampleImages: AttachmentItem[] = [
   {
     id: 1,
-    url: 'https://example.com/photo.jpg',
+    url: 'https://placehold.co/400x400/777777/FFFFFF.png',
     fileName: 'nature.jpg',
     contentType: 'image/jpeg',
   },
