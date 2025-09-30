@@ -1,5 +1,6 @@
-import type { Preview } from "@storybook/react";
+import type { Preview } from '@storybook/react';
 import '../lib/tailwind.css';
+import { withI18n } from './decorators/withI18next';
 
 const preview: Preview = {
   parameters: {
@@ -10,6 +11,7 @@ const preview: Preview = {
       },
     },
   },
+  decorators: [withI18n],
 };
 
 export default preview;
