@@ -21,6 +21,7 @@ export type MultiSelectOptionType = {
   hidden?: boolean;
   disabled?: boolean;
   children?: MultiSelectOptionType[];
+  defaultExpanded?: boolean; // Новое свойство для контроля раскрытия по умолчанию
 };
 
 type InternalMultiSelectOptionType = {
@@ -29,6 +30,7 @@ type InternalMultiSelectOptionType = {
   hidden?: boolean;
   disabled?: boolean;
   children?: MultiSelectOptionType[];
+  defaultExpanded?: boolean;
 };
 
 export interface MultiSelectProps {
@@ -235,7 +237,10 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
         internalOptions.forEach(opt => {
           const key = String(opt.value);
           if (typeof opt.value !== 'symbol') {
-            if (next[key] === undefined) next[key] = false;
+            // Используем defaultExpanded из опции, если задан, иначе сохраняем текущее состояние или false
+            if (next[key] === undefined) {
+              next[key] = opt.defaultExpanded ?? false;
+            }
           }
         });
         return next;
