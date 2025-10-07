@@ -151,7 +151,7 @@ export const ConfirmModal = (props: ConfirmModalProps) => {
               />
             )}
           </DialogSection>
-          <DialogFooter>
+          <DialogFooter align='end'>
             {!cancelHidden && (
               <DialogClose aria-label='Close' asChild>
                 <Button type='button' variant='outline' size='sm' onClick={onCancel}>

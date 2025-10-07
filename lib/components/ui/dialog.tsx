@@ -132,11 +132,16 @@ DialogHeader.displayName = 'DialogHeader';
  * @component
  * @param {React.ReactNode} children - Кнопки или другие интерактивные элементы
  */
-const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+interface DialogFooterProps extends React.HTMLAttributes<HTMLDivElement> {
+  align?: 'start' | 'end';
+}
+
+const DialogFooter = ({ className, align = 'start', ...props }: DialogFooterProps) => (
   <div
     className={cn(
-      'flex flex-col-reverse bg-background py-4 px-5 sm:justify-end sm:!flex-row sm:space-x-4 sticky bottom-0',
+      'flex flex-col-reverse bg-background py-4 px-5 sm:justify-start sm:!flex-row sm:space-x-4 sticky bottom-0',
       className,
+      { 'sm:justify-end': align === 'end' },
     )}
     {...props}
   />
