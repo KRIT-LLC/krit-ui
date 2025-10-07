@@ -151,7 +151,14 @@ export const ConfirmModal = (props: ConfirmModalProps) => {
               />
             )}
           </DialogSection>
-          <DialogFooter>
+          <DialogFooter align='end'>
+            {!cancelHidden && (
+              <DialogClose aria-label='Close' asChild>
+                <Button type='button' variant='outline' size='sm' onClick={onCancel}>
+                  {cancelText || t('cancellation')}
+                </Button>
+              </DialogClose>
+            )}
             {!confirmHidden && (
               <Button
                 variant={confirmType}
@@ -161,13 +168,6 @@ export const ConfirmModal = (props: ConfirmModalProps) => {
               >
                 {confirmText}
               </Button>
-            )}
-            {!cancelHidden && (
-              <DialogClose aria-label='Close' asChild>
-                <Button type='button' variant='outline' size='sm' onClick={onCancel}>
-                  {cancelText || t('cancellation')}
-                </Button>
-              </DialogClose>
             )}
           </DialogFooter>
         </Form>
