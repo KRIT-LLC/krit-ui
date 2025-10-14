@@ -236,6 +236,8 @@
 ![person.svg](person.svg)
 #### PersonOutlineIcon
 ![person_outline.svg](person_outline.svg)
+#### PhotoMusthaveIcon
+![photo_musthave.svg](photo_musthave.svg)
 #### PlayIcon
 ![play.svg](play.svg)
 #### PlaylistAddCheckIcon
