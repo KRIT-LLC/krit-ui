@@ -117,6 +117,7 @@ export { default as PenOutlineIcon } from '@/assets/pen_outline.svg?react';
 export { default as PeopleAltOutlinedIcon } from '@/assets/people_alt_outlined.svg?react';
 export { default as PersonIcon } from '@/assets/person.svg?react';
 export { default as PersonOutlineIcon } from '@/assets/person_outline.svg?react';
+export { default as PhotoMusthaveIcon } from '@/assets/photo_musthave.svg?react';
 export { default as PlayIcon } from '@/assets/play.svg?react';
 export { default as PlaylistAddCheckIcon } from '@/assets/playlist_add_check.svg?react';
 export { default as PortraitIcon } from '@/assets/portrait.svg?react';
