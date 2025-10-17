@@ -97,25 +97,29 @@ TableFooter.displayName = 'TableFooter';
 
 /**
  * Строка таблицы. Содержит ячейки TableHead или TableCell.
+ * Поддерживает интерактивные состояния: hover и выделение.
  *
  * @component
  * @param {object} props - Параметры компонента
  * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {number} [props.dataIndex] - Индекс строки в данных, добавляется как data-атрибут для доступа через DOM
  * @param {React.Ref<HTMLTableRowElement>} ref - Реф для доступа к DOM-элементу
  * @returns {React.ReactElement} Строка таблицы
  */
-const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTMLTableRowElement>>(
-  ({ className, ...props }, ref) => (
-    <tr
-      ref={ref}
-      className={cn(
-        'transition-colors hover:bg-background-primary-hover data-[state=selected]:bg-background-tertiary',
-        className,
-      )}
-      {...props}
-    />
-  ),
-);
+const TableRow = React.forwardRef<
+  HTMLTableRowElement,
+  React.HTMLAttributes<HTMLTableRowElement> & { dataIndex?: number }
+>(({ className, dataIndex, ...props }, ref) => (
+  <tr
+    ref={ref}
+    data-index={dataIndex}
+    className={cn(
+      'transition-colors hover:bg-background-primary-hover data-[state=selected]:bg-background-tertiary',
+      className,
+    )}
+    {...props}
+  />
+));
 TableRow.displayName = 'TableRow';
 
 /**
