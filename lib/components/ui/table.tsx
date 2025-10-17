@@ -26,10 +26,12 @@ Table.displayName = 'Table';
 
 /**
  * Заголовок таблицы. Содержит элементы TableHead.
+ * Поддерживает режим липкого заголовка, который остается видимым при прокрутке.
  *
  * @component
  * @param {object} props - Параметры компонента
  * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {boolean} [props.sticky] - Если true, заголовок фиксируется при прокрутке (position: sticky)
  * @param {React.Ref<HTMLTableSectionElement>} ref - Реф для доступа к DOM-элементу
  * @returns {React.ReactElement} Секция заголовка таблицы
  */
