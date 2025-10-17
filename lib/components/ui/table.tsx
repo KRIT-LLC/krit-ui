@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { cn } from '@/utils';
+import { Separator } from '@/components/ui/separator';
 
 /**
  * Контейнер таблицы с поддержкой прокрутки и базовой стилизацией.
@@ -25,18 +26,34 @@ Table.displayName = 'Table';
 
 /**
  * Заголовок таблицы. Содержит элементы TableHead.
+ * Поддерживает режим липкого заголовка, который остается видимым при прокрутке.
  *
  * @component
  * @param {object} props - Параметры компонента
  * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {boolean} [props.sticky] - Если true, заголовок фиксируется при прокрутке (position: sticky)
  * @param {React.Ref<HTMLTableSectionElement>} ref - Реф для доступа к DOM-элементу
  * @returns {React.ReactElement} Секция заголовка таблицы
  */
 const TableHeader = React.forwardRef<
   HTMLTableSectionElement,
-  React.HTMLAttributes<HTMLTableSectionElement>
->(({ className, ...props }, ref) => (
-  <thead ref={ref} className={cn('[&_tr]:border-b', className)} {...props} />
+  React.HTMLAttributes<HTMLTableSectionElement> & { sticky?: boolean }
+>(({ className, sticky, children, ...props }, ref) => (
+  <thead
+    ref={ref}
+    className={cn(
+      'bg-background [&_tr]:border-b',
+      sticky ? 'sticky print:static z-30 top-0 [&_tr]:border-none' : '',
+      className,
+      sticky ? 'border-none [&_tr]:border-none' : '',
+    )}
+    {...props}
+  >
+  {sticky && className?.includes('border-t') && <Separator className="absolute w-full" />}
+  {children}
+  {sticky && <Separator className="absolute w-full" />}
+  {sticky && <Separator className="bg-[transparent]" />}
+  </thead>
 ));
 TableHeader.displayName = 'TableHeader';
 
