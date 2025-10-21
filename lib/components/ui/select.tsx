@@ -265,7 +265,11 @@ const SelectItem = React.forwardRef<
     )}
     {...props}
   >
-    <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+    <SelectPrimitive.ItemText asChild>
+      <span className='truncate block' title={typeof children === 'string' ? children : undefined}>
+        {children}
+      </span>
+    </SelectPrimitive.ItemText>
     <span className='absolute right-4 flex h-3.5 w-3.5 items-center justify-center text-foreground-secondary'>
       <SelectPrimitive.ItemIndicator>
         <Check className='h-4 w-4' />
