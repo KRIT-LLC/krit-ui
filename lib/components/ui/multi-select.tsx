@@ -328,7 +328,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
     }, [filteredOptions]);
 
     const valueText = React.useMemo(() => {
-      if (isAllSelected && showAllOption) {
+      if (isAllSelected && showAllOption && value.length > 1) {
         return t('all');
       }
 
