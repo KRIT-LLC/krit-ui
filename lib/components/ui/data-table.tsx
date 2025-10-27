@@ -55,6 +55,7 @@ interface DataTableProps<TData, TValue> {
   onColumnVisibilityChange?: OnChangeFn<VisibilityState>;
   columnFilters?: ColumnFiltersState;
   onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>;
+  rowHoverContent?: (row: TData) => React.ReactNode;
 }
 
 /**
@@ -112,7 +113,10 @@ export function DataTable<TData, TValue>({
   onColumnVisibilityChange,
   columnFilters,
   onColumnFiltersChange,
+  rowHoverContent,
 }: DataTableProps<TData, TValue>) {
+  const wrapperRef = React.useRef<HTMLDivElement>(null);
+  const [hoveredRow, setHoveredRow] = React.useState<TData | null>(null);
   const table = useReactTable({
     getRowId,
     data,
@@ -137,7 +141,7 @@ export function DataTable<TData, TValue>({
     onExpandedChange,
     onColumnVisibilityChange,
     onColumnFiltersChange,
-    // @ts-ignore
+    // @ts-expect-error – допускаем наличие подстрок для вложенных строк
     getSubRows: row => row.subRows,
   });
 
@@ -153,8 +157,32 @@ export function DataTable<TData, TValue>({
     }
   };
 
+  const handleRowMouseEnter = (e: React.MouseEvent<HTMLTableRowElement>, rowData: TData) => {
+    if (!rowHoverContent || !wrapperRef.current) return;
+
+    const rowEl = e.currentTarget;
+    const rowRect = rowEl.getBoundingClientRect();
+    const wrapperRect = wrapperRef.current.getBoundingClientRect();
+
+    // Устанавливаем CSS Custom Properties для позиционирования
+    wrapperRef.current.style.setProperty('--hover-top', `${rowRect.top - wrapperRect.top}px`);
+    wrapperRef.current.style.setProperty('--hover-height', `${rowRect.height}px`);
+    wrapperRef.current.style.setProperty('--hover-visible', '1');
+
+    setHoveredRow(rowData);
+  };
+
+  const handleRowMouseLeave = () => {
+    if (!rowHoverContent || !wrapperRef.current) return;
+    wrapperRef.current.style.setProperty('--hover-visible', '0');
+  };
+
   return (
-    <div className={cn('relative flex flex-1 flex-col h-full', className)}>
+    <div
+      ref={wrapperRef}
+      onMouseLeave={handleRowMouseLeave}
+      className={cn('relative flex flex-1 flex-col h-full', className)}
+    >
       <Table>
         <TableHeader
           className={cn(isStickyHeader && 'sticky top-0 bg-background z-10', headerClassName)}
@@ -207,6 +235,7 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && !selectedRowClassName && 'selected'}
                   className={cn(row.getIsSelected() ? selectedRowClassName : '')}
                   onClick={() => onRowClick?.(row.original)}
+                  onMouseEnter={e => handleRowMouseEnter(e, row.original)}
                 >
                   {row.getVisibleCells().map(cell => (
                     <TableCell
@@ -222,7 +251,7 @@ export function DataTable<TData, TValue>({
                   <TableRow key={`${row.id}-expanded`}>
                     <td colSpan={row.getVisibleCells().length}>
                       {
-                        // @ts-ignore
+                        // @ts-expect-error – в некоторых сущностях содержится кастомный JSX
                         row.original.customExpandedContent
                       }
                     </td>
@@ -239,6 +268,25 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
+      {rowHoverContent && hoveredRow && (
+        <div
+          className='absolute bottom-0 left-0 right-0 z-20 pointer-events-none transition-opacity duration-200'
+          style={{
+            top: 'var(--hover-top)',
+            height: 'var(--hover-height)',
+            opacity: 'var(--hover-visible)',
+          }}
+        >
+          <div
+            className={cn(
+              'h-full flex items-center justify-end pointer-events-none',
+              getCellPadding(),
+            )}
+          >
+            <div className='pointer-events-auto'>{rowHoverContent(hoveredRow)}</div>
+          </div>
+        </div>
+      )}
       {additionalSlot}
       {pagination && (
         <DataTablePagination
