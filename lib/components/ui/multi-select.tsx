@@ -55,6 +55,7 @@ export interface MultiSelectProps {
   maxVisibleRowsBadge?: number;
   defaultSearchedValue?: string;
   createLabel?: string;
+  autoSelectSingleOption?: boolean;
   onCreate?: (query: string) => void;
   renderOption?: (option: MultiSelectOptionType, isChecked: boolean) => React.ReactNode;
   onRefetch?: () => void;
@@ -122,6 +123,7 @@ const CommandAddItem = ({
  * @param {number} [props.maxVisibleRowsBadge] - Максимальное количество строк для отображения бейджей
  * @param {string} [props.defaultSearchedValue] - Значение поиска по умолчанию
  * @param {string} [props.createLabel] - Текст для создания новой опции
+ * @param {boolean} [props.autoSelectSingleOption] - Автоматически выбирать единственную доступную опцию
  * @param {Function} [props.onCreate] - Callback создания новой опции
  * @param {Function} [props.renderOption] - Кастомный рендер опции
  * @param {Function} [props.onRefetch] - Callback повторной загрузки данных
@@ -167,6 +169,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
       maxVisibleRowsBadge,
       defaultSearchedValue,
       createLabel,
+      autoSelectSingleOption,
       onCreate,
       renderOption,
       onRefetch,
@@ -203,6 +206,13 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
       });
       return flat;
     }, [options]);
+
+    React.useEffect(() => {
+      if (autoSelectSingleOption && filteredActualOptions.length === 1 && value.length === 0) {
+        const singleOption = filteredActualOptions[0];
+        onChange?.([singleOption.value], [singleOption.label]);
+      }
+    }, [autoSelectSingleOption, filteredActualOptions, value.length, onChange]);
 
     const allOption: InternalMultiSelectOptionType = React.useMemo(
       () => ({ label: t('all'), value: ALL_VALUE }),

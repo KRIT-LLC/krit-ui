@@ -21,12 +21,13 @@ export interface SelectProps extends React.ComponentPropsWithoutRef<typeof Selec
   isLoading?: boolean;
   isError?: boolean;
   error?: string | boolean;
+  readOnly?: boolean;
+  autoSelectSingleOption?: boolean;
   renderValue?: (option: OptionType) => React.ReactNode;
   renderOption?: (option: OptionType) => React.ReactNode;
   onRefetch?: () => void;
   onChange?: (value: string, label: string) => void;
   onClick?: () => void;
-  readOnly?: boolean;
 }
 
 /**
@@ -43,12 +44,13 @@ export interface SelectProps extends React.ComponentPropsWithoutRef<typeof Selec
  * @param {boolean} [props.isLoading] - Флаг загрузки данных
  * @param {boolean} [props.isError] - Флаг ошибки загрузки
  * @param {string|boolean} [props.error] - Сообщение об ошибке
+ * @param {boolean} [props.readOnly] - Режим только для чтения
+ * @param {boolean} [props.autoSelectSingleOption] - Автоматически выбирать единственную доступную опцию
  * @param {function} [props.renderValue] - Функция кастомного рендеринга выбранного значения
  * @param {function} [props.renderOption] - Функция кастомного рендеринга опций
  * @param {function} [props.onRefetch] - Обработчик повторной загрузки данных
  * @param {function} [props.onChange] - Обработчик изменения значения
  * @param {function} [props.onClick] - Обработчик клика по триггеру
- * @param {boolean} [props.readOnly] - Режим только для чтения
  * @param {React.Ref<React.ElementRef<typeof SelectPrimitive.Trigger>>} ref - Реф для доступа к DOM-элементу
  * @returns {React.ReactElement} Компонент выбора с расширенными возможностями
  *
@@ -72,6 +74,8 @@ const Select = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Trigger>
       isLoading,
       isError,
       error,
+      readOnly,
+      autoSelectSingleOption,
       renderValue = option => option.label,
       renderOption = option => option.label,
       onRefetch,
@@ -79,23 +83,33 @@ const Select = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Trigger>
       onValueChange,
       onClick,
       onOpenChange,
-      readOnly,
       ...props
     },
     ref,
   ) => {
     const [value, setValue] = React.useState(props.value || '');
-    const handleChange = (value: string) => {
-      if (!props.options.length) return;
-      setValue(value);
-      onValueChange
-        ? onValueChange(value)
-        : onChange?.(value, props.options.find(option => option.value === value)?.label || '');
-    };
+
+    const handleChange = React.useCallback(
+      (value: string) => {
+        if (!props.options.length) return;
+        setValue(value);
+        onValueChange
+          ? onValueChange(value)
+          : onChange?.(value, props.options.find(option => option.value === value)?.label || '');
+      },
+      [props.options, onValueChange, onChange],
+    );
 
     React.useEffect(() => {
       setValue(props.value || '');
     }, [props.value]);
+
+    React.useEffect(() => {
+      if (autoSelectSingleOption && props.options.length === 1 && !value) {
+        const singleOption = props.options[0];
+        handleChange(singleOption.value);
+      }
+    }, [autoSelectSingleOption, props.options, value, handleChange]);
 
     return (
       <SelectPrimitive.Root
