@@ -5,6 +5,7 @@ import {
   ExpandedState,
   flexRender,
   getCoreRowModel,
+  getExpandedRowModel,
   OnChangeFn,
   PaginationState,
   Row,
@@ -122,6 +123,7 @@ export function DataTable<TData, TValue>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
     manualPagination: true,
     rowCount: rowCount,
     state: {
@@ -135,6 +137,7 @@ export function DataTable<TData, TValue>({
     manualSorting,
     enableRowSelection,
     enableMultiRowSelection,
+    enableColumnResizing: false,
     onPaginationChange,
     onRowSelectionChange,
     onSortingChange,
@@ -185,7 +188,7 @@ export function DataTable<TData, TValue>({
     >
       <Table>
         <TableHeader
-          className={cn(isStickyHeader && 'sticky top-0 bg-background z-10', headerClassName)}
+          className={cn(isStickyHeader && 'sticky top-0 bg-background z-20', headerClassName)}
         >
           {table.getHeaderGroups().map(headerGroup => (
             <TableRow key={headerGroup.id} className='border-line-primary'>
@@ -194,7 +197,10 @@ export function DataTable<TData, TValue>({
                   <TableHead
                     key={header.id}
                     colSpan={header.colSpan}
-                    style={{ width: header.getSize() }}
+                    style={{
+                      minWidth: header.getSize(),
+                      width: header.getSize(),
+                    }}
                     className={getCellPadding()}
                   >
                     {header.isPlaceholder
@@ -216,7 +222,10 @@ export function DataTable<TData, TValue>({
                         <TableCell
                           key={header.id}
                           colSpan={header.colSpan}
-                          style={{ width: header.column.getSize() }}
+                          style={{
+                            minWidth: header.column.getSize(),
+                            width: header.column.getSize(),
+                          }}
                           className={getCellPadding()}
                         >
                           <Skeleton className={cn('w-full', skeletonClassName)} />
@@ -240,7 +249,10 @@ export function DataTable<TData, TValue>({
                   {row.getVisibleCells().map(cell => (
                     <TableCell
                       key={cell.id}
-                      style={{ width: cell.column.getSize() }}
+                      style={{
+                        minWidth: cell.column.getSize(),
+                        width: cell.column.getSize(),
+                      }}
                       className={getCellPadding()}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
