@@ -28,7 +28,7 @@ export interface NavPanelProps {
    *   LinkComponent={NavLink}
    * />
    */
-  profileNavSlot: React.ReactNode;
+  profileNavSlot?: React.ReactNode;
   /** @description Слот для расширения навигации
    * @example
    * <Nav
@@ -43,8 +43,10 @@ export interface NavPanelProps {
    *   ]}
    *   LinkComponent={NavLink}
    * />*/
-  expandableNavSlot: React.ReactNode;
+  expandableNavSlot?: React.ReactNode;
   location?: Location;
+  bottomSlot?: React.ReactNode;
+  separateOnlyBlocks?: boolean;
 }
 
 const NavPanel = (props: NavPanelProps) => {
@@ -56,6 +58,8 @@ const NavPanel = (props: NavPanelProps) => {
     profileNavSlot,
     expandableNavSlot,
     location,
+    bottomSlot,
+    separateOnlyBlocks = false,
   } = props;
 
   const getItemVariant = (item: NavItem) =>
@@ -74,7 +78,7 @@ const NavPanel = (props: NavPanelProps) => {
   ));
 
   return (
-    <>
+    <div>
       <div
         className={cn(
           'text-[14px] px-[12px] leading-5 py-4 cursor-default whitespace-nowrap flex justify-normal',
@@ -85,20 +89,23 @@ const NavPanel = (props: NavPanelProps) => {
       >
         {projectName}
       </div>
-      <NavSeparator />
-      <div className={'overflow-y-auto h-[calc(100vh_-_140px)]'}>
+      {separateOnlyBlocks ? null : <NavSeparator />}
+      <div className={'overflow-y-auto h-[calc(100vh_-_140px)] flex flex-col'}>
         {navBlocks}
-        <NavSeparator />
+        {separateOnlyBlocks ? null : <NavSeparator />}
         {profileNavSlot}
+        {bottomSlot && <div className='px-3 mt-auto'>{bottomSlot}</div>}
       </div>
-      <div className='mt-auto'>
-        <NavSeparator />
-        {expandableNavSlot}
-      </div>
-    </>
+      {expandableNavSlot && (
+        <div className='mt-auto'>
+          {separateOnlyBlocks ? null : <NavSeparator />}
+          {expandableNavSlot}
+        </div>
+      )}
+    </div>
   );
 };
 
-NavPanel.dispayName = 'NavPanel';
+NavPanel.displayName = 'NavPanel';
 
 export { NavPanel };

@@ -44,6 +44,8 @@
 ![attach_file.svg](attach_file.svg)
 #### AudioFileIcon
 ![audio_file.svg](audio_file.svg)
+#### BarChartIcon
+![bar_chart.svg](bar_chart.svg)
 #### BgDarkIcon
 ![bg_dark.svg](bg_dark.svg)
 #### BgLightIcon
@@ -152,6 +154,8 @@
 ![file.svg](file.svg)
 #### FileCopyIcon
 ![file_copy.svg](file_copy.svg)
+#### FileCopyOutlineIcon
+![file_copy_outline.svg](file_copy_outline.svg)
 #### FileDownloadIcon
 ![file_download.svg](file_download.svg)
 #### FirstPageIcon
@@ -164,6 +168,8 @@
 ![format_align_left.svg](format_align_left.svg)
 #### GearsAlarmIcon
 ![gears_alarm.svg](gears_alarm.svg)
+#### GroupOutlineIcon
+![group_outline.svg](group_outline.svg)
 #### GroupWorkIcon
 ![group_work.svg](group_work.svg)
 #### HandPaperIcon
@@ -174,6 +180,8 @@
 ![hardware.svg](hardware.svg)
 #### HelpCenterIcon
 ![help_center.svg](help_center.svg)
+#### HelpCenterOutlineIcon
+![help_center_outline.svg](help_center_outline.svg)
 #### HideImageIcon
 ![hide_image.svg](hide_image.svg)
 #### HideOutlineIcon
@@ -190,10 +198,14 @@
 ![img_box_fill.svg](img_box_fill.svg)
 #### InfoIcon
 ![info.svg](info.svg)
+#### InsertInvitationOutlineIcon
+![insert_invitation_outline.svg](insert_invitation_outline.svg)
 #### InventoryIcon
 ![inventory.svg](inventory.svg)
 #### LanIcon
 ![lan.svg](lan.svg)
+#### LanOutlineIcon
+![lan_outline.svg](lan_outline.svg)
 #### LastPageIcon
 ![last_page.svg](last_page.svg)
 #### LegendToggleIcon
@@ -244,6 +256,8 @@
 ![playlist_add_check.svg](playlist_add_check.svg)
 #### PortraitIcon
 ![portrait.svg](portrait.svg)
+#### PrecisionManufacturingOutlineIcon
+![precision_manufacturing_outline.svg](precision_manufacturing_outline.svg)
 #### PriorityIcon
 ![priority.svg](priority.svg)
 #### PublishIcon
@@ -298,6 +312,8 @@
 ![stars.svg](stars.svg)
 #### StraightenIcon
 ![straighten.svg](straighten.svg)
+#### StrategyIcon
+![strategy.svg](strategy.svg)
 #### SubdirectoryArrowRightIcon
 ![subdirectory_arrow_right.svg](subdirectory_arrow_right.svg)
 #### SupervisorAccountIcon
@@ -330,6 +346,8 @@
 ![view_sidebar.svg](view_sidebar.svg)
 #### WarehouseIcon
 ![warehouse.svg](warehouse.svg)
+#### WarehouseOutlineIcon
+![warehouse_outline.svg](warehouse_outline.svg)
 #### WarningAmberIcon
 ![warning_amber.svg](warning_amber.svg)
 #### WatchLaterIcon
@@ -342,6 +360,8 @@
 ![whatshot.svg](whatshot.svg)
 #### WorkspacesIcon
 ![workspaces.svg](workspaces.svg)
+#### WrenchToolIcon
+![wrench_tool.svg](wrench_tool.svg)
 #### WriteIcon
 ![write.svg](write.svg)
 #### ZoomOutMapOutlinedIcon
