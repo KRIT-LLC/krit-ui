@@ -49,6 +49,7 @@ export * from '@/components/ui/time-picker';
 export * from '@/components/ui/carousel';
 export * from '@/components/ui/filters-column-header';
 export * from '@/components/ui/number-input';
+export * from '@/components/ui/sheet';
 
 export * from '@/utils';
 
