@@ -55,6 +55,7 @@ module.exports = {
         'success-fade': 'hsl(var(--krit-background-success-fade))',
         'success-fade-hover': 'hsl(var(--krit-background-success-fade-hover))',
         overlay: 'hsl(var(--krit-background-overlay))', // TODO: Add 0.6 opacity
+        sidebar: 'hsl(var(--krit-background-sidebar))',
       },
       foreground: {
         DEFAULT: 'hsl(var(--krit-foreground-primary))',
@@ -69,6 +70,7 @@ module.exports = {
         error: 'hsl(var(--krit-foreground-error))',
         warning: 'hsl(var(--krit-foreground-warning))',
         success: 'hsl(var(--krit-foreground-success))',
+        white: 'hsl(var(--krit-foreground-white))',
       },
       line: {
         DEFAULT: 'hsl(var(--krit-line))',
