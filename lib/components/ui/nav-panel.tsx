@@ -46,7 +46,7 @@ export interface NavPanelProps {
   expandableNavSlot?: React.ReactNode;
   location?: Location;
   bottomSlot?: React.ReactNode;
-  separateOnlyBlocks?: boolean;
+  withBackground?: boolean;
 }
 
 const NavPanel = (props: NavPanelProps) => {
@@ -59,11 +59,15 @@ const NavPanel = (props: NavPanelProps) => {
     expandableNavSlot,
     location,
     bottomSlot,
-    separateOnlyBlocks = false,
+    withBackground = false,
   } = props;
 
-  const getItemVariant = (item: NavItem) =>
+  const getItemVariant = (item: NavItem) => {
+    if (withBackground) {
+      return location?.pathname === String(item.to) ? 'nav-item-selected' : 'nav-item';
+    }
     location?.pathname === String(item.to) ? 'secondary-contrast' : 'ghost';
+  };
 
   const navBlocks = (navItems ?? []).map((block, index) => (
     <React.Fragment key={index}>
@@ -78,7 +82,7 @@ const NavPanel = (props: NavPanelProps) => {
   ));
 
   return (
-    <div>
+    <div className={cn(withBackground && 'bg-background-sidebar')}>
       <div
         className={cn(
           'text-[14px] px-[12px] leading-5 py-4 cursor-default whitespace-nowrap flex justify-normal',
@@ -89,16 +93,16 @@ const NavPanel = (props: NavPanelProps) => {
       >
         {projectName}
       </div>
-      {separateOnlyBlocks ? null : <NavSeparator />}
+      {withBackground ? null : <NavSeparator />}
       <div className={'overflow-y-auto h-[calc(100vh_-_140px)] flex flex-col'}>
         {navBlocks}
-        {separateOnlyBlocks ? null : <NavSeparator />}
+        {withBackground ? null : <NavSeparator />}
         {profileNavSlot}
         {bottomSlot && <div className='px-3 mt-auto'>{bottomSlot}</div>}
       </div>
       {expandableNavSlot && (
         <div className='mt-auto'>
-          {separateOnlyBlocks ? null : <NavSeparator />}
+          {withBackground ? null : <NavSeparator />}
           {expandableNavSlot}
         </div>
       )}
