@@ -56,7 +56,6 @@ module.exports = {
         'success-fade-hover': 'hsl(var(--krit-background-success-fade-hover))',
         overlay: 'hsl(var(--krit-background-overlay))', // TODO: Add 0.6 opacity
         sidebar: 'hsl(var(--krit-background-sidebar))',
-        white: 'hsl(var(--krit-background-white))',
       },
       foreground: {
         DEFAULT: 'hsl(var(--krit-foreground-primary))',
