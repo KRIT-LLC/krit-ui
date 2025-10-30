@@ -66,7 +66,7 @@ const NavPanel = (props: NavPanelProps) => {
     if (withBackground) {
       return location?.pathname === String(item.to) ? 'nav-item-selected' : 'nav-item';
     }
-    location?.pathname === String(item.to) ? 'secondary-contrast' : 'ghost';
+    return location?.pathname === String(item.to) ? 'secondary-contrast' : 'ghost';
   };
 
   const navBlocks = (navItems ?? []).map((block, index) => (
