@@ -71,6 +71,7 @@ module.exports = {
         warning: 'hsl(var(--krit-foreground-warning))',
         success: 'hsl(var(--krit-foreground-success))',
         white: 'hsl(var(--krit-foreground-white))',
+        'sidebar-active': 'hsl(var(--krit-foreground-sidebar-active))',
       },
       line: {
         DEFAULT: 'hsl(var(--krit-line))',

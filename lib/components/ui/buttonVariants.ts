@@ -38,7 +38,8 @@ export const buttonVariants = cva(
         light: 'bg-background-primary hover:bg-background-primary-hover shadow-lg hover:shadow-xl',
         'nav-item':
           'hover:bg-background-contrast-fade-selected/30 text-foreground-tertiary hover:text-foreground-white',
-        'nav-item-selected': 'bg-background-contrast-fade-selected/30  text-foreground-theme',
+        'nav-item-selected':
+          'bg-background-contrast-fade-selected/30  text-foreground-sidebar-active',
       },
       size: {
         default: 'h-9 px-4 py-2',

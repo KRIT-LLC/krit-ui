@@ -54,6 +54,7 @@
     --krit-foreground-warning: 38 89% 47%;
     --krit-foreground-success: 133 87% 34%;
     --krit-foreground-white: 0 0% 100%;
+    --krit-foreground-sidebar-active: 217 100% 65%; /* Todo удалить после добавления Day2 и Night2*/
 
     --krit-line-primary: var(--krit-background-contrast-fade);
     --krit-line-primary-hover: var(--krit-background-contrast-fade);
@@ -135,6 +136,7 @@
     --krit-foreground-warning: 54 93% 52%;
     --krit-foreground-success: 133 95% 49%;
     --krit-foreground-white: 0 0% 100%;
+    --krit-foreground-sidebar-active: 221 99% 48%; /* Todo удалить после добавления Day2 и Night2*/
 
     --krit-line-primary: var(--krit-background-contrast-fade);
     --krit-line-primary-hover: var(--krit-background-contrast-fade);
