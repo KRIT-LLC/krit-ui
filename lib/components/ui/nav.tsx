@@ -74,7 +74,6 @@ export function Nav(props: NavProps) {
                     to={item.to ?? '#'}
                     className={cn(
                       buttonVariants({ variant: item.variant || itemVariant(item), size: 'icon' }),
-                      'h-9 w-14',
                       item.className,
                     )}
                     onClick={(e: React.MouseEvent) => {
