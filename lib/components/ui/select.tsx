@@ -88,6 +88,7 @@ const Select = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Trigger>
     ref,
   ) => {
     const [value, setValue] = React.useState(props.value || '');
+    const [preventAutoSelect, setPreventAutoSelect] = React.useState(false);
 
     const handleChange = React.useCallback(
       (value: string) => {
@@ -105,11 +106,14 @@ const Select = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Trigger>
     }, [props.value]);
 
     React.useEffect(() => {
-      if (autoSelectSingleOption && props.options.length === 1 && !value) {
+      if (autoSelectSingleOption && props.options.length === 1 && !value && !preventAutoSelect) {
         const singleOption = props.options[0];
         handleChange(singleOption.value);
       }
-    }, [autoSelectSingleOption, props.options, value, handleChange]);
+      if (preventAutoSelect && value) {
+        setPreventAutoSelect(false);
+      }
+    }, [autoSelectSingleOption, props.options, value, handleChange, preventAutoSelect]);
 
     return (
       <SelectPrimitive.Root
@@ -138,7 +142,10 @@ const Select = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Trigger>
                 'text-icon-fade-contrast pointer-events-auto absolute z-50 right-9',
                 readOnly && 'cursor-not-allowed pointer-events-none opacity-95',
               )}
-              onClick={() => handleChange?.('')}
+              onClick={() => {
+                setPreventAutoSelect(true);
+                handleChange?.('');
+              }}
             />
           )}
         </SelectTrigger>

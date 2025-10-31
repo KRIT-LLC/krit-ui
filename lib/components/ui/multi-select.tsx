@@ -185,6 +185,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
     const { t } = useTranslation();
     const [search, setSearch] = React.useState(defaultSearchedValue || '');
     const [canCreateOption, setCanCreateOption] = React.useState(!!createLabel);
+    const [preventAutoSelect, setPreventAutoSelect] = React.useState(false);
 
     React.useEffect(() => {
       onSearch?.(search);
@@ -208,11 +209,19 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
     }, [options]);
 
     React.useEffect(() => {
-      if (autoSelectSingleOption && filteredActualOptions.length === 1 && value.length === 0) {
+      if (
+        autoSelectSingleOption &&
+        filteredActualOptions.length === 1 &&
+        value.length === 0 &&
+        !preventAutoSelect
+      ) {
         const singleOption = filteredActualOptions[0];
         onChange?.([singleOption.value], [singleOption.label]);
       }
-    }, [autoSelectSingleOption, filteredActualOptions, value.length, onChange]);
+      if (preventAutoSelect && value.length > 0) {
+        setPreventAutoSelect(false);
+      }
+    }, [autoSelectSingleOption, filteredActualOptions, value.length, onChange, preventAutoSelect]);
 
     const allOption: InternalMultiSelectOptionType = React.useMemo(
       () => ({ label: t('all'), value: ALL_VALUE }),
@@ -514,8 +523,10 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
                       onClick={e => {
                         e.stopPropagation();
                         if (onRemoveClick) {
+                          setPreventAutoSelect(true);
                           onRemoveClick();
                         } else if (showReset && onChange) {
+                          setPreventAutoSelect(true);
                           onChange([], []);
                         }
                       }}
