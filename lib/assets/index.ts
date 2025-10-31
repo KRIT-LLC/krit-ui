@@ -110,6 +110,7 @@ export { default as LocationMapOutlineIcon } from '@/assets/location_map_outline
 export { default as LocationOnIcon } from '@/assets/location_on.svg?react';
 export { default as LockIcon } from '@/assets/lock.svg?react';
 export { default as LockOpenIcon } from '@/assets/lock_open.svg?react';
+export { default as LogoutOutlineIcon } from '@/assets/logout_outline.svg?react';
 export { default as MenuIcon } from '@/assets/menu.svg?react';
 export { default as MoreVertIcon } from '@/assets/more_vert.svg?react';
 export { default as MyLocationIcon } from '@/assets/my_location.svg?react';
@@ -146,6 +147,7 @@ export { default as SaveFillIcon } from '@/assets/save_fill.svg?react';
 export { default as SearchIcon } from '@/assets/search.svg?react';
 export { default as SearchEmptyIcon } from '@/assets/search_empty.svg?react';
 export { default as SettingsIcon } from '@/assets/settings.svg?react';
+export { default as SettingsOutlineIcon } from '@/assets/settings_outline.svg?react';
 export { default as ShoppingBasketIcon } from '@/assets/shopping_basket.svg?react';
 
 export { default as SimCardDownloadIcon } from '@/assets/sim_card_download.svg?react';
