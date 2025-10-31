@@ -82,7 +82,7 @@ const NavPanel = (props: NavPanelProps) => {
   ));
 
   return (
-    <div className={cn(withBackground && 'bg-background-sidebar')}>
+    <div className={cn(withBackground && 'bg-background-sidebar', 'flex flex-col h-screen')}>
       <div
         className={cn(
           'text-[14px] px-[12px] leading-5 py-4 cursor-default whitespace-nowrap flex justify-normal',
@@ -94,14 +94,19 @@ const NavPanel = (props: NavPanelProps) => {
         {projectName}
       </div>
       {withBackground ? null : <NavSeparator />}
-      <div className={'overflow-y-auto h-[calc(100vh_-_140px)] flex flex-col'}>
+      <div
+        className={
+          'overflow-y-auto flex-col flex-grow [scrollbar-width:none] [-webkit-scrollbar-width:none] [-webkit-scrollbar:0px] [-webkit-appearance:none]'
+        }
+        style={{ msHighContrastAdjust: 'none' }}
+      >
         {navBlocks}
         {withBackground ? null : <NavSeparator />}
         {profileNavSlot}
-        {bottomSlot && <div className='px-3 mt-auto'>{bottomSlot}</div>}
       </div>
       {expandableNavSlot && (
         <div className='mt-auto'>
+          <div className='px-2'>{bottomSlot}</div>
           {withBackground ? null : <NavSeparator />}
           {expandableNavSlot}
         </div>
