@@ -222,6 +222,8 @@
 ![lock.svg](lock.svg)
 #### LockOpenIcon
 ![lock_open.svg](lock_open.svg)
+#### LogoutOutlineIcon
+![logout_outline.svg](logout_outline.svg)
 #### MenuIcon
 ![menu.svg](menu.svg)
 #### MoreVertIcon
@@ -294,6 +296,8 @@
 ![search_empty.svg](search_empty.svg)
 #### SettingsIcon
 ![settings.svg](settings.svg)
+#### SettingsOutlineIcon
+![settings_outline.svg](settings_outline.svg)
 #### ShoppingBasketIcon
 ![shopping_basket.svg](shopping_basket.svg)
 #### SignInBackgroundIcon
