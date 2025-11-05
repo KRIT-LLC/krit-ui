@@ -1,3 +1,5 @@
+/* eslint-env node */
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ['selector'], // https://ui.shadcn.com/docs/dark-mode/vite
@@ -20,6 +22,7 @@ module.exports = {
       'background-error-gradient': 'var(--krit-background-error-gradient)',
       'background-success-gradient': 'var(--krit-background-success-gradient)',
       'background-progress-gradient': 'var(--krit-background-progress-gradient)',
+      'background-transparent-gradient': 'var(--krit-background-transparent-gradient)',
     },
     colors: {
       background: {
@@ -56,6 +59,14 @@ module.exports = {
         'success-fade-hover': 'hsl(var(--krit-background-success-fade-hover))',
         overlay: 'hsl(var(--krit-background-overlay))', // TODO: Add 0.6 opacity
         sidebar: 'hsl(var(--krit-background-sidebar))',
+        created: 'hsl(var(--krit-background-created))',
+        assigned: 'hsl(var(--krit-background-assigned))',
+        'in-process': 'hsl(var(--krit-background-in-process))',
+        partially: 'hsl(var(--krit-background-partially))',
+        done: 'hsl(var(--krit-background-done))',
+        rejected: 'hsl(var(--krit-background-rejected))',
+        draft: 'hsl(var(--krit-background-draft))',
+        paused: 'hsl(var(--krit-background-paused))',
       },
       foreground: {
         DEFAULT: 'hsl(var(--krit-foreground-primary))',
@@ -85,6 +96,15 @@ module.exports = {
         theme: 'hsl(var(--krit-line-theme))',
         contrast: 'hsl(var(--krit-line-contrast))',
         focused: 'hsl(var(--krit-line-focused))',
+        created: 'hsl(var(--krit-line-created))',
+        assigned: 'hsl(var(--krit-line-assigned))',
+        'in-process': 'hsl(var(--krit-line-in-process))',
+        partially: 'hsl(var(--krit-line-partially))',
+        done: 'hsl(var(--krit-line-done))',
+        rejected: 'hsl(var(--krit-line-rejected))',
+        draft: 'hsl(var(--krit-line-draft))',
+        'not-started': 'hsl(var(--krit-line-not-started))',
+        paused: 'hsl(var(--krit-line-paused))',
       },
       icon: {
         contrast: 'hsl(var(--krit-icon-contrast))',
@@ -97,6 +117,14 @@ module.exports = {
         error: 'hsl(var(--krit-icon-error))',
         warning: 'hsl(var(--krit-icon-warning))',
         success: 'hsl(var(--krit-icon-success))',
+        created: 'hsl(var(--krit-icon-created))',
+        assigned: 'hsl(var(--krit-icon-assigned))',
+        'in-process': 'hsl(var(--krit-icon-in-process))',
+        partially: 'hsl(var(--krit-icon-partially))',
+        done: 'hsl(var(--krit-icon-done))',
+        rejected: 'hsl(var(--krit-icon-rejected))',
+        draft: 'hsl(var(--krit-icon-draft))',
+        paused: 'hsl(var(--krit-icon-paused))',
       },
       purple: 'hsl(var(--krit-purple))',
     },
