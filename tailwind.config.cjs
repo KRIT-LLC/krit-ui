@@ -18,12 +18,6 @@ module.exports = {
         '2xl': '1400px',
       },
     },
-    backgroundImage: {
-      'background-error-gradient': 'var(--krit-background-error-gradient)',
-      'background-success-gradient': 'var(--krit-background-success-gradient)',
-      'background-progress-gradient': 'var(--krit-background-progress-gradient)',
-      'background-transparent-gradient': 'var(--krit-background-transparent-gradient)',
-    },
     colors: {
       background: {
         DEFAULT: 'hsl(var(--krit-background-primary))',
@@ -212,10 +206,16 @@ module.exports = {
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
       backgroundImage: {
+        'background-error-gradient': 'var(--krit-background-error-gradient)',
+        'background-success-gradient': 'var(--krit-background-success-gradient)',
+        'background-progress-gradient': 'var(--krit-background-progress-gradient)',
+        'background-transparent-gradient': 'var(--krit-background-transparent-gradient)',
         'gradient-primary': 'linear-gradient(100deg, #56CCF2 0.13%, #2F80ED 124.93%)',
         'gradient-base': 'var(--krit-gradient-base)',
         'gradient-fade-to-bottom': 'var(--krit-gradient-fade-to-bottom)',
         'gradient-fade-to-top': 'var(--krit-gradient-fade-to-top)',
+        'fade-to-right':
+          'linear-gradient(90deg, hsl(var(--krit-background-primary) / 0) 0%, hsl(var(--krit-background-primary)) 100%)',
       },
       transitionProperty: {
         height: 'height',
