@@ -1,86 +1,36 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useEffect, useState } from 'react';
 
 export type Theme = 'dark' | 'light' | 'system';
-type HSLColor = `${number} ${number}% ${number}%`;
-type Gradient = `linear-gradient(${string})`;
-
-export type ThemeVariables = {
-  // Background colors
-  '--krit-background-primary': HSLColor;
-  '--krit-background-primary-hover': HSLColor;
-  '--krit-background-primary-selected': HSLColor;
-  '--krit-background-secondary': HSLColor;
-  '--krit-background-secondary-hover': HSLColor;
-  '--krit-background-tertiary': HSLColor;
-  '--krit-background-theme': HSLColor;
-  '--krit-background-theme-hover': HSLColor;
-  '--krit-background-theme-fade': HSLColor;
-  '--krit-background-contrast': HSLColor;
-  '--krit-background-contrast-hover': HSLColor;
-  '--krit-background-contrast-disabled': HSLColor;
-  '--krit-background-contrast-selected': HSLColor;
-  '--krit-background-contrast-fade': HSLColor;
-  '--krit-background-contrast-fade-hover': HSLColor;
-  '--krit-background-contrast-fade-selected': HSLColor;
-  '--krit-background-contrast-fade-disabled': HSLColor;
-  '--krit-background-error': HSLColor;
-  '--krit-background-error-hover': HSLColor;
-  '--krit-background-error-fade': HSLColor;
-  '--krit-background-error-fade-hover': HSLColor;
-  '--krit-background-error-gradient': Gradient;
-  '--krit-background-warning': HSLColor;
-  '--krit-background-warning-hover': HSLColor;
-  '--krit-background-warning-fade': HSLColor;
-  '--krit-background-warning-fade-hover': HSLColor;
-  '--krit-background-success': HSLColor;
-  '--krit-background-success-hover': HSLColor;
-  '--krit-background-success-tertiary': HSLColor;
-  '--krit-background-success-fade': HSLColor;
-  '--krit-background-success-fade-hover': HSLColor;
-  '--krit-background-success-gradient': Gradient;
-  '--krit-background-overlay': HSLColor;
-  '--krit-background-progress-gradient': Gradient;
-
-  // Foreground colors
-  '--krit-foreground-primary': HSLColor;
-  '--krit-foreground-primary-disabled': HSLColor;
-  '--krit-foreground-secondary': HSLColor;
-  '--krit-foreground-tertiary': HSLColor;
-  '--krit-foreground-theme': HSLColor;
-  '--krit-foreground-on-contrast': HSLColor;
-  '--krit-foreground-on-contrast-disabled': HSLColor;
-  '--krit-foreground-error': HSLColor;
-  '--krit-foreground-warning': HSLColor;
-  '--krit-foreground-success': HSLColor;
-
-  // Line colors
-  '--krit-line-primary': HSLColor;
-  '--krit-line-primary-hover': HSLColor;
-  '--krit-line-primary-disabled': HSLColor;
-  '--krit-line-secondary': HSLColor;
-  '--krit-line-error': HSLColor;
-  '--krit-line-warning': HSLColor;
-  '--krit-line-success': HSLColor;
-  '--krit-line-theme': HSLColor;
-  '--krit-line-contrast': HSLColor;
-  '--krit-line-focused': HSLColor;
-
-  // Icon colors
-  '--krit-icon-contrast': HSLColor;
-  '--krit-icon-contrast-disabled': HSLColor;
-  '--krit-icon-fade-contrast': HSLColor;
-  '--krit-icon-on-contrast': HSLColor;
-  '--krit-icon-on-contrast-selected': HSLColor;
-  '--krit-icon-on-contrast-disabled': HSLColor;
-  '--krit-icon-theme': HSLColor;
-  '--krit-icon-error': HSLColor;
-  '--krit-icon-warning': HSLColor;
-  '--krit-icon-success': HSLColor;
-
-  // Other
-  '--krit-purple': HSLColor;
-  '--krit-radius': `${number}rem`;
-};
+/**
+ * Версия темы. Определяет постфикс для классов тем в CSS.
+ *
+ * **Как расширять тип:**
+ * Для добавления новой версии темы расширьте тип через union:
+ * ```typescript
+ * export type ThemeVersion = '2' | '3' | 'project_name';
+ * ```
+ *
+ * **Правила именования классов в CSS:**
+ * - Классы должны начинаться с `light` или `dark`
+ * - После базового названия темы должен идти постфикс версии (значение из ThemeVersion)
+ * - Примеры корректных классов:
+ *   - `light` (версия не указана или пустая строка)
+ *   - `dark` (версия не указана или пустая строка)
+ *   - `light2` (themeVersion='2')
+ *   - `dark2` (themeVersion='2')
+ *   - `light_project_name` (themeVersion='project_name')
+ *   - `dark_project_name` (themeVersion='project_name')
+ *
+ * **Пример использования:**
+ * При `themeVersion='2'` будут применяться классы `.light2` и `.dark2`.
+ * Эти классы должны быть определены в соответствующем CSS файле (например, `colors2.css`).
+ *
+ * **Важно:**
+ * - Значение `themeVersion` должно точно соответствовать постфиксу в CSS классах
+ * - Классы автоматически удаляются из DOM перед применением новой темы
+ * - Все классы, начинающиеся с `light` или `dark`, будут удалены при переключении темы
+ */
+export type ThemeVersion = '2';
 
 const translations = {
   expand: 'Expand',
@@ -134,11 +84,11 @@ export type ThemeProviderProps = {
    */
   translations?: Record<Translations, string>;
   /**
-   * Цвета для тем. Объект, где ключи — это названия тем (`dark` или `light`),
-   * а значения — объекты с CSS-переменными (необязательными).
-   * Позволяет кастомизировать цвета для каждой темы.
+   * Версия темы. Если указана, классы будут применены с постфиксом версии.
+   * Например, при themeVersion='2' будут использоваться классы .light2 и .dark2.
+   * Должна соответствовать классу в используемом colors.css файле.
    */
-  colors?: Record<'dark' | 'light', Partial<ThemeVariables>>;
+  themeVersion?: ThemeVersion;
 };
 
 export type ThemeProviderState = {
@@ -168,7 +118,7 @@ export const ThemeProviderContext = createContext<ThemeProviderState>(initialSta
  * @param {Theme} [props.defaultTheme='system'] - Тема по умолчанию
  * @param {string} [props.storageKey='app-ui-theme'] - Ключ для сохранения темы в localStorage
  * @param {Record<Translations, string>} [props.translations] - Кастомные переводы
- * @param {Record<'dark' | 'light', Partial<ThemeVariables>>} [props.colors] - Кастомные цвета для тем
+ * @param {ThemeVersion} [props.themeVersion] - Версия темы (например, '2' для классов .light2 и .dark2)
  * @returns {React.ReactElement} Провайдер темы с контекстом
  *
  * @example
@@ -178,16 +128,8 @@ export const ThemeProviderContext = createContext<ThemeProviderState>(initialSta
  *
  * @example
  * <ThemeProvider
- *   colors={{
- *     dark: {
- *       '--krit-background-primary': '0 0% 10%',
- *       '--krit-foreground-primary': '0 0% 100%'
- *     },
- *     light: {
- *       '--krit-background-primary': '0 0% 100%',
- *       '--krit-foreground-primary': '0 0% 10%'
- *     }
- *   }}
+ *   themeVersion="2"
+ *   defaultTheme="dark"
  * >
  *   <App />
  * </ThemeProvider>
@@ -196,36 +138,41 @@ export function ThemeProvider({
   children,
   defaultTheme = 'system',
   storageKey = 'app-ui-theme',
-  colors,
+  themeVersion,
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(
     () => (localStorage.getItem(storageKey) as Theme) || defaultTheme,
   );
 
-  const updateThemeVariables = (theme: 'dark' | 'light') => {
-    Object.entries(colors?.[theme] || {}).forEach(([key, value]) => {
-      document.documentElement.style.setProperty(key, value);
-    });
-  };
+  const getThemeClass = useCallback(
+    (baseTheme: 'dark' | 'light'): string => {
+      return themeVersion ? `${baseTheme}${themeVersion}` : baseTheme;
+    },
+    [themeVersion],
+  );
 
   useEffect(() => {
     const root = window.document.documentElement;
 
-    root.classList.remove('light', 'dark');
+    // Удаляем все классы тем, которые начинаются с 'light' или 'dark'
+    const classesToRemove = Array.from(root.classList).filter(
+      className => className.startsWith('light') || className.startsWith('dark'),
+    );
+    classesToRemove.forEach(className => root.classList.remove(className));
 
     if (theme === 'system') {
       const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
         ? 'dark'
         : 'light';
+      const themeClass = getThemeClass(systemTheme);
       setTheme(systemTheme);
-      root.classList.add(systemTheme);
-      updateThemeVariables(systemTheme);
+      root.classList.add(themeClass);
     } else {
-      root.classList.add(theme);
-      updateThemeVariables(theme);
+      const themeClass = getThemeClass(theme);
+      root.classList.add(themeClass);
     }
-  }, [theme, colors]);
+  }, [theme, getThemeClass]);
 
   const value: ThemeProviderState = {
     theme,

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from '@/components/ui/button';
 import { ThemeProvider } from '@/components/ui/theme-provider';
@@ -11,7 +12,7 @@ const meta: Meta<typeof ThemeProvider> = {
     docs: {
       description: {
         component:
-          'Провайдер темы для приложения. Управляет цветовой темой, переводами и CSS-переменными.',
+          'Провайдер темы для приложения. Управляет цветовой темой через CSS классы и переводами.',
       },
     },
   },
@@ -25,6 +26,12 @@ const meta: Meta<typeof ThemeProvider> = {
       control: 'text',
       description: 'Ключ для сохранения темы в localStorage',
     },
+    themeVersion: {
+      control: 'select',
+      options: [undefined, '2'],
+      description:
+        'Версия темы. Определяет постфикс для CSS классов (например, "2" для классов .light2 и .dark2)',
+    },
   },
 } satisfies Meta<typeof ThemeProvider>;
 
@@ -34,10 +41,41 @@ type Story = StoryObj<typeof ThemeProvider>;
 // Компонент для демонстрации использования темы
 const ThemeDemo = () => {
   const { theme, setTheme, toggleTheme } = useTheme();
+  const [currentThemeClass, setCurrentThemeClass] = useState<string>('не установлен');
+
+  // Отслеживаем изменения класса темы в DOM
+  useEffect(() => {
+    const updateThemeClass = () => {
+      const themeClass =
+        typeof window !== 'undefined'
+          ? Array.from(document.documentElement.classList).find(
+              className => className.startsWith('light') || className.startsWith('dark'),
+            ) || 'не установлен'
+          : 'не доступен';
+      setCurrentThemeClass(themeClass);
+    };
+
+    updateThemeClass();
+
+    // Наблюдаем за изменениями классов в DOM
+    const observer = new MutationObserver(updateThemeClass);
+    if (typeof window !== 'undefined') {
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class'],
+      });
+    }
+
+    return () => observer.disconnect();
+  }, [theme]);
 
   return (
     <div className='p-4 bg-background-primary text-foreground-primary rounded-lg border'>
       <h3 className='text-lg font-medium mb-4'>Текущая тема: {theme}</h3>
+      <p className='text-sm text-foreground-secondary mb-4'>
+        CSS класс в DOM:{' '}
+        <code className='px-1 py-0.5 bg-background-secondary rounded'>{currentThemeClass}</code>
+      </p>
       <div className='flex gap-2'>
         <Button onClick={() => setTheme('light')}>Light</Button>
         <Button onClick={() => setTheme('dark')}>Dark</Button>
@@ -64,14 +102,15 @@ export const Default: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Базовый провайдер темы с настройками по умолчанию.',
+        story:
+          'Базовый провайдер темы с настройками по умолчанию. Использует стандартные классы .light и .dark.',
       },
     },
   },
 };
 
-// С кастомными цветами
-export const WithCustomColors: Story = {
+// С версией темы
+export const WithThemeVersion: Story = {
   render: args => (
     <ThemeProvider {...args}>
       <ThemeDemo />
@@ -79,23 +118,13 @@ export const WithCustomColors: Story = {
   ),
   args: {
     defaultTheme: 'dark',
-    colors: {
-      dark: {
-        '--krit-background-primary': '240 10% 10%',
-        '--krit-foreground-primary': '0 0% 98%',
-        '--krit-background-theme': '142 76% 36%',
-      },
-      light: {
-        '--krit-background-primary': '0 0% 98%',
-        '--krit-foreground-primary': '240 10% 10%',
-        '--krit-background-theme': '142 76% 36%',
-      },
-    },
+    themeVersion: '2',
   },
   parameters: {
     docs: {
       description: {
-        story: 'Провайдер темы с кастомными цветами для светлой и темной темы.',
+        story:
+          'Провайдер темы с версией "2". Использует классы .light2 и .dark2 из colors2.css. Версия темы добавляется как постфикс к базовым классам тем.',
       },
     },
   },
