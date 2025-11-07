@@ -88,7 +88,7 @@ const Select = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Trigger>
     ref,
   ) => {
     const [value, setValue] = React.useState(props.value || '');
-    const [preventAutoSelect, setPreventAutoSelect] = React.useState(false);
+    const hasAutoSelectedOnceRef = React.useRef(false);
 
     const handleChange = React.useCallback(
       (value: string) => {
@@ -106,14 +106,17 @@ const Select = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Trigger>
     }, [props.value]);
 
     React.useEffect(() => {
-      if (autoSelectSingleOption && props.options.length === 1 && !value && !preventAutoSelect) {
+      if (
+        autoSelectSingleOption &&
+        props.options.length === 1 &&
+        !value &&
+        !hasAutoSelectedOnceRef.current
+      ) {
         const singleOption = props.options[0];
         handleChange(singleOption.value);
+        hasAutoSelectedOnceRef.current = true;
       }
-      if (preventAutoSelect && value) {
-        setPreventAutoSelect(false);
-      }
-    }, [autoSelectSingleOption, props.options, value, handleChange, preventAutoSelect]);
+    }, [autoSelectSingleOption, props.options, value, handleChange]);
 
     return (
       <SelectPrimitive.Root
@@ -143,7 +146,7 @@ const Select = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Trigger>
                 readOnly && 'cursor-not-allowed pointer-events-none opacity-95',
               )}
               onClick={() => {
-                setPreventAutoSelect(true);
+                hasAutoSelectedOnceRef.current = true;
                 handleChange?.('');
               }}
             />
