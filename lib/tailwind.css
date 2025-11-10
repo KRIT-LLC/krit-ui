@@ -1,122 +1,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+@import './colors.css';
+@import './colors2.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  /* Цвета которых нет в общем макете цветов krit-ui */
   :root {
-    --krit-background-primary: 0 0% 100%;
-    --krit-background-primary-hover: 0 0% 98%;
-    --krit-background-primary-selected: 0 0% 88%;
-    --krit-background-secondary: 210 22% 96%;
-    --krit-background-secondary-hover: 0 0% 98%;
-    --krit-background-tertiary: 0 0% 90%;
-    --krit-background-transparent: 0 0% 100% / 0%;
-    --krit-background-theme: 241 55% 50%;
-    --krit-background-theme-hover: 241 55% 45%;
-    --krit-background-theme-fade: 244 54% 95%;
-    --krit-background-contrast: 234 15% 25%;
-    --krit-background-contrast-hover: 236 15% 23%;
-    --krit-background-contrast-disabled: 234 12% 30%;
-    --krit-background-contrast-selected: 234 24% 23%;
-    --krit-background-contrast-fade: 225 9% 83%;
-    --krit-background-contrast-fade-hover: 222 10% 74%;
-    --krit-background-contrast-fade-selected: 223 11% 67%;
-    --krit-background-contrast-fade-disabled: 228 22% 91%;
-    --krit-background-error: 354 93% 65%;
-    --krit-background-error-hover: 354 71% 59%;
-    --krit-background-error-fade: 356 89% 96%;
-    --krit-background-error-fade-hover: 353 93% 95%;
-    --krit-background-error-gradient: linear-gradient(116.49deg, #ffeae5 -7.58%, #ffc4b7 76.73%);
-    --krit-background-warning: 38 98% 48%;
-    --krit-background-warning-hover: 55 70% 58%;
-    --krit-background-warning-fade: 56 89% 96%;
-    --krit-background-warning-fade-hover: 55 93% 95%;
-    --krit-background-success: 133 84% 37%;
-    --krit-background-success-hover: 132 83% 34%;
-    --krit-background-success-tertiary: 133 50% 75%;
-    --krit-background-success-fade: 136 45% 94%;
-    --krit-background-success-fade-hover: 132 83% 34%;
-    --krit-background-success-gradient: linear-gradient(116.49deg, #e5ffeb -7.58%, #b7ffc7 76.73%);
-    --krit-background-overlay: 226 21% 12%;
+    --krit-background-error-gradient: linear-gradient(
+      116.49deg,
+      hsl(var(--krit-background-error-fade)) -7.58%,
+      hsl(var(--krit-background-error)) 76.73%
+    );
+    --krit-background-success-gradient: linear-gradient(
+      116.49deg,
+      hsl(var(--krit-background-success-fade)) -7.58%,
+      hsl(var(--krit-background-success)) 76.73%
+    );
     --krit-background-progress-gradient: linear-gradient(
       90deg,
       hsl(var(--krit-background-theme-fade)) 0%,
       hsl(var(--krit-background-theme)) 100%
     );
-
     --krit-background-transparent-gradient: linear-gradient(
       90deg,
       hsl(var(--krit-background-transparent)) 0%,
       hsl(var(--krit-background-secondary-hover)) 37.5%
     );
-    --krit-background-sidebar: 210 17% 20%;
-
-    --krit-foreground-primary: 224 27% 11%;
-    --krit-foreground-primary-disabled: 222 8% 42%;
-    --krit-foreground-secondary: 241 42% 61%;
-    --krit-foreground-tertiary: 0 0% 66%;
-    --krit-foreground-quaternary: 224 10% 44%;
-    --krit-foreground-theme: 241 58% 47%;
-    --krit-foreground-on-contrast: var(--krit-background-primary);
-    --krit-foreground-on-contrast-disabled: 233 5% 70%;
-    --krit-foreground-error: 355 88% 51%;
-    --krit-foreground-warning: 38 89% 47%;
-    --krit-foreground-success: 133 87% 34%;
-    --krit-foreground-white: 0 0% 100%;
-    --krit-foreground-sidebar-active: 217 100% 65%; /* Todo удалить после добавления Day2 и Night2*/
-
-    --krit-line-primary: var(--krit-background-contrast-fade);
-    --krit-line-primary-hover: var(--krit-background-contrast-fade);
-    --krit-line-primary-disabled: 229 19% 88%;
-    --krit-line-secondary: 224 9% 75%;
-    --krit-line-error: var(--krit-foreground-error);
-    --krit-line-warning: var(--krit-foreground-warning);
-    --krit-line-success: var(--krit-foreground-success);
-    --krit-line-theme: 241 76% 39%;
-    --krit-line-contrast: 234 15% 25%;
-    --krit-line-focused: 241 76% 39%;
-
-    --krit-icon-contrast: var(--krit-foreground-primary);
-    --krit-icon-contrast-disabled: 222 8% 42%;
-    --krit-icon-fade-contrast: 225 14% 67%;
-    --krit-icon-on-contrast: var(--krit-background-primary);
-    --krit-icon-on-contrast-selected: var(--krit-background-primary);
-    --krit-icon-on-contrast-disabled: var(--krit-foreground-on-contrast-disabled);
-    --krit-icon-theme: var(--krit-foreground-theme);
-    --krit-icon-error: var(--krit-foreground-error);
-    --krit-icon-warning: var(--krit-foreground-warning);
-    --krit-icon-success: var(--krit-foreground-success);
-
-    --krit-background-created: 59 100% 63%;
-    --krit-line-created: 59 100% 43%;
-    --krit-icon-created: 59 100% 23%;
-    --krit-background-assigned: 329 52% 69%;
-    --krit-line-assigned: var(--krit-background-assigned);
-    --krit-icon-assigned: 329 51% 49%;
-    --krit-background-in-process: 246 100% 70%;
-    --krit-line-in-process: 246 100% 80%;
-    --krit-icon-in-process: 246 100% 60%;
-    --krit-background-partially: 37 100% 53%;
-    --krit-line-partially: var(--krit-background-partially);
-    --krit-icon-partially: 37 100% 23%;
-    --krit-background-done: 118 76% 55%;
-    --krit-line-done: 118 76% 45%;
-    --krit-icon-done: 118 76% 25%;
-    --krit-background-rejected: 0 100% 68%;
     --krit-line-rejected: var(--krit-background-rejected);
-    --krit-icon-rejected: 0 100% 18%;
-    --krit-background-draft: 227 17% 84%;
-    --krit-line-draft: var(--krit-background-draft);
-    --krit-icon-draft: 230 17% 14%;
-    --krit-line-not-started: 329 51% 89%;
-    --krit-background-paused: 216 100% 66%;
-    --krit-line-paused: var(--krit-background-paused);
-    --krit-icon-paused: 216 100% 26%;
-
     --krit-purple: 241 98% 69%;
-
     --krit-muted: 210 40% 96.1%;
     --krit-muted-foreground: 0 0% 66%;
 
@@ -124,40 +38,16 @@
   }
 
   .dark {
-    --krit-background-primary: 224 19% 15%;
-    --krit-background-primary-hover: 224 18% 20%;
-    --krit-background-primary-selected: 224 22% 23%;
-    --krit-background-secondary: 226 21% 12%;
-    --krit-background-secondary-hover: 224 26% 13%;
-    --krit-background-tertiary: 224 27% 11%;
-    --krit-background-transparent: 0 0% 100% / 0%;
-    --krit-background-theme: 242 80% 71%;
-    --krit-background-theme-hover: 241 43% 58%;
-    --krit-background-theme-fade: 241 30% 48%;
-    --krit-background-contrast: 224 38% 71%;
-    --krit-background-contrast-hover: 224 68% 80%;
-    --krit-background-contrast-disabled: 224 28% 60%;
-    --krit-background-contrast-selected: 224 90% 80%;
-    --krit-background-contrast-fade: 223 13% 27%;
-    --krit-background-contrast-fade-hover: 224 13% 34%;
-    --krit-background-contrast-fade-selected: 222 12% 37%;
-    --krit-background-contrast-fade-disabled: 222 15% 23%;
-    --krit-background-error: 355 66% 50%;
-    --krit-background-error-hover: 355 65% 45%;
-    --krit-background-error-fade: 0 36% 21%;
-    --krit-background-error-fade-hover: 355 66% 30%;
-    --krit-background-error-gradient: linear-gradient(116deg, #947061 -7.58%, #7b392b 76.73%);
-    --krit-background-warning: 58 87% 52%;
-    --krit-background-warning-hover: 58 81% 47%;
-    --krit-background-warning-fade: 57 48% 24%;
-    --krit-background-warning-fade-hover: 58 82% 31%;
-    --krit-background-success: 133 51% 51%;
-    --krit-background-success-tertiary: 126 26% 49%;
-    --krit-background-success-hover: 132 83% 34%;
-    --krit-background-success-fade: 133 82% 28%;
-    --krit-background-success-fade-hover: 133 83% 23%;
-    --krit-background-success-gradient: linear-gradient(116deg, #61946c -7.58%, #2b7b3c 76.73%);
-    --krit-background-overlay: var(--krit-background-secondary);
+    --krit-background-error-gradient: linear-gradient(
+      116deg,
+      hsl(var(--krit-background-error-fade)) -7.58%,
+      hsl(var(--krit-background-error)) 76.73%
+    );
+    --krit-background-success-gradient: linear-gradient(
+      116deg,
+      hsl(var(--krit-background-success-fade)) -7.58%,
+      hsl(var(--krit-background-success)) 76.73%
+    );
     --krit-background-progress-gradient: linear-gradient(
       90deg,
       hsl(var(--krit-background-theme-fade)) 0%,
@@ -168,60 +58,9 @@
       hsl(var(--krit-background-transparent)) 0%,
       hsl(var(--krit-background-secondary-hover)) 37.5%
     );
-    --krit-background-sidebar: 210 17% 20%;
-
-    --krit-foreground-primary: 0 0% 96%;
-    --krit-foreground-primary-disabled: 0 0% 52%;
-    --krit-foreground-secondary: 0 0% 83%;
-    --krit-foreground-tertiary: 0 0% 58%;
-    --krit-foreground-quaternary: 224 10% 44%;
-    --krit-foreground-theme: 241 100% 82%;
-    --krit-foreground-on-contrast: var(--krit-background-primary);
-    --krit-foreground-on-contrast-disabled: 224 18% 30%;
-    --krit-foreground-error: 354 93% 65%;
-    --krit-foreground-warning: 54 93% 52%;
-    --krit-foreground-success: 133 95% 49%;
-    --krit-foreground-white: 0 0% 100%;
-    --krit-foreground-sidebar-active: 221 99% 48%; /* Todo удалить после добавления Day2 и Night2*/
-
-    --krit-line-primary: var(--krit-background-contrast-fade);
-    --krit-line-primary-hover: var(--krit-background-contrast-fade);
-    --krit-line-primary-disabled: 224 18% 21%;
-    --krit-line-secondary: var(--krit-background-primary-hover);
-    --krit-line-error: var(--krit-foreground-error);
-    --krit-line-warning: var(--krit-foreground-warning);
-    --krit-line-success: var(--krit-foreground-success);
-    --krit-line-theme: 241 56% 64%;
-    --krit-line-contrast: 223 12% 58%;
-    --krit-line-focused: 241 56% 65%;
-
-    --krit-icon-contrast: var(--krit-foreground-primary);
-    --krit-icon-contrast-disabled: var(--krit-foreground-secondary);
-    --krit-icon-fade-contrast: var(--krit-background-contrast-fade);
-    --krit-icon-on-contrast: var(--krit-background-primary);
-    --krit-icon-on-contrast-selected: var(--krit-background-primary);
-    --krit-icon-on-contrast-disabled: var(--krit-foreground-on-contrast-disabled);
-    --krit-icon-theme: var(--krit-foreground-theme);
-    --krit-icon-error: var(--krit-foreground-error);
-    --krit-icon-warning: var(--krit-foreground-warning);
-    --krit-icon-success: var(--krit-foreground-success);
-    --krit-icon-created: 59 100% 83%;
-    --krit-icon-assigned: 329 51% 79%;
-    --krit-line-in-process: var(--krit-background-in-process);
-    --krit-icon-in-process: 246 100% 90%;
-    --krit-icon-partially: 37 100% 83%;
-    --krit-icon-done: 118 77% 65%;
-    --krit-icon-rejected: 0 100% 88%;
-    --krit-icon-draft: 228 17% 94%;
-    --krit-line-not-started: 228 17% 44%;
-    --krit-icon-paused: 216 100% 86%;
-
     --krit-purple: 241 98% 69%;
-
     --krit-muted: 223 47% 11%;
     --krit-muted-foreground: 0 0% 52%;
-
-    --krit-radius: 0.5rem;
   }
 }
 
