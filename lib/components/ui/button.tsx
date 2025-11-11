@@ -53,7 +53,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
-        {icon && <span className='mr-2'>{icon}</span>}
+        {icon && <span className={cn(size !== 'icon' && 'mr-2')}>{icon}</span>}
         {children}
         {asDropdown && <ArrowDropDown className='ml-2' />}
       </Comp>
