@@ -85,7 +85,7 @@ const NavPanel = (props: NavPanelProps) => {
     <div className={cn(withBackground && 'bg-background-sidebar', 'flex flex-col h-screen')}>
       <div
         className={cn(
-          'text-[14px] px-[12px] leading-5 py-4 cursor-default whitespace-nowrap flex justify-normal',
+          'text-[14px] px-2 leading-5 py-4 cursor-default whitespace-nowrap flex justify-normal',
           {
             'text-center justify-center': isCollapsed,
           },
