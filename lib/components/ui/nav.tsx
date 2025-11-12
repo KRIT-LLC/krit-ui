@@ -64,7 +64,7 @@ export function Nav(props: NavProps) {
       data-collapsed={isCollapsed}
       className='group flex flex-col gap-4 py-4 data-[collapsed=true]:py-4'
     >
-      <nav className='grid gap-3 px-3 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-3'>
+      <nav className='grid gap-1.5 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2'>
         {items.map((item, index) =>
           isCollapsed ? (
             <TooltipProvider key={index}>
@@ -134,5 +134,5 @@ export function Nav(props: NavProps) {
  * @returns {JSX.Element} Элемент разделителя
  */
 export function NavSeparator() {
-  return <Separator className='w-[calc(100%_-_24px)] ml-3 bg-line-primary' />;
+  return <Separator className='w-[calc(100%_-_24px)] ml-3 bg-line-secondary' />;
 }

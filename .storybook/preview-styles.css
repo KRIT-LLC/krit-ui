@@ -1,0 +1,5 @@
+/* Import all theme styles for Storybook */
+@import '../lib/tailwind.css';
+@import '../lib/colors.css';
+@import '../lib/colors2.css';
+

@@ -48,7 +48,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         head_row: 'flex',
         head_cell: 'text-foreground-secondary rounded-md w-9 font-normal text-[0.8rem]',
         row: 'flex w-full mt-2',
-        cell: 'h-9 w-9 text-center p-0 relative [&:has([aria-selected].day-range-start)]:rounded-l-md [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-muted [&:has([aria-selected])]:bg-muted first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
+        cell: 'h-9 w-9 text-center p-0 relative [&:has([aria-selected].day-range-start)]:rounded-l-md [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-background-tertiary [&:has([aria-selected])]:bg-background-tertiary first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
         day: cn(
           buttonVariants({ variant: 'ghost' }),
           'h-9 w-9 p-0 text-sm font-normal transition-all hover:bg-background-secondary hover:text-foreground aria-selected:opacity-100',
@@ -58,12 +58,12 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         day_selected:
           'bg-background-theme text-foreground-on-contrast hover:bg-background-theme/80 hover:text-foreground-on-contrast focus:bg-background-theme focus:text-foreground-on-contrast',
         day_today:
-          'transition-none bg-muted text-foreground-theme hover:bg-none  hover:text-primary hover:bg-clip-content',
+          'transition-none bg-background-tertiary text-foreground-theme hover:bg-none  hover:text-primary hover:bg-clip-content',
         day_outside:
-          'day-outside text-foreground-secondary opacity-50 hover:text-foreground/90 aria-selected:bg-muted aria-selected:text-foreground-secondary aria-selected:opacity-30',
+          'day-outside text-foreground-secondary opacity-50 hover:text-foreground/90 aria-selected:bg-background-tertiary aria-selected:text-foreground-secondary aria-selected:opacity-30',
         day_disabled: 'text-foreground-secondary opacity-50',
         day_range_middle:
-          'bg-none aria-selected:bg-muted aria-selected:hover:bg-none aria-selected:hover:bg-background-secondary aria-selected:text-foreground',
+          'bg-none aria-selected:bg-background-tertiary aria-selected:hover:bg-none aria-selected:hover:bg-background-secondary aria-selected:text-foreground',
         day_hidden: 'invisible',
         ...classNames,
       }}

@@ -506,7 +506,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
             {children || (
               <>
                 {!value?.length && (
-                  <span className='text-muted-foreground text-sm'>
+                  <span className='text-foreground-secondary text-sm'>
                     {placeholder}
                     {required && <span className='text-foreground-error ml-1'>*</span>}
                   </span>
