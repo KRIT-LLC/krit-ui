@@ -498,9 +498,13 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
             role='combobox'
             aria-expanded={open}
             disabled={disabled}
-            className={cn('w-full justify-between px-3 overflow-hidden', triggerClassName, {
-              'h-auto overflow-visible hover:bg-[transparent] active:bg-[transparent]': showBadge,
-            })}
+            className={cn(
+              'w-full justify-between px-3 overflow-hidden disabled:opacity-50',
+              triggerClassName,
+              {
+                'h-auto overflow-visible hover:bg-[transparent] active:bg-[transparent]': showBadge,
+              },
+            )}
             onClick={onClick || (() => onOpenChange?.(!open))}
           >
             {children || (
@@ -619,7 +623,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
                             className={cn(
                               'flex items-center text-sm px-3 py-2 cursor-pointer select-none',
                               'hover:bg-background-theme-fade',
-                              group.disabled && 'opacity-60 pointer-events-none',
+                              group.disabled && 'opacity-50 pointer-events-none cursor-not-allowed',
                               !matchesSearch && visibleChildren.length === 0 && 'hidden',
                             )}
                             onClick={() => toggleGroup(group.value)}
