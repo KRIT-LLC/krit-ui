@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 @import './colors.css';
 @import './colors2.css';
+@import './colorsNordGold.css';
 
 @tailwind base;
 @tailwind components;

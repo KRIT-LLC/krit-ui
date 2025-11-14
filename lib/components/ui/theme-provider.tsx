@@ -23,14 +23,15 @@ export type Theme = 'dark' | 'light' | 'system';
  *
  * **Пример использования:**
  * При `themeVersion='2'` будут применяться классы `.light2` и `.dark2`.
- * Эти классы должны быть определены в соответствующем CSS файле (например, `colors2.css`).
+ * При `themeVersion='NordGold'` будут применяться классы `.lightNordGold` и `.darkNordGold`.
+ * Эти классы должны быть определены в соответствующем CSS файле (например, `colors2.css`, `colorsNordGold.css`).
  *
  * **Важно:**
  * - Значение `themeVersion` должно точно соответствовать постфиксу в CSS классах
  * - Классы автоматически удаляются из DOM перед применением новой темы
  * - Все классы, начинающиеся с `light` или `dark`, будут удалены при переключении темы
  */
-export type ThemeVersion = '2';
+export type ThemeVersion = '2' | 'NordGold';
 
 const translations = {
   expand: 'Expand',
