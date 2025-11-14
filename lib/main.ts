@@ -66,5 +66,6 @@ export * from '@/hooks/useStoredTabs';
 export * from '@/hooks/useTableStates';
 export * from '@/hooks/useStoredFields';
 export * from '@/lib/attachments';
+export * from '@/hooks/useColumnFilters';
 
 export * from '@/assets';
