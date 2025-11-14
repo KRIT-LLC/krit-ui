@@ -6,7 +6,7 @@ import { ListFilter } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { cn } from '@/utils';
 import CalendarOutlineIcon from '@/assets/calendar_outline.svg?react';
-import FilterAltOffIcon from '@/assets/filter_alt_off.svg?react';
+import FilterAltOffIcon from '@/assets/filter_alt_off_outline.svg?react';
 import SearchIcon from '@/assets/search.svg?react';
 import { Button } from './button';
 import { Calendar } from './calendar';
