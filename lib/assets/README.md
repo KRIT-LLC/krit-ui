@@ -158,6 +158,8 @@
 ![file_copy_outline.svg](file_copy_outline.svg)
 #### FileDownloadIcon
 ![file_download.svg](file_download.svg)
+#### FilterAltOffIcon
+![filter_alt_off.svg](filter_alt_off.svg)
 #### FirstPageIcon
 ![first_page.svg](first_page.svg)
 #### FlagIcon

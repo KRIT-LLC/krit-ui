@@ -78,6 +78,7 @@ export { default as FileIcon } from '@/assets/file.svg?react';
 export { default as FileCopyIcon } from '@/assets/file_copy.svg?react';
 export { default as FileCopyOutlineIcon } from '@/assets/file_copy_outline.svg?react';
 export { default as FileDownloadIcon } from '@/assets/file_download.svg?react';
+export { default as FilterAltOffIcon } from '@/assets/filter_alt_off.svg?react';
 export { default as FirstPageIcon } from '@/assets/first_page.svg?react';
 export { default as FlagIcon } from '@/assets/flag.svg?react';
 export { default as FlagFillIcon } from '@/assets/flag_fill.svg?react';

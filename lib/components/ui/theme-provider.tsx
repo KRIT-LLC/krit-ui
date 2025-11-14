@@ -60,6 +60,9 @@ const translations = {
   videoSizeLimitMB: 'Video size limit',
   maxSizeOfFilesMB: 'Max size of files',
   mb: 'Mb',
+  apply: 'Apply',
+  showAll: 'Show all',
+  chooseAll: 'Choose all',
 };
 
 export type Translations = keyof typeof translations;
