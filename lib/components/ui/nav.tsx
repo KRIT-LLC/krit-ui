@@ -58,10 +58,11 @@ interface NavProps {
  * @returns {JSX.Element} Элемент навигации
  */
 const POPOVER_CONTENT_CLASS =
-  'p-2 w-48 border-0 shadow-lg rounded-xl bg-[hsl(var(--background-popover-menu))] text-white';
-const POPOVER_CHILD_CLASS = 'justify-start gap-2 px-2 min-w-0 text-white hover:text-white';
-const POPOVER_TEXT_CLASS = 'text-sm truncate min-w-0 flex-1 text-white';
-const POPOVER_ICON_CLASS = 'h-4 w-4 flex-shrink-0 text-white';
+  'p-2 w-48 border-0 shadow-lg rounded-xl bg-[hsl(var(--background-popover-menu))] [&_*]:text-[hsl(var(--text-popover-menu))]';
+const POPOVER_CHILD_CLASS =
+  'justify-start gap-2 px-2 min-w-0 text-[hsl(var(--text-popover-menu))] hover:text-[hsl(var(--text-popover-menu))]';
+const POPOVER_TEXT_CLASS = 'text-sm truncate min-w-0 flex-1 text-[hsl(var(--text-popover-menu))]';
+const POPOVER_ICON_CLASS = 'h-4 w-4 flex-shrink-0 text-[hsl(var(--text-popover-menu))]';
 
 const PopoverChildren = ({
   children,
@@ -80,11 +81,12 @@ const PopoverChildren = ({
         key={childIndex}
         to={child.to ?? '#'}
         className={cn(
+          POPOVER_CHILD_CLASS,
           buttonVariants({
             variant: child.variant || itemVariant(child),
             size: 'sm',
           }),
-          POPOVER_CHILD_CLASS,
+          'text-[hsl(var(--text-popover-menu))] hover:text-[hsl(var(--text-popover-menu))] focus:text-[hsl(var(--text-popover-menu))] active:text-[hsl(var(--text-popover-menu))]',
           child.className,
         )}
         onClick={(e: React.MouseEvent) => {
@@ -95,7 +97,11 @@ const PopoverChildren = ({
       >
         {child.icon && <child.icon className={POPOVER_ICON_CLASS} />}
         <span className={POPOVER_TEXT_CLASS}>{child.title}</span>
-        {child.label && <span className='ml-auto flex-shrink-0 text-white'>{child.label}</span>}
+        {child.label && (
+          <span className='ml-auto flex-shrink-0 text-[hsl(var(--text-popover-menu))]'>
+            {child.label}
+          </span>
+        )}
       </LinkComponent>
     ))}
   </nav>
