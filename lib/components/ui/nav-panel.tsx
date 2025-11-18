@@ -63,9 +63,26 @@ const NavPanel = (props: NavPanelProps) => {
   } = props;
 
   const getItemVariant = (item: NavItem) => {
-    const isActive = location?.pathname === String(item.to);
-    const isChildActive = item.children?.some(child => child.to && location?.pathname === child.to);
-    const isItemActive = isActive || isChildActive;
+    if (!location?.pathname) {
+      return withBackground ? 'nav-item' : 'ghost';
+    }
+
+    const currentPath = location.pathname;
+    const itemPath = String(item.to || '');
+
+    // Проверяем точное совпадение
+    const isActive = currentPath === itemPath;
+
+    // Проверяем, начинается ли текущий путь с пути пункта меню (для вложенных маршрутов)
+    const isPathActive = itemPath && currentPath.startsWith(itemPath + '/');
+
+    // Проверяем активность дочерних элементов
+    const isChildActive = item.children?.some(child => {
+      const childPath = String(child.to || '');
+      return childPath && (currentPath === childPath || currentPath.startsWith(childPath + '/'));
+    });
+
+    const isItemActive = isActive || isPathActive || isChildActive;
 
     if (withBackground) {
       return isItemActive ? 'nav-item-selected' : 'nav-item';
