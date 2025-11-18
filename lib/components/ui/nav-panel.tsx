@@ -63,10 +63,14 @@ const NavPanel = (props: NavPanelProps) => {
   } = props;
 
   const getItemVariant = (item: NavItem) => {
+    const isActive = location?.pathname === String(item.to);
+    const isChildActive = item.children?.some(child => child.to && location?.pathname === child.to);
+    const isItemActive = isActive || isChildActive;
+
     if (withBackground) {
-      return location?.pathname === String(item.to) ? 'nav-item-selected' : 'nav-item';
+      return isItemActive ? 'nav-item-selected' : 'nav-item';
     }
-    return location?.pathname === String(item.to) ? 'secondary-contrast' : 'ghost';
+    return isItemActive ? 'secondary-contrast' : 'ghost';
   };
 
   const navBlocks = (navItems ?? []).map((block, index) => (
@@ -77,6 +81,7 @@ const NavPanel = (props: NavPanelProps) => {
         items={block}
         itemVariant={getItemVariant}
         LinkComponent={linkComponent}
+        location={location}
       />
     </React.Fragment>
   ));
