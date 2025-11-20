@@ -142,6 +142,8 @@
 ![event_available.svg](event_available.svg)
 #### EventNoteIcon
 ![event_note.svg](event_note.svg)
+#### EventRepeatOutlinedIcon
+![event_repeat_outlined.svg](event_repeat_outlined.svg)
 #### ExpandMoreIcon
 ![expand_more.svg](expand_more.svg)
 #### FactCheckOutlineIcon
@@ -370,5 +372,9 @@
 ![wrench_tool.svg](wrench_tool.svg)
 #### WriteIcon
 ![write.svg](write.svg)
+#### ZoomInOutlinedIcon
+![zoom_in_outlined.svg](zoom_in_outlined.svg)
 #### ZoomOutMapOutlinedIcon
 ![zoom_out_map_outlined.svg](zoom_out_map_outlined.svg)
+#### ZoomOutOutlinedIcon
+![zoom_out_outlined.svg](zoom_out_outlined.svg)
