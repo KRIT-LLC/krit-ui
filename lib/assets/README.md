@@ -328,6 +328,8 @@
 ![supervisor_account.svg](supervisor_account.svg)
 #### TableChartIcon
 ![table_chart.svg](table_chart.svg)
+#### TableRowsOutlineIcon
+![table_rows_outline.svg](table_rows_outline.svg)
 #### TargetOutlineIcon
 ![target_outline.svg](target_outline.svg)
 #### ThermostatIcon
@@ -340,6 +342,8 @@
 ![tour.svg](tour.svg)
 #### TranslateIcon
 ![translate.svg](translate.svg)
+#### TuneOutlineIcon
+![tune_outline.svg](tune_outline.svg)
 #### UnlockIcon
 ![unlock.svg](unlock.svg)
 #### UserIcon
@@ -352,6 +356,8 @@
 ![view_outline.svg](view_outline.svg)
 #### ViewSidebarIcon
 ![view_sidebar.svg](view_sidebar.svg)
+#### ViewSidebarOutlineIcon
+![view_sidebar_outline.svg](view_sidebar_outline.svg)
 #### WarehouseIcon
 ![warehouse.svg](warehouse.svg)
 #### WarehouseOutlineIcon
