@@ -2,7 +2,7 @@
   /* Цветовая схема NordGold из общего макета цветов krit-ui */
   .lightNordGold {
     --krit-background-contrast: 65 100% 34%;
-    --krit-background-contrast-fade: 217 11% 86%;
+    --krit-background-contrast-fade: 65 100% 34%;
     --krit-background-error: 7 100% 67%;
     --krit-background-error-fade: 12 100% 96%;
     --krit-background-error-tertiary: 0 50% 74%;
@@ -36,7 +36,7 @@
     --krit-background-success-tertiary: 133 50% 74%;
     --krit-background-tertiary: 0 0% 96%;
     --krit-background-theme: 65 100% 34%;
-    --krit-background-theme-fade: 64 26% 90%;
+    --krit-background-theme-fade: 65 100% 34%;
     --krit-background-transparent: 0 0% 100%;
     --krit-background-warning: 39 97% 73%;
     --krit-background-warning-fade: 37 100% 91%;
@@ -129,7 +129,7 @@
 
   .darkNordGold {
     --krit-background-contrast: 64 100% 31%;
-    --krit-background-contrast-fade: 226 3% 46%;
+    --krit-background-contrast-fade: 64 100% 31%;
     --krit-background-error: 3 48% 48%;
     --krit-background-error-fade: 353 41% 48%;
     --krit-background-error-tertiary: 7 36% 53%;
@@ -252,5 +252,57 @@
     --krit-line-success: 133 95% 48%;
     --krit-line-theme: 64 100% 31%;
     --krit-line-warning: 53 93% 51%;
+  }
+
+  /* Для темы NordGold на зеленом фоне используем белый текст */
+  /* Переопределяем цвет текста на белый для элементов с зеленым фоном */
+
+  /* Badge - элементы с bg-background-contrast-fade (класс применяется напрямую) */
+  .lightNordGold .bg-background-contrast-fade,
+  .darkNordGold .bg-background-contrast-fade {
+    color: hsl(var(--krit-foreground-on-contrast)) !important;
+  }
+
+  /* Tabs - элементы с data-[state=active]:bg-background-contrast-fade */
+  .lightNordGold [data-state='active'].bg-background-contrast-fade,
+  .darkNordGold [data-state='active'].bg-background-contrast-fade {
+    color: hsl(var(--krit-foreground-on-contrast)) !important;
+  }
+
+  /* MultiSelect - элементы с aria-selected:bg-background-theme-fade */
+  .lightNordGold [aria-selected='true'].bg-background-theme-fade,
+  .darkNordGold [aria-selected='true'].bg-background-theme-fade {
+    color: hsl(var(--krit-foreground-on-contrast)) !important;
+  }
+
+  /* DropdownMenu - элементы с data-[state=open]:bg-background-theme */
+  .lightNordGold [data-state='open'].bg-background-theme,
+  .darkNordGold [data-state='open'].bg-background-theme {
+    color: hsl(var(--krit-foreground-on-contrast)) !important;
+  }
+
+  /* Select, DropdownMenu - элементы в состоянии focus с зеленым фоном */
+  /* Используем селектор для элементов с role='option' и role='menuitem' в состоянии focus */
+  .lightNordGold [role='option']:focus,
+  .darkNordGold [role='option']:focus,
+  .lightNordGold [role='menuitem']:focus,
+  .darkNordGold [role='menuitem']:focus,
+  .lightNordGold [role='menuitem'][data-state='open'],
+  .darkNordGold [role='menuitem'][data-state='open'] {
+    color: hsl(var(--krit-foreground-on-contrast)) !important;
+  }
+
+  /* Data-highlighted состояния */
+  .lightNordGold [data-highlighted],
+  .darkNordGold [data-highlighted] {
+    color: hsl(var(--krit-foreground-on-contrast)) !important;
+  }
+
+  /* Кнопка outline - зеленая обводка */
+  .lightNordGold button.border-2.border-line-primary,
+  .darkNordGold button.border-2.border-line-primary,
+  .lightNordGold .border-2.border-line-primary,
+  .darkNordGold .border-2.border-line-primary {
+    border-color: hsl(var(--krit-background-theme)) !important;
   }
 }
