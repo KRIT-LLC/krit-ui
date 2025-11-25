@@ -36,6 +36,7 @@ type InternalMultiSelectOptionType = {
 export interface MultiSelectProps {
   className?: string;
   triggerClassName?: string;
+  popoverContentClassName?: string;
   variant?: ButtonVariant;
   placeholder?: string;
   options: MultiSelectOptionType[];
@@ -150,6 +151,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
     {
       className,
       triggerClassName,
+      popoverContentClassName,
       variant = 'secondary-outline',
       placeholder,
       options,
@@ -541,7 +543,12 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className='w-full p-0 min-w-[var(--radix-popover-trigger-width)] overflow-auto'>
+        <PopoverContent
+          className={cn(
+            'w-full p-0 min-w-[var(--radix-popover-trigger-width)] overflow-auto',
+            popoverContentClassName,
+          )}
+        >
           <Command shouldFilter={false} className={className}>
             {shouldFilter && (
               <CommandInput
