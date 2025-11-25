@@ -254,9 +254,6 @@
     --krit-line-warning: 53 93% 51%;
   }
 
-  /* Для темы NordGold на зеленом фоне используем белый текст */
-  /* Переопределяем цвет текста на белый для элементов с зеленым фоном */
-
   /* Badge - элементы с bg-background-contrast-fade (класс применяется напрямую) */
   .lightNordGold .bg-background-contrast-fade,
   .darkNordGold .bg-background-contrast-fade {
