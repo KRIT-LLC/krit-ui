@@ -36,6 +36,8 @@ export interface AttachmentsSectionProps {
   onRemove?: (index: number, tabIndex: number) => Promise<void> | void;
   /** Список вкладок с файлами */
   tabs?: Attachments;
+  /** Показать плашку "Медиафайлов нет" при отсутствии файлов */
+  showNoDataBanner?: boolean;
 }
 
 /**
@@ -64,6 +66,7 @@ export const AttachmentsSection = ({
   withCompress,
   onAdd,
   onRemove,
+  showNoDataBanner = true,
 }: AttachmentsSectionProps) => {
   const { t } = useTranslation();
   const [selected, setSelected] = useState(0);
@@ -102,7 +105,7 @@ export const AttachmentsSection = ({
       <div
         className={cn('flex gap-5 mb-1', orientation === 'horizontal' ? 'flex-row' : 'flex-col')}
       >
-        {!hasItems && !onAdd && <NoDataBanner>{t('noMediaFiles')}</NoDataBanner>}
+        {!hasItems && !onAdd && showNoDataBanner && <NoDataBanner>{t('noMediaFiles')}</NoDataBanner>}
         {(!!hasItems || !!onAdd) &&
           visibleTabs.map(item => (
             <div
