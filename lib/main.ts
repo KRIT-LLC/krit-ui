@@ -51,6 +51,7 @@ export * from '@/components/ui/carousel';
 export * from '@/components/ui/filters-column-header';
 export * from '@/components/ui/number-input';
 export * from '@/components/ui/sheet';
+export * from '@/components/ui/scroll-area';
 
 export * from '@/utils';
 
