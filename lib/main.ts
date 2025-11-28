@@ -44,6 +44,7 @@ export * from '@/components/ui/tooltip';
 export * from '@/components/ui/segmented-control';
 export * from '@/components/ui/radio-group';
 export * from '@/components/ui/banner';
+export * from '@/components/ui/bottom-menu';
 export * from '@/components/ui/attachmentsSection';
 export * from '@/components/ui/time-picker';
 export * from '@/components/ui/carousel';
