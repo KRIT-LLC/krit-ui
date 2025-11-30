@@ -28,6 +28,7 @@ interface BaseFilterProps {
 
 interface FiltersColumnHeaderProps extends BaseFilterProps {
   children?: React.ReactNode;
+  className?: string;
 }
 
 const FilterContent = ({
@@ -239,9 +240,10 @@ export const FiltersColumnHeader = ({
   locale,
   options,
   excludeFilterValues,
+  className,
 }: FiltersColumnHeaderProps) => {
   return (
-    <div className='flex flex-row gap-2 justify-between items-center'>
+    <div className={cn('flex flex-row gap-2 items-center justify-between', className)}>
       {children}
       <FilterContent
         type={type}
