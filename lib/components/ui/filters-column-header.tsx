@@ -28,6 +28,7 @@ interface BaseFilterProps {
 
 interface FiltersColumnHeaderProps extends BaseFilterProps {
   children?: React.ReactNode;
+  align?: 'start' | 'center' | 'end' | 'between';
 }
 
 const FilterContent = ({
@@ -239,9 +240,17 @@ export const FiltersColumnHeader = ({
   locale,
   options,
   excludeFilterValues,
+  align = 'between',
 }: FiltersColumnHeaderProps) => {
+  const justifyClass = {
+    start: 'justify-start',
+    center: 'justify-center',
+    end: 'justify-end',
+    between: 'justify-between',
+  }[align];
+
   return (
-    <div className='flex flex-row gap-2 justify-between items-center'>
+    <div className={cn('flex flex-row gap-2 items-center', justifyClass)}>
       {children}
       <FilterContent
         type={type}
