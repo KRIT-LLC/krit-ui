@@ -1,6 +1,8 @@
 import * as React from 'react';
 import * as TabsPrimitive from '@radix-ui/react-tabs';
+import { type VariantProps } from 'class-variance-authority';
 import { cn } from '@/utils';
+import { tabsListVariants, tabsTriggerVariants } from './tabsVariants';
 
 /**
  * Контейнер для компонентов вкладок. Обеспечивает базовую функциональность и состояние вкладок.
@@ -18,22 +20,16 @@ const Tabs = TabsPrimitive.Root;
  * @component
  * @param {object} props - Параметры компонента
  * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {VariantProps<typeof tabsListVariants>['size']} [props.size] - Размер вкладок (default | icon)
  * @param {React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>} props - Стандартные свойства List из Radix UI
  * @param {React.Ref<React.ElementRef<typeof TabsPrimitive.List>>} ref - Реф для доступа к DOM-элементу
  * @returns {React.ReactElement} Контейнер переключателей вкладок
  */
 const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.List
-    ref={ref}
-    className={cn(
-      'inline-flex h-9 items-center justify-center rounded-lg bg-background-secondary p-1 text-foreground',
-      className,
-    )}
-    {...props}
-  />
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List> & VariantProps<typeof tabsListVariants>
+>(({ className, size, ...props }, ref) => (
+  <TabsPrimitive.List ref={ref} className={cn(tabsListVariants({ size }), className)} {...props} />
 ));
 TabsList.displayName = TabsPrimitive.List.displayName;
 
@@ -43,20 +39,19 @@ TabsList.displayName = TabsPrimitive.List.displayName;
  * @component
  * @param {object} props - Параметры компонента
  * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {VariantProps<typeof tabsTriggerVariants>['size']} [props.size] - Размер вкладки (default | icon). Используйте 'icon' для вкладок только с иконкой без текста
  * @param {React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>} props - Стандартные свойства Trigger из Radix UI
  * @param {React.Ref<React.ElementRef<typeof TabsPrimitive.Trigger>>} ref - Реф для доступа к DOM-элементу
  * @returns {React.ReactElement} Переключатель вкладки
  */
 const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> &
+    VariantProps<typeof tabsTriggerVariants>
+>(({ className, size, ...props }, ref) => (
   <TabsPrimitive.Trigger
     ref={ref}
-    className={cn(
-      'inline-flex gap-1 items-center justify-center whitespace-nowrap rounded-md px-3 h-7 text-sm font-normal ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background-contrast-fade data-[state=active]:text-foreground data-[state=active]:shadow-sm',
-      className,
-    )}
+    className={cn(tabsTriggerVariants({ size }), className)}
     {...props}
   />
 ));

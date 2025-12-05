@@ -47,8 +47,8 @@ export const HorizontalCarousel: StoryObj<typeof Carousel> = {
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious variant='secondary-outline' />
-      <CarouselNext variant='secondary-outline' />
+      <CarouselPrevious variant='fade-contrast-outlined' />
+      <CarouselNext variant='fade-contrast-outlined' />
     </Carousel>
   ),
 };
@@ -67,8 +67,8 @@ export const VerticalCarousel: StoryObj<typeof Carousel> = {
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious variant='secondary-outline' />
-      <CarouselNext variant='secondary-outline' />
+      <CarouselPrevious variant='fade-contrast-outlined' />
+      <CarouselNext variant='fade-contrast-outlined' />
     </Carousel>
   ),
 };

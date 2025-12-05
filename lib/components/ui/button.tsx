@@ -30,7 +30,7 @@ export interface ButtonProps
  * @returns {React.ReactElement} Кнопка с заданными свойствами
  *
  * @example
- * <Button variant="primary" size="lg">Нажми меня</Button>
+ * <Button variant="theme-filled" size="lg">Нажми меня</Button>
  */
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, asDropdown, icon, children, ...props }, ref) => {
@@ -48,14 +48,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     // Для обычного случая (не asChild) рендерим все элементы
     return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }), asDropdown && 'gap-1')}
-        ref={ref}
-        {...props}
-      >
-        {icon && <span className={cn(size !== 'icon' && 'mr-2')}>{icon}</span>}
+      <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props}>
+        {icon && <span className='w-6 h-6 flex items-center justify-center'>{icon}</span>}
         {children}
-        {asDropdown && <ArrowDropDown className='ml-2' />}
+        {asDropdown && <ArrowDropDown className='w-6 h-6' />}
       </Comp>
     );
   },

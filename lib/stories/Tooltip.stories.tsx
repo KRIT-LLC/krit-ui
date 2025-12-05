@@ -38,7 +38,7 @@ export const Default: Story = {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant='outline'>Наведи на меня</Button>
+          <Button variant='fade-contrast-outlined'>Наведи на меня</Button>
         </TooltipTrigger>
         <TooltipContent>
           <p>Это базовая всплывающая подсказка</p>
@@ -61,7 +61,7 @@ export const WithDelay: Story = {
     <TooltipProvider>
       <Tooltip delayDuration={800}>
         <TooltipTrigger asChild>
-          <Button variant='outline'>Наведи с задержкой</Button>
+          <Button variant='fade-contrast-outlined'>Наведи с задержкой</Button>
         </TooltipTrigger>
         <TooltipContent>
           <p>Эта подсказка появляется с задержкой 800ms</p>
@@ -84,7 +84,7 @@ export const WithCustomStyle: Story = {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant='outline'>Кастомная подсказка</Button>
+          <Button variant='fade-contrast-outlined'>Кастомная подсказка</Button>
         </TooltipTrigger>
         <TooltipContent className='bg-blue-100 text-blue-900 border-blue-300'>
           <p>Подсказка с пользовательскими стилями</p>
@@ -105,7 +105,7 @@ export const WithCustomStyle: Story = {
 export const InfoTooltipDemo: Story = {
   render: () => (
     <InfoTooltip text='Это **важная** информация с поддержкой **жирного** текста'>
-      <Button variant='outline'>Информационная подсказка</Button>
+      <Button variant='fade-contrast-outlined'>Информационная подсказка</Button>
     </InfoTooltip>
   ),
   parameters: {
@@ -122,7 +122,7 @@ export const InfoTooltipDemo: Story = {
 export const LongContent: Story = {
   render: () => (
     <InfoTooltip text='Это очень длинный текст подсказки, который занимает несколько строк и демонстрирует, как компонент обрабатывает многострочный контент. Подсказки полезны для предоставления дополнительной информации без загромождения интерфейса.'>
-      <Button variant='outline'>Длинная подсказка</Button>
+      <Button variant='fade-contrast-outlined'>Длинная подсказка</Button>
     </InfoTooltip>
   ),
   parameters: {
@@ -141,7 +141,7 @@ export const DifferentPositions: Story = {
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant='outline'>Подсказка сверху</Button>
+            <Button variant='fade-contrast-outlined'>Подсказка сверху</Button>
           </TooltipTrigger>
           <TooltipContent side='top'>
             <p>Подсказка появляется сверху</p>
@@ -152,7 +152,7 @@ export const DifferentPositions: Story = {
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant='outline'>Подсказка справа</Button>
+            <Button variant='fade-contrast-outlined'>Подсказка справа</Button>
           </TooltipTrigger>
           <TooltipContent side='right'>
             <p>Подсказка появляется справа</p>
@@ -163,7 +163,7 @@ export const DifferentPositions: Story = {
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant='outline'>Подсказка снизу</Button>
+            <Button variant='fade-contrast-outlined'>Подсказка снизу</Button>
           </TooltipTrigger>
           <TooltipContent side='bottom'>
             <p>Подсказка появляется снизу</p>
@@ -174,7 +174,7 @@ export const DifferentPositions: Story = {
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant='outline'>Подсказка слева</Button>
+            <Button variant='fade-contrast-outlined'>Подсказка слева</Button>
           </TooltipTrigger>
           <TooltipContent side='left'>
             <p>Подсказка появляется слева</p>

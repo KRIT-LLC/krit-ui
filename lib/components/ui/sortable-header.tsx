@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
 import { Column } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
-import { Button } from './button';
 import { cn } from '@/utils';
+import { Button } from './button';
 
 interface SortableHeaderProps {
   className?: string;
@@ -13,7 +13,7 @@ interface SortableHeaderProps {
 export const SortableHeader = ({ className, children, column }: SortableHeaderProps) => {
   return (
     <Button
-      variant='ghost'
+      variant='fade-contrast-transparent'
       className={cn('p-0 hover:bg-[transparent]', className)}
       onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
     >

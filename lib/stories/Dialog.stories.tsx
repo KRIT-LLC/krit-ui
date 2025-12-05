@@ -31,7 +31,7 @@ export const Basic: Story = {
   render: () => (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant='primary'>Open Dialog</Button>
+        <Button variant='theme-filled'>Open Dialog</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -42,8 +42,8 @@ export const Basic: Story = {
           <div className='h-96 bg-background-secondary rounded-lg p-4'>Scrollable content area</div>
         </DialogSection>
         <DialogFooter>
-          <Button variant='primary'>Confirm</Button>
-          <Button variant='secondary'>Cancel</Button>
+          <Button variant='theme-filled'>Confirm</Button>
+          <Button variant='fade-contrast-filled'>Cancel</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -54,7 +54,7 @@ export const AsidePanel: Story = {
   render: () => (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant='primary'>Open Side Panel</Button>
+        <Button variant='theme-filled'>Open Side Panel</Button>
       </DialogTrigger>
       <DialogContent aside>
         <DialogHeader hideCloseButton>
@@ -69,7 +69,7 @@ export const AsidePanel: Story = {
           ))}
         </DialogSection>
         <DialogFooter className='!justify-start'>
-          <Button variant='secondary'>Close</Button>
+          <Button variant='fade-contrast-filled'>Close</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -80,7 +80,7 @@ export const WithScrollableSection: Story = {
   render: args => (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant='primary'>Open Scrollable</Button>
+        <Button variant='theme-filled'>Open Scrollable</Button>
       </DialogTrigger>
       <DialogContent {...args} scrollableSection>
         <DialogHeader>

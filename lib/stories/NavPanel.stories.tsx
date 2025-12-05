@@ -88,8 +88,13 @@ const ProfileSlot = ({ isCollapsed }: { isCollapsed: boolean }) => (
   <Nav
     isCollapsed={isCollapsed}
     items={[
-      { title: 'Profile', icon: ProfileIcon, to: '/profile', variant: 'ghost' },
-      { title: 'Logout', icon: LogoutIcon, onClick: () => console.log('logout'), variant: 'ghost' },
+      { title: 'Profile', icon: ProfileIcon, to: '/profile', variant: 'fade-contrast-transparent' },
+      {
+        title: 'Logout',
+        icon: LogoutIcon,
+        onClick: () => console.log('logout'),
+        variant: 'fade-contrast-transparent',
+      },
     ]}
     LinkComponent={MockLink}
   />
@@ -110,7 +115,7 @@ const ExpandableSlot = ({
         title: isCollapsed ? 'Expand' : 'Collapse',
         icon: isCollapsed ? LastPageIcon : FirstPageIcon,
         onClick: onToggle,
-        variant: 'ghost',
+        variant: 'fade-contrast-transparent',
       },
     ]}
     LinkComponent={MockLink}

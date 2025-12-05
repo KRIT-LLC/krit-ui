@@ -168,7 +168,7 @@ const FilterContent = ({
         return (
           <div className='flex flex-col gap-2 w-auto p-2 rounded-lg bg-background'>
             <Input value={search} onChange={e => setSearch(e.target.value)} />
-            <Button variant='default' onClick={handleSearchApply}>
+            <Button variant='fade-contrast-filled' onClick={handleSearchApply}>
               {applyText || t('apply')}
             </Button>
           </div>
@@ -198,7 +198,7 @@ const FilterContent = ({
               options={options}
               table={table}
             />
-            <Button variant='default' onClick={handleSelectApply}>
+            <Button variant='fade-contrast-filled' onClick={handleSelectApply}>
               {applyText || t('apply')}
             </Button>
           </div>
@@ -212,7 +212,7 @@ const FilterContent = ({
   // Reset filter is a simple button, no popover
   if (type === 'reset') {
     return (
-      <Button variant='ghost' size='icon' onClick={handleReset}>
+      <Button variant='fade-contrast-transparent' size='icon' onClick={handleReset}>
         {getFilterIcon()}
       </Button>
     );
@@ -222,7 +222,12 @@ const FilterContent = ({
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen} modal={true}>
       <PopoverTrigger asChild>
-        <Button className='p-1' variant='ghost' size='icon' icon={getFilterIcon()} />
+        <Button
+          className='p-1'
+          variant='fade-contrast-transparent'
+          size='icon'
+          icon={getFilterIcon()}
+        />
       </PopoverTrigger>
       <PopoverContent className='w-auto rounded-lg bg-background p-0'>
         {renderFilterContent()}

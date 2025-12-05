@@ -201,7 +201,7 @@ export const Previews = (props: PreviewsProps) => {
     const confirmed = await confirm({
       description: t('confirmDeleteMedia'),
       confirmText: t('delete'),
-      confirmType: 'destructive-primary',
+      confirmType: 'warning-filled',
     });
     if (confirmed) item.onRemove?.() || onRemove?.(index);
   };

@@ -20,7 +20,7 @@ export interface BadgeProps
  * @param {'sm' | 'default' | 'lg'} [props.size] - Размер компонента
  * @param {React.ReactNode} [props.icon] - Иконка слева от содержимого
  * @param {React.ReactNode} [props.iconRight] - Иконка справа от содержимого
- * @param {'default' | 'secondary' | 'black'} [props.iconVariant] - Стиль иконки (только для variant='secondary')
+ * @param {'default' | 'secondary' | 'black'} [props.iconVariant] - Стиль иконки (только для variant='fade-contrast-filled')
  * @param {'default' | 'truncate'} [props.layout] - Распределение внутренних элементов
  * @param {string} [props.className] - Дополнительные CSS-классы
  * @param {React.ReactNode} props.children - Основное содержимое бейджа

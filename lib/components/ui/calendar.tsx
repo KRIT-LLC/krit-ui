@@ -39,7 +39,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         caption_label: 'hidden',
         nav: 'space-x-1 flex items-center',
         nav_button: cn(
-          buttonVariants({ variant: 'outline' }),
+          buttonVariants({ variant: 'fade-contrast-outlined' }),
           'h-7 w-7 bg-[transparent] border-none text-primary p-0 hover:bg-[transparent] hover:text-primary/80',
         ),
         nav_button_previous: 'absolute -left-1',
@@ -50,7 +50,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         row: 'flex w-full mt-2',
         cell: 'h-9 w-9 text-center p-0 relative [&:has([aria-selected].day-range-start)]:rounded-l-md [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-background-tertiary [&:has([aria-selected])]:bg-background-tertiary first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
         day: cn(
-          buttonVariants({ variant: 'ghost' }),
+          buttonVariants({ variant: 'fade-contrast-transparent' }),
           'h-9 w-9 p-0 text-sm font-normal transition-all hover:bg-background-secondary hover:text-foreground aria-selected:opacity-100',
         ),
         day_range_start: 'day-range-start hover:!text-primary !text-foreground-on-contrast',

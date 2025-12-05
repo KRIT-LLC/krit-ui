@@ -144,7 +144,7 @@ export function DatePicker({ className, locale, iconClassName, ...props }: DateP
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant={'secondary-outline'}
+          variant={'fade-contrast-outlined'}
           size={'sm'}
           className={cn(
             'w-full justify-start text-left font-normal px-3 text-sm focus-visible:outline-none focus-visible:border-line-focused data-[state=open]:border-line-focused',

@@ -21,9 +21,9 @@ export interface NavPanelProps {
    *       title: t('theme'),
    *       icon: theme === 'light' ? Sun : Moon,
    *       onClick: toggleTheme,
-   *       variant: 'ghost',
+   *       variant: 'fade-contrast-transparent',
    *     },
-   *     { title: t('logout'), icon: AccountCircle, onClick: logout, variant: 'ghost' },
+   *     { title: t('logout'), icon: AccountCircle, onClick: logout, variant: 'fade-contrast-transparent' },
    *   ]}
    *   LinkComponent={NavLink}
    * />
@@ -38,7 +38,7 @@ export interface NavPanelProps {
    *       title: sidebar.isCollapsed ? t('expand') : t('collapse'),
    *       icon: sidebar.isCollapsed ? LastPage : FirstPage,
    *       onClick: sidebar.isCollapsed ? sidebar.expand : sidebar.collapse,
-   *       variant: 'ghost',
+   *       variant: 'fade-contrast-transparent',
    *     },
    *   ]}
    *   LinkComponent={NavLink}
@@ -46,7 +46,6 @@ export interface NavPanelProps {
   expandableNavSlot?: React.ReactNode;
   location?: Location;
   bottomSlot?: React.ReactNode;
-  withBackground?: boolean;
 }
 
 const NavPanel = (props: NavPanelProps) => {
@@ -59,12 +58,11 @@ const NavPanel = (props: NavPanelProps) => {
     expandableNavSlot,
     location,
     bottomSlot,
-    withBackground = false,
   } = props;
 
   const getItemVariant = (item: NavItem) => {
     if (!location?.pathname) {
-      return withBackground ? 'nav-item' : 'ghost';
+      return 'nav-item';
     }
 
     const currentPath = location.pathname;
@@ -84,10 +82,7 @@ const NavPanel = (props: NavPanelProps) => {
 
     const isItemActive = isActive || isPathActive || isChildActive;
 
-    if (withBackground) {
-      return isItemActive ? 'nav-item-selected' : 'nav-item';
-    }
-    return isItemActive ? 'secondary-contrast' : 'ghost';
+    return isItemActive ? 'nav-item-selected' : 'nav-item';
   };
 
   const navBlocks = (navItems ?? []).map((block, index) => (
@@ -104,7 +99,7 @@ const NavPanel = (props: NavPanelProps) => {
   ));
 
   return (
-    <div className={cn(withBackground && 'bg-background-sidebar', 'flex flex-col h-screen')}>
+    <div className={cn('bg-background-sidebar', 'flex flex-col h-screen')}>
       <div
         className={cn(
           'text-[14px] px-2 leading-5 py-4 cursor-default whitespace-nowrap flex justify-normal',
@@ -115,7 +110,6 @@ const NavPanel = (props: NavPanelProps) => {
       >
         {projectName}
       </div>
-      {withBackground ? null : <NavSeparator />}
       <div
         className={
           'overflow-y-auto flex-col flex-grow [scrollbar-width:none] [-webkit-scrollbar-width:none] [-webkit-scrollbar:0px] [-webkit-appearance:none]'
@@ -123,13 +117,11 @@ const NavPanel = (props: NavPanelProps) => {
         style={{ msHighContrastAdjust: 'none' }}
       >
         {navBlocks}
-        {withBackground ? null : <NavSeparator />}
         {profileNavSlot}
       </div>
       {expandableNavSlot && (
         <div className='mt-auto'>
           <div className='px-2'>{bottomSlot}</div>
-          {withBackground ? null : <NavSeparator />}
           {expandableNavSlot}
         </div>
       )}

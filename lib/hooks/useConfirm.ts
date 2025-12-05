@@ -2,11 +2,10 @@ import { FC } from 'react';
 import { create } from 'zustand';
 
 export type ConfirmType =
-  | 'contrast'
-  | 'destructive'
-  | 'destructive-primary'
-  | 'secondary'
-  | 'outline';
+  | 'theme-filled'
+  | 'warning-filled'
+  | 'fade-contrast-filled'
+  | 'fade-contrast-outlined';
 
 export type InputComponent = FC<{ value: string; onChange: (value: string) => void }>;
 
@@ -54,7 +53,7 @@ export const useConfirmStore = create<ConfirmState>()(set => ({
   title: '',
   description: '',
   confirmText: '',
-  confirmType: 'outline' as ConfirmType,
+  confirmType: 'fade-contrast-outlined' as ConfirmType,
   confirmHidden: false,
   cancelText: '',
   cancelHidden: false,
@@ -72,7 +71,7 @@ export const useConfirmStore = create<ConfirmState>()(set => ({
       title: options.title ?? '',
       description: options.description,
       confirmText: options.confirmText,
-      confirmType: options.confirmType ?? 'secondary',
+      confirmType: options.confirmType ?? 'fade-contrast-filled',
       confirmHidden: options.confirmHidden ?? false,
       cancelText: options.cancelText ?? '',
       cancelHidden: options.cancelHidden ?? false,

@@ -47,7 +47,7 @@ const ToastDemo = ({ variant }: { variant?: 'default' | 'destructive' | 'success
 
   return (
     <Button
-      variant='outline'
+      variant='fade-contrast-outlined'
       onClick={() => {
         toast({
           variant,
@@ -114,7 +114,7 @@ export const WithAction: Story = {
 
     return (
       <Button
-        variant='outline'
+        variant='fade-contrast-outlined'
         onClick={() => {
           toast({
             title: 'Запрос',
@@ -147,7 +147,7 @@ export const WithLongContent: Story = {
 
     return (
       <Button
-        variant='outline'
+        variant='fade-contrast-outlined'
         onClick={() => {
           toast({
             title: 'Очень длинный заголовок уведомления, который не помещается в одну строку',
@@ -188,7 +188,7 @@ export const ComplexExample: Story = {
         </Button>
 
         <Button
-          variant='success'
+          variant='theme-filled'
           onClick={() => {
             toast({
               variant: 'success',
@@ -201,7 +201,7 @@ export const ComplexExample: Story = {
         </Button>
 
         <Button
-          variant='destructive'
+          variant='warning-filled'
           onClick={() => {
             toast({
               variant: 'destructive',

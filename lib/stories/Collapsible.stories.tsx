@@ -55,7 +55,7 @@ export const BasicUsage: StoryObj<typeof Collapsible> = {
         <div className='flex items-center justify-between space-x-4 px-4'>
           <h4 className='text-sm font-semibold'>Basic Collapsible Example</h4>
           <CollapsibleTrigger asChild>
-            <Button variant='ghost' size='sm'>
+            <Button variant='fade-contrast-transparent' size='sm'>
               <ChevronUp
                 className={cn('h-4 w-4 transition-transform', isOpen ? 'rotate-0' : 'rotate-180')}
               />
@@ -107,7 +107,7 @@ export const WithErrorState: StoryObj<typeof CollapsibleSection> = {
 export const WithCustomActions: StoryObj<typeof CollapsibleSection> = {
   args: {
     ...Default.args,
-    right: <Button variant='ghost'>Settings</Button>,
+    right: <Button variant='fade-contrast-transparent'>Settings</Button>,
     icon: <span>📁</span>,
   },
 };
