@@ -76,7 +76,7 @@ export const WithActions: Story = {
     onBack: action('backClicked'),
     actions: (
       <>
-        <Button variant='outline'>Фильтр</Button>
+        <Button variant='fade-contrast-outlined'>Фильтр</Button>
         <Button>Создать проект</Button>
       </>
     ),
@@ -114,11 +114,11 @@ export const WithTitleActions: Story = {
   args: {
     title: 'Мой проект',
     titleActions: (
-      <Button variant='ghost' size='sm'>
+      <Button variant='fade-contrast-transparent' size='sm'>
         Редактировать
       </Button>
     ),
-    actions: <Button variant='outline'>Экспорт</Button>,
+    actions: <Button variant='fade-contrast-outlined'>Экспорт</Button>,
   },
   parameters: {
     docs: {
@@ -139,13 +139,13 @@ export const CompleteExample: Story = {
     onNext: action('nextClicked'),
     onPrevious: action('previousClicked'),
     titleActions: (
-      <Button variant='ghost' size='sm'>
+      <Button variant='fade-contrast-transparent' size='sm'>
         Добавить заметку
       </Button>
     ),
     actions: (
       <>
-        <Button variant='outline'>Поделиться</Button>
+        <Button variant='fade-contrast-outlined'>Поделиться</Button>
         <Button>Сохранить</Button>
       </>
     ),

@@ -33,7 +33,7 @@ export const RightSide: Story = {
   render: () => (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant='primary'>Open Sheet (Right)</Button>
+        <Button variant='theme-filled'>Open Sheet (Right)</Button>
       </SheetTrigger>
       <SheetContent side='right'>
         <SheetHeader>
@@ -58,9 +58,9 @@ export const RightSide: Story = {
         </div>
         <SheetFooter>
           <SheetClose asChild>
-            <Button variant='secondary'>Cancel</Button>
+            <Button variant='fade-contrast-filled'>Cancel</Button>
           </SheetClose>
-          <Button variant='primary'>Save changes</Button>
+          <Button variant='theme-filled'>Save changes</Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>
@@ -71,7 +71,7 @@ export const LeftSide: Story = {
   render: () => (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant='primary'>Open Sheet (Left)</Button>
+        <Button variant='theme-filled'>Open Sheet (Left)</Button>
       </SheetTrigger>
       <SheetContent side='left'>
         <SheetHeader>
@@ -101,7 +101,7 @@ export const TopSide: Story = {
   render: () => (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant='primary'>Open Sheet (Top)</Button>
+        <Button variant='theme-filled'>Open Sheet (Top)</Button>
       </SheetTrigger>
       <SheetContent side='top'>
         <SheetHeader>
@@ -131,7 +131,7 @@ export const BottomSide: Story = {
   render: () => (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant='primary'>Open Sheet (Bottom)</Button>
+        <Button variant='theme-filled'>Open Sheet (Bottom)</Button>
       </SheetTrigger>
       <SheetContent side='bottom'>
         <SheetHeader>
@@ -161,7 +161,7 @@ export const WithScrollableContent: Story = {
   render: () => (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant='primary'>Open Sheet with Long Content</Button>
+        <Button variant='theme-filled'>Open Sheet with Long Content</Button>
       </SheetTrigger>
       <SheetContent side='right'>
         <SheetHeader>
@@ -181,9 +181,9 @@ export const WithScrollableContent: Story = {
         </div>
         <SheetFooter>
           <SheetClose asChild>
-            <Button variant='secondary'>Decline</Button>
+            <Button variant='fade-contrast-filled'>Decline</Button>
           </SheetClose>
-          <Button variant='primary'>Accept</Button>
+          <Button variant='theme-filled'>Accept</Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>
@@ -194,7 +194,7 @@ export const WithoutFooter: Story = {
   render: () => (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant='primary'>Open Simple Sheet</Button>
+        <Button variant='theme-filled'>Open Simple Sheet</Button>
       </SheetTrigger>
       <SheetContent side='right'>
         <SheetHeader>
@@ -223,7 +223,7 @@ export const WithCustomWidth: Story = {
   render: () => (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant='primary'>Open Wide Sheet</Button>
+        <Button variant='theme-filled'>Open Wide Sheet</Button>
       </SheetTrigger>
       <SheetContent side='right' className='sm:max-w-2xl'>
         <SheetHeader>
@@ -247,7 +247,7 @@ export const WithCustomWidth: Story = {
           </div>
         </div>
         <SheetFooter>
-          <Button variant='primary'>Done</Button>
+          <Button variant='theme-filled'>Done</Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>

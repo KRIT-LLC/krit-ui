@@ -1,6 +1,6 @@
 // BottomMenu.stories.tsx
-import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { BottomMenu } from '@/components/ui/bottom-menu';
 import { Button } from '@/components/ui/button';
 
@@ -42,16 +42,16 @@ export const Default: Story = {
     label: 'Выбраны заказы: 27',
     actions: (
       <>
-        <Button variant='contrast-fade' onClick={() => alert('Отправлено на утверждение')}>
+        <Button variant='fade-contrast-filled' onClick={() => alert('Отправлено на утверждение')}>
           Отправить на утверждение
         </Button>
-        <Button variant='contrast-fade' onClick={() => alert('Утверждено')}>
+        <Button variant='fade-contrast-filled' onClick={() => alert('Утверждено')}>
           Утвердить
         </Button>
-        <Button variant='contrast-fade' onClick={() => alert('Выполнено')}>
+        <Button variant='fade-contrast-filled' onClick={() => alert('Выполнено')}>
           Выполнить
         </Button>
-        <Button variant='contrast-fade' onClick={() => alert('Работы приняты')}>
+        <Button variant='fade-contrast-filled' onClick={() => alert('Работы приняты')}>
           Принять работы
         </Button>
       </>
@@ -71,7 +71,7 @@ export const SingleAction: Story = {
   args: {
     label: 'Выбрано элементов: 5',
     actions: (
-      <Button variant='contrast-fade' onClick={() => alert('Удалено')}>
+      <Button variant='fade-contrast-filled' onClick={() => alert('Удалено')}>
         Удалить
       </Button>
     ),
@@ -91,16 +91,16 @@ export const WithDifferentVariants: Story = {
     label: 'Выбраны заказы: 3',
     actions: (
       <>
-        <Button variant='contrast-fade' onClick={() => alert('Обычная кнопка')}>
+        <Button variant='fade-contrast-filled' onClick={() => alert('Обычная кнопка')}>
           Обычная
         </Button>
-        <Button variant='primary' onClick={() => alert('Основная кнопка')}>
+        <Button variant='theme-filled' onClick={() => alert('Основная кнопка')}>
           Основная
         </Button>
-        <Button variant='destructive' onClick={() => alert('Ошибка')}>
+        <Button variant='warning-filled' onClick={() => alert('Ошибка')}>
           Ошибка
         </Button>
-        <Button variant='success' onClick={() => alert('Успех')}>
+        <Button variant='theme-filled' onClick={() => alert('Успех')}>
           Успех
         </Button>
       </>
@@ -121,13 +121,13 @@ export const WithDisabledActions: Story = {
     label: 'Выбраны заказы: 0',
     actions: (
       <>
-        <Button variant='contrast-fade' onClick={() => alert('Отправлено')} disabled>
+        <Button variant='fade-contrast-filled' onClick={() => alert('Отправлено')} disabled>
           Отправить на утверждение
         </Button>
-        <Button variant='contrast-fade' onClick={() => alert('Утверждено')} disabled>
+        <Button variant='fade-contrast-filled' onClick={() => alert('Утверждено')} disabled>
           Утвердить
         </Button>
-        <Button variant='contrast-fade' onClick={() => alert('Выполнено')}>
+        <Button variant='fade-contrast-filled' onClick={() => alert('Выполнено')}>
           Выполнить
         </Button>
       </>
@@ -155,10 +155,13 @@ export const Interactive: Story = {
             Выбрано элементов: <strong>{selectedCount}</strong>
           </p>
           <div className='flex gap-2'>
-            <Button onClick={() => setIsOpen(!isOpen)} variant='outline'>
+            <Button onClick={() => setIsOpen(!isOpen)} variant='fade-contrast-outlined'>
               {isOpen ? 'Скрыть меню' : 'Показать меню'}
             </Button>
-            <Button onClick={() => setSelectedCount(prev => prev + 5)} variant='outline'>
+            <Button
+              onClick={() => setSelectedCount(prev => prev + 5)}
+              variant='fade-contrast-outlined'
+            >
               Выбрать 5 элементов
             </Button>
           </div>
@@ -168,20 +171,20 @@ export const Interactive: Story = {
           actions={
             <>
               <Button
-                variant='contrast-fade'
+                variant='fade-contrast-filled'
                 onClick={() => setSelectedCount(prev => prev + 1)}
               >
                 Увеличить
               </Button>
               <Button
-                variant='contrast-fade'
+                variant='fade-contrast-filled'
                 onClick={() => setSelectedCount(prev => Math.max(0, prev - 1))}
                 disabled={selectedCount === 0}
               >
                 Уменьшить
               </Button>
               <Button
-                variant='contrast-fade'
+                variant='fade-contrast-filled'
                 onClick={() => setSelectedCount(0)}
                 disabled={selectedCount === 0}
               >
@@ -197,7 +200,8 @@ export const Interactive: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Интерактивный пример с управлением состоянием выбранных элементов и видимостью меню.',
+        story:
+          'Интерактивный пример с управлением состоянием выбранных элементов и видимостью меню.',
       },
     },
   },
@@ -209,10 +213,10 @@ export const WithLongLabel: Story = {
     label: 'Выбраны заказы: 1234567890 (очень длинный текст для проверки адаптивности)',
     actions: (
       <>
-        <Button variant='contrast-fade' onClick={() => alert('Действие 1')}>
+        <Button variant='fade-contrast-filled' onClick={() => alert('Действие 1')}>
           Действие 1
         </Button>
-        <Button variant='contrast-fade' onClick={() => alert('Действие 2')}>
+        <Button variant='fade-contrast-filled' onClick={() => alert('Действие 2')}>
           Действие 2
         </Button>
       </>
@@ -233,22 +237,22 @@ export const ManyActions: Story = {
     label: 'Выбраны заказы: 15',
     actions: (
       <>
-        <Button variant='contrast-fade' onClick={() => alert('Действие 1')}>
+        <Button variant='fade-contrast-filled' onClick={() => alert('Действие 1')}>
           Действие 1
         </Button>
-        <Button variant='contrast-fade' onClick={() => alert('Действие 2')}>
+        <Button variant='fade-contrast-filled' onClick={() => alert('Действие 2')}>
           Действие 2
         </Button>
-        <Button variant='contrast-fade' onClick={() => alert('Действие 3')}>
+        <Button variant='fade-contrast-filled' onClick={() => alert('Действие 3')}>
           Действие 3
         </Button>
-        <Button variant='contrast-fade' onClick={() => alert('Действие 4')}>
+        <Button variant='fade-contrast-filled' onClick={() => alert('Действие 4')}>
           Действие 4
         </Button>
-        <Button variant='contrast-fade' onClick={() => alert('Действие 5')}>
+        <Button variant='fade-contrast-filled' onClick={() => alert('Действие 5')}>
           Действие 5
         </Button>
-        <Button variant='contrast-fade' onClick={() => alert('Действие 6')}>
+        <Button variant='fade-contrast-filled' onClick={() => alert('Действие 6')}>
           Действие 6
         </Button>
       </>
@@ -269,11 +273,11 @@ export const WithCustomElements: Story = {
     label: 'Выбраны заказы: 10',
     actions: (
       <>
-        <Button variant='contrast-fade' onClick={() => alert('Действие 1')}>
+        <Button variant='fade-contrast-filled' onClick={() => alert('Действие 1')}>
           Действие 1
         </Button>
         <div className='h-9 w-px bg-line-primary' />
-        <Button variant='contrast-fade' onClick={() => alert('Действие 2')}>
+        <Button variant='fade-contrast-filled' onClick={() => alert('Действие 2')}>
           Действие 2
         </Button>
       </>

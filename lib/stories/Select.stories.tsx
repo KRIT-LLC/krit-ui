@@ -229,7 +229,7 @@ export const Interactive: Story = {
         />
         <div className='flex space-x-2'>
           <Button onClick={handleRefetch}>Обновить опции</Button>
-          <Button variant='outline' onClick={simulateError}>
+          <Button variant='fade-contrast-outlined' onClick={simulateError}>
             Имитировать ошибку
           </Button>
         </div>

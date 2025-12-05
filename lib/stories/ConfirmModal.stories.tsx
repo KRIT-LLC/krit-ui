@@ -59,7 +59,7 @@ export const Deletion: StoryObj<typeof ConfirmModal> = {
     <ConfirmModal
       title='Удаление проекта'
       description='Это действие нельзя будет отменить'
-      confirmType='destructive'
+      confirmType='warning-filled'
       confirmText='Удалить навсегда'
     >
       Удалить проект

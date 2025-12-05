@@ -33,7 +33,7 @@ export const Basic: Story = {
   render: () => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant='secondary'>Open Menu</Button>
+        <Button variant='fade-contrast-filled'>Open Menu</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem>Profile</DropdownMenuItem>
@@ -48,7 +48,7 @@ export const WithIcons: Story = {
   render: () => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant='secondary'>Actions</Button>
+        <Button variant='fade-contrast-filled'>Actions</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem>
@@ -71,7 +71,7 @@ export const WithControls: Story = {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant='secondary'>Preferences</Button>
+          <Button variant='fade-contrast-filled'>Preferences</Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuCheckboxItem checked={checked} onCheckedChange={setChecked}>

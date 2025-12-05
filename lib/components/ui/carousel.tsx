@@ -187,7 +187,7 @@ const CarouselItem = ({ className, ...props }: React.ComponentProps<'div'>) => {
 
 const CarouselPrevious = ({
   className,
-  variant = 'outline',
+  variant = 'fade-contrast-outlined',
   size = 'icon',
   ...props
 }: React.ComponentProps<typeof Button>) => {
@@ -218,7 +218,7 @@ const CarouselPrevious = ({
 
 const CarouselNext = ({
   className,
-  variant = 'outline',
+  variant = 'fade-contrast-outlined',
   size = 'icon',
   ...props
 }: React.ComponentProps<typeof Button>) => {
@@ -322,8 +322,11 @@ export const GalleryImages = <T,>({
         ))}
       </CarouselContent>
 
-      <CarouselPrevious variant='secondary-outline' className='bg-background-primary top-1/3' />
-      <CarouselNext variant='secondary-outline' className='bg-background-primary top-1/3' />
+      <CarouselPrevious
+        variant='fade-contrast-outlined'
+        className='bg-background-primary top-1/3'
+      />
+      <CarouselNext variant='fade-contrast-outlined' className='bg-background-primary top-1/3' />
 
       <CarouselThumbs className='justify-start mt-2'>
         {items.map((img, index) => (

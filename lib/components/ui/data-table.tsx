@@ -322,7 +322,7 @@ function PaginationButton({
 }) {
   return (
     <Button
-      variant='ghost'
+      variant='fade-contrast-transparent'
       className={cn('h-6 w-6 p-0 lg:flex rounded-full', { 'bg-background-theme-fade': active })}
       disabled={active}
       onClick={onClick}
@@ -436,7 +436,7 @@ export function Pagination({
         <div className='flex items-center text-foreground-secondary'>
           {!compact && (
             <Button
-              variant='ghost'
+              variant='fade-contrast-transparent'
               className='h-6 w-6 p-0 lg:flex rounded-full'
               onClick={() => setPageIndex?.(0)}
               disabled={!canPreviousPage}
@@ -446,7 +446,7 @@ export function Pagination({
             </Button>
           )}
           <Button
-            variant='ghost'
+            variant='fade-contrast-transparent'
             className='h-6 w-6 p-0 rounded-full'
             onClick={() => previousPage && previousPage()}
             disabled={!canPreviousPage}
@@ -482,7 +482,7 @@ export function Pagination({
             </>
           )}
           <Button
-            variant='ghost'
+            variant='fade-contrast-transparent'
             className='h-6 w-6 p-0 rounded-full'
             onClick={() => nextPage && nextPage()}
             disabled={!canNextPage}
@@ -492,7 +492,7 @@ export function Pagination({
           </Button>
           {!compact && (
             <Button
-              variant='ghost'
+              variant='fade-contrast-transparent'
               className='hidden h-6 w-6 p-0 lg:flex rounded-full'
               onClick={() => setPageIndex?.(pageCount - 1)}
               disabled={!canNextPage}

@@ -45,7 +45,7 @@ const ToastDemo = () => {
       </Button>
 
       <Button
-        variant='success'
+        variant='theme-filled'
         onClick={() => {
           toast({
             variant: 'success',
@@ -58,7 +58,7 @@ const ToastDemo = () => {
       </Button>
 
       <Button
-        variant='destructive'
+        variant='warning-filled'
         onClick={() => {
           toast({
             variant: 'destructive',

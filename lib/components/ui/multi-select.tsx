@@ -105,7 +105,7 @@ const CommandAddItem = ({
  * @param {MultiSelectProps} props - Параметры компонента
  * @param {string} [props.className] - Дополнительные CSS-классы для контейнера
  * @param {string} [props.triggerClassName] - Дополнительные CSS-классы для триггера
- * @param {ButtonVariant} [props.variant='secondary-outline'] - Вариант стиля кнопки-триггера
+ * @param {ButtonVariant} [props.variant='fade-contrast-outlined'] - Вариант стиля кнопки-триггера
  * @param {string} [props.placeholder] - Текст-заполнитель при отсутствии выбранных значений
  * @param {MultiSelectOptionType[]} props.options - Опции для выбора
  * @param {string[]} props.value - Выбранные значения
@@ -152,7 +152,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
       className,
       triggerClassName,
       popoverContentClassName,
-      variant = 'secondary-outline',
+      variant = 'fade-contrast-outlined',
       placeholder,
       options,
       value,

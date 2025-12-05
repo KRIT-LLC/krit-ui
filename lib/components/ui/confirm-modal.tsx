@@ -55,7 +55,7 @@ export const ConfirmModal = (props: ConfirmModalProps) => {
   const {
     title,
     description,
-    confirmType = 'contrast',
+    confirmType = 'theme-filled',
     confirmText = 'OK',
     confirmHidden,
     cancelText,
@@ -154,7 +154,7 @@ export const ConfirmModal = (props: ConfirmModalProps) => {
           <DialogFooter align='end'>
             {!cancelHidden && (
               <DialogClose aria-label='Close' asChild>
-                <Button type='button' variant='outline' size='sm' onClick={onCancel}>
+                <Button type='button' variant='fade-contrast-outlined' size='sm' onClick={onCancel}>
                   {cancelText || t('cancellation')}
                 </Button>
               </DialogClose>

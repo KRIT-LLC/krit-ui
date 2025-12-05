@@ -139,7 +139,7 @@ const NavItemComponent = ({
       size: isCollapsed ? 'icon' : 'sm',
     }),
     !isCollapsed && 'justify-start gap-2 px-2 min-w-0 w-full',
-    item.variant === 'primary' && 'justify-center',
+    item.variant === 'theme-filled' && 'justify-center',
     item.className,
   );
 
@@ -201,7 +201,11 @@ const NavItemComponent = ({
     return (
       <Popover key={index} open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
-          <Button variant='link' className={buttonClasses} onClick={handleToggle}>
+          <Button
+            variant='fade-contrast-transparent'
+            className={buttonClasses}
+            onClick={handleToggle}
+          >
             {item.icon && <item.icon className='h-6 w-6 flex-shrink-0' />}
             <span className='text-sm tracking-[0.25px] animate-in fade-in truncate min-w-0 flex-1 text-left'>
               {item.title}
@@ -210,7 +214,7 @@ const NavItemComponent = ({
               <span
                 className={cn(
                   'ml-auto flex-shrink-0',
-                  item.variant === 'secondary-contrast' && 'text-background dark:text-white',
+                  item.variant === 'fade-contrast-filled' && 'text-background dark:text-white',
                 )}
               >
                 {item.label}
@@ -246,7 +250,7 @@ const NavItemComponent = ({
         <span
           className={cn(
             'ml-auto flex-shrink-0',
-            item.variant === 'secondary-contrast' && 'text-background dark:text-white',
+            item.variant === 'fade-contrast-filled' && 'text-background dark:text-white',
           )}
         >
           {item.label}
@@ -260,7 +264,7 @@ export function Nav(props: NavProps) {
   const {
     items,
     isCollapsed,
-    itemVariant = item => item.variant || 'secondary-contrast',
+    itemVariant = item => item.variant || 'fade-contrast-filled',
     LinkComponent,
   } = props;
 

@@ -70,10 +70,10 @@ const itemsWithLabels: NavItem[] = [
 
 // Элементы с разными стилями
 const itemsWithVariants: NavItem[] = [
-  { title: 'Dashboard', icon: Home, to: '/dashboard', variant: 'primary' },
-  { title: 'Profile', icon: User, to: '/profile', variant: 'secondary' },
-  { title: 'Settings', icon: Settings, to: '/settings', variant: 'ghost' },
-  { title: 'Help', icon: HelpCircle, to: '/help', variant: 'secondary-contrast' },
+  { title: 'Dashboard', icon: Home, to: '/dashboard', variant: 'theme-filled' },
+  { title: 'Profile', icon: User, to: '/profile', variant: 'fade-contrast-filled' },
+  { title: 'Settings', icon: Settings, to: '/settings', variant: 'fade-contrast-transparent' },
+  { title: 'Help', icon: HelpCircle, to: '/help', variant: 'fade-contrast-outlined' },
 ];
 
 /**
@@ -132,7 +132,8 @@ export const WithCustomVariant: Story = {
   args: {
     isCollapsed: false,
     items: baseItems,
-    itemVariant: item => (item.title === 'Dashboard' ? 'primary' : 'ghost'),
+    itemVariant: item =>
+      item.title === 'Dashboard' ? 'fade-contrast-filled' : 'fade-contrast-transparent',
     LinkComponent: MockLink,
   },
 };

@@ -49,7 +49,7 @@ export const Default: Story = {
   render: () => (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant='outline'>Открыть Popover</Button>
+        <Button variant='fade-contrast-outlined'>Открыть Popover</Button>
       </PopoverTrigger>
       <PopoverContent className='bg-background-primary'>
         <div className='space-y-2'>
@@ -73,7 +73,7 @@ export const WithPositioning: Story = {
       <div className='flex gap-2'>
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant='outline'>Сверху</Button>
+            <Button variant='fade-contrast-outlined'>Сверху</Button>
           </PopoverTrigger>
           <PopoverContent className='bg-background-primary' side='top'>
             <p>Popover отображается сверху от триггера</p>
@@ -82,7 +82,7 @@ export const WithPositioning: Story = {
 
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant='outline'>Справа</Button>
+            <Button variant='fade-contrast-outlined'>Справа</Button>
           </PopoverTrigger>
           <PopoverContent className='bg-background-primary' side='right'>
             <p>Popover отображается справа от триггера</p>
@@ -91,7 +91,7 @@ export const WithPositioning: Story = {
 
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant='outline'>Снизу</Button>
+            <Button variant='fade-contrast-outlined'>Снизу</Button>
           </PopoverTrigger>
           <PopoverContent className='bg-background-primary' side='bottom'>
             <p>Popover отображается снизу от триггера</p>
@@ -100,7 +100,7 @@ export const WithPositioning: Story = {
 
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant='outline'>Слева</Button>
+            <Button variant='fade-contrast-outlined'>Слева</Button>
           </PopoverTrigger>
           <PopoverContent className='bg-background-primary' side='left'>
             <p>Popover отображается слева от триггера</p>
@@ -111,7 +111,7 @@ export const WithPositioning: Story = {
       <div className='flex gap-2'>
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant='outline'>Начало</Button>
+            <Button variant='fade-contrast-outlined'>Начало</Button>
           </PopoverTrigger>
           <PopoverContent className='bg-background-primary' align='start'>
             <p>Контент выровнен по началу триггера</p>
@@ -120,7 +120,7 @@ export const WithPositioning: Story = {
 
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant='outline'>Центр</Button>
+            <Button variant='fade-contrast-outlined'>Центр</Button>
           </PopoverTrigger>
           <PopoverContent className='bg-background-primary' align='center'>
             <p>Контент выровнен по центру триггера</p>
@@ -129,7 +129,7 @@ export const WithPositioning: Story = {
 
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant='outline'>Конец</Button>
+            <Button variant='fade-contrast-outlined'>Конец</Button>
           </PopoverTrigger>
           <PopoverContent className='bg-background-primary' align='end'>
             <p>Контент выровнен по концу триггера</p>
@@ -148,7 +148,7 @@ export const WithCustomStyles: Story = {
   render: () => (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant='outline'>Кастомный стиль</Button>
+        <Button variant='fade-contrast-outlined'>Кастомный стиль</Button>
       </PopoverTrigger>
       <PopoverContent className='bg-background-primary border-blue-300 text-blue-900'>
         <div className='space-y-2'>
@@ -168,7 +168,7 @@ export const WithForm: Story = {
   render: () => (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant='outline'>Настройки</Button>
+        <Button variant='fade-contrast-outlined'>Настройки</Button>
       </PopoverTrigger>
       <PopoverContent className='bg-background-primary'>
         <div className='space-y-4'>
@@ -207,7 +207,9 @@ export const Controlled: Story = {
     return (
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button variant='outline'>{open ? 'Закрыть Popover' : 'Открыть Popover'}</Button>
+          <Button variant='fade-contrast-outlined'>
+            {open ? 'Закрыть Popover' : 'Открыть Popover'}
+          </Button>
         </PopoverTrigger>
         <PopoverContent className='bg-background-primary'>
           <div className='space-y-2'>

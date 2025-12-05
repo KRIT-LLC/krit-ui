@@ -70,7 +70,7 @@ export const Banner = ({
       </div>
       <div className='mt-2 text-sm text-foreground-secondary'>{subtitle}</div>
       {actionText && (
-        <Button variant='contrast' className='mt-4' onClick={onActionClick}>
+        <Button variant='theme-filled' className='mt-4' onClick={onActionClick}>
           {actionText}
         </Button>
       )}
