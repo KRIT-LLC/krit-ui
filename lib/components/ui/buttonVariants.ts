@@ -5,7 +5,7 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        // Соответствует старым вариантам с серым фоном: default, secondary-contrast, contrast-fade, grey, grey-primary
+        // Соответствует старым вариантам с серым фоном: default, secondary-contrast, contrast-fade, grey, grey-primary, secondary
         'fade-contrast-filled':
           'bg-background-contrast-fade text-foreground-primary hover:bg-background-contrast-fade-hover disabled:bg-background-contrast-fade-disabled disabled:text-foreground-primary-disabled',
         // Соответствует старым вариантам прозрачным с бордерами: outline, secondary-outline

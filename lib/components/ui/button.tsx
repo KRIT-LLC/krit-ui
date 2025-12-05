@@ -30,7 +30,7 @@ export interface ButtonProps
  * @returns {React.ReactElement} Кнопка с заданными свойствами
  *
  * @example
- * <Button variant="primary" size="lg">Нажми меня</Button>
+ * <Button variant="theme-filled" size="lg">Нажми меня</Button>
  */
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, asDropdown, icon, children, ...props }, ref) => {

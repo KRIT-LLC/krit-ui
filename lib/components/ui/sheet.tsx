@@ -155,7 +155,7 @@ SheetHeader.displayName = 'SheetHeader';
  * ```tsx
  * <SheetFooter>
  *   <Button>Cancel</Button>
- *   <Button variant="primary">Save</Button>
+ *   <Button variant="theme-filled">Save</Button>
  * </SheetFooter>
  * ```
  */

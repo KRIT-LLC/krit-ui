@@ -30,10 +30,10 @@ export interface BottomMenuProps extends React.HTMLAttributes<HTMLDivElement> {
  *   label="Выбраны заказы: 27"
  *   actions={
  *     <>
- *       <Button variant="contrast-fade" onClick={() => handleApprove()}>
+ *       <Button variant="fade-contrast-filled" onClick={() => handleApprove()}>
  *         Утвердить
  *       </Button>
- *       <Button variant="contrast-fade" onClick={() => handleExecute()}>
+ *       <Button variant="fade-contrast-filled" onClick={() => handleExecute()}>
  *         Выполнить
  *       </Button>
  *     </>
