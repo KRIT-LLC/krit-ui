@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { cn } from '@/utils';
 import { Separator } from '@/components/ui/separator';
+import { cn } from '@/utils';
 
 /**
  * Контейнер таблицы с поддержкой прокрутки и базовой стилизацией.
@@ -49,10 +49,10 @@ const TableHeader = React.forwardRef<
     )}
     {...props}
   >
-  {sticky && className?.includes('border-t') && <Separator className="absolute w-full" />}
-  {children}
-  {sticky && <Separator className="absolute w-full" />}
-  {sticky && <Separator className="bg-[transparent]" />}
+    {sticky && className?.includes('border-t') && <Separator className='absolute w-full' />}
+    {children}
+    {sticky && <Separator className='absolute w-full' />}
+    {sticky && <Separator className='bg-[transparent]' />}
   </thead>
 ));
 TableHeader.displayName = 'TableHeader';
@@ -114,7 +114,7 @@ const TableRow = React.forwardRef<
     ref={ref}
     data-index={dataIndex}
     className={cn(
-      'transition-colors hover:bg-background-primary-hover data-[state=selected]:bg-background-tertiary',
+      'transition-colors hover:bg-background-primary-hover data-[state=selected]:bg-background-tertiary even:bg-background-secondary',
       className,
     )}
     {...props}
@@ -138,7 +138,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      'h-12 px-4 text-left align-middle font-normal text-foreground-secondary [&:has([role=checkbox])]:pr-0',
+      'h-12 px-4 text-left align-middle font-normal text-foreground-secondary [&:has([role=checkbox])]:pr-0 border-r border-line-primary last:border-r-0',
       className,
     )}
     {...props}
@@ -161,7 +161,10 @@ const TableCell = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <td
     ref={ref}
-    className={cn('p-4 align-middle [&:has([role=checkbox])]:pr-0', className)}
+    className={cn(
+      'p-4 align-middle [&:has([role=checkbox])]:pr-0 border-r border-line-primary last:border-r-0',
+      className,
+    )}
     {...props}
   />
 ));

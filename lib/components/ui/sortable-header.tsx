@@ -1,8 +1,7 @@
 import { ReactNode } from 'react';
 import { Column } from '@tanstack/react-table';
-import { ArrowUpDown } from 'lucide-react';
 import { cn } from '@/utils';
-import { Button } from './button';
+import SortIcon from '@/assets/sort.svg?react';
 
 interface SortableHeaderProps {
   className?: string;
@@ -12,13 +11,12 @@ interface SortableHeaderProps {
 
 export const SortableHeader = ({ className, children, column }: SortableHeaderProps) => {
   return (
-    <Button
-      variant='fade-contrast-transparent'
-      className={cn('p-0 hover:bg-[transparent]', className)}
+    <div
+      className={cn('flex items-center gap-1 cursor-pointer', className)}
       onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
     >
+      <SortIcon className='h-4 w-4 shrink-0 text-icon' />
       {children}
-      <ArrowUpDown className='ml-2 h-4 w-4' />
-    </Button>
+    </div>
   );
 };

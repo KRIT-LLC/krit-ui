@@ -154,6 +154,7 @@ export { default as ShoppingBasketIcon } from '@/assets/shopping_basket.svg?reac
 
 export { default as SimCardDownloadIcon } from '@/assets/sim_card_download.svg?react';
 export { default as SmsFailedIcon } from '@/assets/sms_failed.svg?react';
+export { default as SortIcon } from '@/assets/sort.svg?react';
 export { default as SouthIcon } from '@/assets/south.svg?react';
 export { default as Square4OutlineIcon } from '@/assets/square_4_outline.svg?react';
 export { default as StarIcon } from '@/assets/star.svg?react';

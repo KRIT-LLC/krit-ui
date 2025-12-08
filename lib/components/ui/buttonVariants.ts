@@ -10,7 +10,7 @@ export const buttonVariants = cva(
           'bg-background-contrast-fade text-foreground-primary hover:bg-background-contrast-fade-hover disabled:bg-background-contrast-fade-disabled disabled:text-foreground-primary-disabled',
         // Соответствует старым вариантам прозрачным с бордерами: outline, secondary-outline
         'fade-contrast-outlined':
-          'border-2 border-line-primary bg-transparent text-foreground-primary hover:bg-background-primary-hover hover:border-line-primary disabled:border-line-primary-disabled disabled:text-foreground-primary-disabled',
+          'border border-line-primary bg-transparent text-foreground-primary hover:bg-background-primary-hover hover:border-line-primary disabled:border-line-primary-disabled disabled:text-foreground-primary-disabled',
         // Соответствует старым вариантам прозрачным: ghost, link, light
         'fade-contrast-transparent':
           'bg-transparent text-foreground-primary hover:bg-background-primary-hover disabled:text-foreground-primary-disabled',
