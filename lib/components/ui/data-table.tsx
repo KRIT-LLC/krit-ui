@@ -57,6 +57,8 @@ interface DataTableProps<TData, TValue> {
   columnFilters?: ColumnFiltersState;
   onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>;
   rowHoverContent?: (row: TData) => React.ReactNode;
+  hideHeader?: boolean;
+  variant?: 'table' | 'list';
 }
 
 /**
@@ -81,6 +83,8 @@ interface DataTableProps<TData, TValue> {
  * @param {function} [props.onRowClick] - Обработчик клика по строке
  * @param {boolean} [props.loading] - Состояние загрузки
  * @param {boolean} [props.isStickyHeader] - Фиксированный заголовок
+ * @param {boolean} [props.hideHeader=false] - Скрыть строку с заголовками
+ * @param {'table' | 'list'} [props.variant='table'] - Вариант стиля таблицы: 'table' - стандартный стиль с границами, 'list' - стиль списка без вертикальных границ и фона строк
  */
 
 export function DataTable<TData, TValue>({
@@ -115,6 +119,8 @@ export function DataTable<TData, TValue>({
   columnFilters,
   onColumnFiltersChange,
   rowHoverContent,
+  hideHeader = false,
+  variant = 'table',
 }: DataTableProps<TData, TValue>) {
   const wrapperRef = React.useRef<HTMLDivElement>(null);
   const [hoveredRow, setHoveredRow] = React.useState<TData | null>(null);
@@ -149,6 +155,18 @@ export function DataTable<TData, TValue>({
   });
 
   const getCellPadding = () => {
+    if (variant === 'list') {
+      // Для варианта list минимальные паддинги только на первой и последней ячейке
+      switch (horizontalPadding) {
+        case 'small':
+          return 'first:pl-0 last:pr-0';
+        case 'large':
+          return 'first:pl-0 last:pr-0';
+        case 'medium':
+        default:
+          return 'first:pl-0 last:pr-0';
+      }
+    }
     switch (horizontalPadding) {
       case 'small':
         return 'first:pl-6 last:pr-6';
@@ -187,36 +205,39 @@ export function DataTable<TData, TValue>({
       className={cn('relative flex flex-1 flex-col h-full', className)}
     >
       <Table>
-        <TableHeader
-          className={cn(isStickyHeader && 'sticky top-0 bg-background z-20', headerClassName)}
-        >
-          {table.getHeaderGroups().map(headerGroup => (
-            <TableRow key={headerGroup.id} className='border-line-primary'>
-              {headerGroup.headers.map(header => {
-                return (
-                  <TableHead
-                    key={header.id}
-                    colSpan={header.colSpan}
-                    style={{
-                      minWidth: header.getSize(),
-                      width: header.getSize(),
-                    }}
-                    className={getCellPadding()}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(header.column.columnDef.header, header.getContext())}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
+        {!hideHeader && (
+          <TableHeader
+            className={cn(isStickyHeader && 'sticky top-0 bg-background z-20', headerClassName)}
+          >
+            {table.getHeaderGroups().map(headerGroup => (
+              <TableRow key={headerGroup.id} className='border-line-primary' variant={variant}>
+                {headerGroup.headers.map(header => {
+                  return (
+                    <TableHead
+                      key={header.id}
+                      colSpan={header.colSpan}
+                      style={{
+                        minWidth: header.getSize(),
+                        width: header.getSize(),
+                      }}
+                      className={variant === 'list' ? '' : getCellPadding()}
+                      variant={variant}
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(header.column.columnDef.header, header.getContext())}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+        )}
         <TableBody>
           {loading
             ? table.getHeaderGroups().map(headerGroup =>
                 Array.from({ length: 5 }).map((_, key) => (
-                  <TableRow key={key}>
+                  <TableRow key={key} variant={variant}>
                     {headerGroup.headers.map(header => {
                       return (
                         <TableCell
@@ -226,7 +247,8 @@ export function DataTable<TData, TValue>({
                             minWidth: header.column.getSize(),
                             width: header.column.getSize(),
                           }}
-                          className={getCellPadding()}
+                          className={variant === 'list' ? '' : getCellPadding()}
+                          variant={variant}
                         >
                           <Skeleton className={cn('w-full', skeletonClassName)} />
                         </TableCell>
@@ -245,6 +267,7 @@ export function DataTable<TData, TValue>({
                   className={cn(row.getIsSelected() ? selectedRowClassName : '')}
                   onClick={() => onRowClick?.(row.original)}
                   onMouseEnter={e => handleRowMouseEnter(e, row.original)}
+                  variant={variant}
                 >
                   {row.getVisibleCells().map(cell => (
                     <TableCell
@@ -253,14 +276,15 @@ export function DataTable<TData, TValue>({
                         minWidth: cell.column.getSize(),
                         width: cell.column.getSize(),
                       }}
-                      className={getCellPadding()}
+                      className={variant === 'list' ? '' : getCellPadding()}
+                      variant={variant}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
                 {row.getIsExpanded() && (
-                  <TableRow key={`${row.id}-expanded`}>
+                  <TableRow key={`${row.id}-expanded`} variant={variant}>
                     <td colSpan={row.getVisibleCells().length}>
                       {
                         // @ts-expect-error – в некоторых сущностях содержится кастомный JSX
@@ -272,8 +296,12 @@ export function DataTable<TData, TValue>({
               </React.Fragment>
             ))
           ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className='h-24 text-center'>
+            <TableRow variant={variant}>
+              <TableCell
+                colSpan={columns.length}
+                className={cn('h-24 text-center', variant === 'list' ? '' : getCellPadding())}
+                variant={variant}
+              >
                 {noResultsText}
               </TableCell>
             </TableRow>
@@ -305,6 +333,7 @@ export function DataTable<TData, TValue>({
           paginationProps={paginationProps}
           table={table}
           horizontalPadding={horizontalPadding}
+          variant={variant}
         />
       )}
     </div>
@@ -511,17 +540,24 @@ interface DataTablePaginationProps<TData> {
   table: TanTable<TData>;
   horizontalPadding?: 'small' | 'medium' | 'large';
   paginationProps?: PaginationProps;
+  variant?: 'table' | 'list';
 }
 
 export function DataTablePagination<TData>({
   table,
   horizontalPadding = 'medium',
   paginationProps,
+  variant = 'table',
 }: DataTablePaginationProps<TData>) {
+  // Автоматически применяем стили для варианта list
+  const listVariantClassName =
+    variant === 'list' ? 'bg-background-secondary rounded-none mt-4 border-none' : '';
+
   return (
     <Pagination
       {...paginationProps}
       horizontalPadding={horizontalPadding}
+      className={cn(paginationProps?.className, listVariantClassName)}
       pageSize={table.getState().pagination.pageSize}
       pageCount={table.getPageCount()}
       pageIndex={table.getState().pagination.pageIndex}

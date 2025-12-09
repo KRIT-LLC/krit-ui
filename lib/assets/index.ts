@@ -17,6 +17,7 @@ export { default as AnalyticsIcon } from '@/assets/analytics.svg?react';
 export { default as ArchiveIcon } from '@/assets/archive.svg?react';
 export { default as ArrowBackIcon } from '@/assets/arrow_back.svg?react';
 export { default as ArrowDropDownIcon } from '@/assets/arrow_drop_down.svg?react';
+export { default as ArrowForwardIcon } from '@/assets/arrow_forward.svg?react';
 export { default as AssignmentIcon } from '@/assets/assignment.svg?react';
 export { default as AssignmentTurnedInIcon } from '@/assets/assignment_turned_in.svg?react';
 export { default as AttachFileIcon } from '@/assets/attach_file.svg?react';

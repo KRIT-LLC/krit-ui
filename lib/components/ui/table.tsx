@@ -103,18 +103,21 @@ TableFooter.displayName = 'TableFooter';
  * @param {object} props - Параметры компонента
  * @param {string} [props.className] - Дополнительные CSS-классы
  * @param {number} [props.dataIndex] - Индекс строки в данных, добавляется как data-атрибут для доступа через DOM
+ * @param {'table' | 'list'} [props.variant='table'] - Вариант стиля: 'table' - стандартный стиль, 'list' - стиль списка
  * @param {React.Ref<HTMLTableRowElement>} ref - Реф для доступа к DOM-элементу
  * @returns {React.ReactElement} Строка таблицы
  */
 const TableRow = React.forwardRef<
   HTMLTableRowElement,
-  React.HTMLAttributes<HTMLTableRowElement> & { dataIndex?: number }
->(({ className, dataIndex, ...props }, ref) => (
+  React.HTMLAttributes<HTMLTableRowElement> & { dataIndex?: number; variant?: 'table' | 'list' }
+>(({ className, dataIndex, variant = 'table', ...props }, ref) => (
   <tr
     ref={ref}
     data-index={dataIndex}
     className={cn(
-      'transition-colors hover:bg-background-primary-hover data-[state=selected]:bg-background-tertiary even:bg-background-secondary',
+      variant === 'list'
+        ? 'border-b border-line-primary data-[state=selected]:bg-background-tertiary'
+        : 'transition-colors hover:bg-background-primary-hover data-[state=selected]:bg-background-tertiary even:bg-background-secondary',
       className,
     )}
     {...props}
@@ -128,17 +131,22 @@ TableRow.displayName = 'TableRow';
  * @component
  * @param {object} props - Параметры компонента
  * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {'table' | 'list'} [props.variant='table'] - Вариант стиля: 'table' - стандартный стиль, 'list' - стиль списка
  * @param {React.Ref<HTMLTableCellElement>} ref - Реф для доступа к DOM-элементу
  * @returns {React.ReactElement} Заголовочная ячейка таблицы
  */
 const TableHead = React.forwardRef<
   HTMLTableCellElement,
-  React.ThHTMLAttributes<HTMLTableCellElement>
->(({ className, ...props }, ref) => (
+  React.ThHTMLAttributes<HTMLTableCellElement> & { variant?: 'table' | 'list' }
+>(({ className, variant = 'table', ...props }, ref) => (
   <th
     ref={ref}
     className={cn(
-      'h-12 px-4 text-left align-middle font-normal text-foreground-secondary [&:has([role=checkbox])]:pr-0 border-r border-line-primary last:border-r-0',
+      'h-12 text-left font-normal text-foreground-secondary [&:has([role=checkbox])]:pr-0',
+      variant === 'list' ? 'align-top' : 'align-middle',
+      variant === 'list'
+        ? 'py-4 first:pl-0 last:pr-0 [&:not(:first-child)]:pl-4'
+        : 'px-4 border-r border-line-primary last:border-r-0',
       className,
     )}
     {...props}
@@ -152,17 +160,22 @@ TableHead.displayName = 'TableHead';
  * @component
  * @param {object} props - Параметры компонента
  * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {'table' | 'list'} [props.variant='table'] - Вариант стиля: 'table' - стандартный стиль, 'list' - стиль списка
  * @param {React.Ref<HTMLTableCellElement>} ref - Реф для доступа к DOM-элементу
  * @returns {React.ReactElement} Ячейка таблицы с данными
  */
 const TableCell = React.forwardRef<
   HTMLTableCellElement,
-  React.TdHTMLAttributes<HTMLTableCellElement>
->(({ className, ...props }, ref) => (
+  React.TdHTMLAttributes<HTMLTableCellElement> & { variant?: 'table' | 'list' }
+>(({ className, variant = 'table', ...props }, ref) => (
   <td
     ref={ref}
     className={cn(
-      'p-4 align-middle [&:has([role=checkbox])]:pr-0 border-r border-line-primary last:border-r-0',
+      variant === 'list' ? 'align-top' : 'align-middle',
+      '[&:has([role=checkbox])]:pr-0',
+      variant === 'list'
+        ? 'py-4 first:pl-0 last:pr-0 [&:not(:first-child)]:pl-4'
+        : 'p-4 border-r border-line-primary last:border-r-0',
       className,
     )}
     {...props}
