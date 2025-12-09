@@ -36,6 +36,8 @@
 ![arrow_back.svg](arrow_back.svg)
 #### ArrowDropDownIcon
 ![arrow_drop_down.svg](arrow_drop_down.svg)
+#### ArrowForwardIcon
+![arrow_forward.svg](arrow_forward.svg)
 #### AssignmentIcon
 ![assignment.svg](assignment.svg)
 #### AssignmentTurnedInIcon
@@ -310,6 +312,8 @@
 ![sim_card_download.svg](sim_card_download.svg)
 #### SmsFailedIcon
 ![sms_failed.svg](sms_failed.svg)
+#### SortIcon
+![sort.svg](sort.svg)
 #### SouthIcon
 ![south.svg](south.svg)
 #### Square4OutlineIcon
