@@ -80,6 +80,15 @@ const meta: Meta<typeof DataTable> = {
       options: ['small', 'medium', 'large'],
     },
     loading: { control: 'boolean' },
+    variant: {
+      control: { type: 'select' },
+      options: ['table', 'list'],
+      description: 'Вариант стиля таблицы: table - стандартный стиль с границами, list - стиль списка без вертикальных границ и фона строк',
+    },
+    hideHeader: {
+      control: 'boolean',
+      description: 'Скрыть строку с заголовками',
+    },
   },
   parameters: {
     docs: {
@@ -296,6 +305,87 @@ export const WithSortingAndFilters: StoryObj<typeof DataTable> = {
       description: {
         story:
           'Таблица с полным набором функций: сортировка и фильтрация. Комбинирует SortableHeader и FiltersColumnHeader для максимальной функциональности.',
+      },
+    },
+  },
+};
+
+export const ListVariant: StoryObj<typeof DataTable> = {
+  args: {
+    columns: [
+      {
+        accessorKey: 'email',
+        header: 'Email',
+        cell: ({ row }) => <TruncatedCell>{row.getValue('email')}</TruncatedCell>,
+      },
+      {
+        accessorKey: 'amount',
+        header: 'Amount',
+      },
+      {
+        accessorKey: 'status',
+        header: 'Status',
+      },
+      {
+        accessorKey: 'date',
+        header: 'Date',
+      },
+    ],
+    data,
+    horizontalPadding: 'medium',
+    variant: 'list',
+    pagination: {
+      pageIndex: 0,
+      pageSize: 10,
+    },
+    rowCount: 8,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Вариант списка без вертикальных границ между колонками, без фона четных строк и hover эффекта. Имеет горизонтальные разделители между строками и автоматические стили для пагинации.',
+      },
+    },
+  },
+};
+
+export const ListVariantWithoutHeader: StoryObj<typeof DataTable> = {
+  args: {
+    columns: [
+      {
+        accessorKey: 'email',
+        header: '',
+        cell: ({ row }) => <TruncatedCell>{row.getValue('email')}</TruncatedCell>,
+      },
+      {
+        accessorKey: 'amount',
+        header: '',
+      },
+      {
+        accessorKey: 'status',
+        header: '',
+      },
+      {
+        accessorKey: 'date',
+        header: '',
+      },
+    ],
+    data,
+    horizontalPadding: 'medium',
+    variant: 'list',
+    hideHeader: true,
+    pagination: {
+      pageIndex: 0,
+      pageSize: 10,
+    },
+    rowCount: 8,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Вариант списка без заголовков. Подходит для отображения истории операций или логов, где заголовки не нужны.',
       },
     },
   },
