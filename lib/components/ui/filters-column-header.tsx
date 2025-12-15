@@ -132,7 +132,7 @@ const FilterContent = ({
             })}
           />
         );
-      case 'select':
+      case 'select': {
         const isFiltered = Array.isArray(selectFilterValue)
           ? !!selectFilterValue.length &&
             !selectFilterValue.every(itm => excludeFilterValues?.includes(itm))
@@ -144,7 +144,8 @@ const FilterContent = ({
             })}
           />
         );
-      case 'reset':
+      }
+      case 'reset': {
         const hasFilters =
           table?.getState()?.columnFilters?.length !== 0 ||
           (table?.getState()?.sorting?.length !== 0 && !!table?.getState()?.sorting);
@@ -156,6 +157,7 @@ const FilterContent = ({
             })}
           />
         );
+      }
       default:
         return null;
     }
