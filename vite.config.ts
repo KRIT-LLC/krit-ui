@@ -19,7 +19,7 @@ export default defineConfig({
       formats: ['es', 'umd'],
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'react/jsx-runtime', 'tailwindcss'],
+      external: ['react', 'react-dom', 'react/jsx-runtime', 'tailwindcss', 'zod', 'zod-i18n-map'],
       output: {
         globals: {
           react: 'React',
