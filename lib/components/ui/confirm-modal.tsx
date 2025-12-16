@@ -163,7 +163,6 @@ export const ConfirmModal = (props: ConfirmModalProps) => {
               <Button
                 variant={confirmType}
                 size='sm'
-                className='min-w-[120px]'
                 onClick={hasInput ? form.handleSubmit(handleConfirm) : () => handleConfirm()}
               >
                 {confirmText}

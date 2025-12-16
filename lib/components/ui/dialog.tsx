@@ -136,7 +136,7 @@ interface DialogFooterProps extends React.HTMLAttributes<HTMLDivElement> {
   align?: 'start' | 'end';
 }
 
-const DialogFooter = ({ className, align = 'start', ...props }: DialogFooterProps) => (
+const DialogFooter = ({ className, align = 'end', ...props }: DialogFooterProps) => (
   <div
     className={cn(
       'flex flex-col-reverse bg-background py-4 px-5 sm:justify-start sm:!flex-row sm:space-x-4 sticky bottom-0',

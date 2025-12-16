@@ -6,9 +6,9 @@ export const renderTextWithBoldMarkdown = (text: string) => {
   const textShouldBeBold = match.map(item => item.replaceAll('*', ''));
   return text.split('**').map(part =>
     textShouldBeBold.includes(part) ? (
-      <strong key={part} className='text-foreground'>
+      <span key={part} className='text-foreground font-medium'>
         {part}
-      </strong>
+      </span>
     ) : (
       part
     ),
