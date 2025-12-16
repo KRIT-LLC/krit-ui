@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   acceptMap,
   AttachmentItem,
@@ -109,22 +109,35 @@ export const Previews = (props: PreviewsProps) => {
   const { notifyError } = useNotify();
   const inputRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation();
-  const [currentPreview, setCurrentPreview] = useState<AttachmentItem>(data[0]);
-
-  const getPrevHandler = () => {
-    const prevIndex = data.indexOf(currentPreview) - 1;
-    if (data[prevIndex]) return () => setCurrentPreview(data[prevIndex]);
-  };
-
-  const getNextHandler = () => {
-    const nextIndex = data.indexOf(currentPreview) + 1;
-    if (data[nextIndex]) return () => setCurrentPreview(data[nextIndex]);
-  };
 
   const getType = (attachment?: AttachmentItem) => {
     const contentType = attachment?.contentType?.split('/')[0].toLowerCase();
     if (contentType === 'application' && attachment?.contentType?.includes('pdf')) return 'pdf';
     return contentType as ContentType;
+  };
+
+  // Фильтруем битые файлы (без url или contentType)
+  const validData = data.filter(item => item?.url && item?.contentType);
+
+  // Фильтруем PDF файлы из навигации слайдера
+  const nonPdfItems = validData.filter(item => getType(item) !== 'pdf');
+  const [currentPreview, setCurrentPreview] = useState<AttachmentItem>(nonPdfItems[0]);
+
+  // Обновляем currentPreview при изменении данных
+  useEffect(() => {
+    const valid = data.filter(item => item?.url && item?.contentType);
+    const nonPdf = valid.filter(item => getType(item) !== 'pdf');
+    setCurrentPreview(prev => (nonPdf.includes(prev) ? prev : nonPdf[0]));
+  }, [data]);
+
+  const getPrevHandler = () => {
+    const prevItem = nonPdfItems[nonPdfItems.indexOf(currentPreview) - 1];
+    return prevItem ? () => setCurrentPreview(prevItem) : undefined;
+  };
+
+  const getNextHandler = () => {
+    const nextItem = nonPdfItems[nonPdfItems.indexOf(currentPreview) + 1];
+    return nextItem ? () => setCurrentPreview(nextItem) : undefined;
   };
 
   const mbToBytes = (mb: number = 0) => mb * 1024 * 1024;
@@ -183,7 +196,7 @@ export const Previews = (props: PreviewsProps) => {
         else notifyError(`${t('videoSizeLimitMB')} ${maxSizes.video}(MB) (${file.name})`);
       }
     }
-    const currentFiles = data.filter(item => !!item.file).map(item => item.file);
+    const currentFiles = validData.filter(item => !!item.file).map(item => item.file);
     const totalSizeMb =
       [...currentFiles, ...filesArray].reduce((acc, file) => acc + file!.size, 0) / 1024 / 1024;
     if (!maxSizes?.total || totalSizeMb > maxSizes.total) {
@@ -221,7 +234,7 @@ export const Previews = (props: PreviewsProps) => {
         className,
       )}
     >
-      {onAdd && (!max || data.length < max) && (
+      {onAdd && (!max || validData.length < max) && (
         <div
           className={cn(
             'w-[130px] h-[130px] relative flex justify-center items-center rounded-lg border-foreground/10 bg-[transparent] text-[transparent] cursor-pointer transition-colors',
@@ -238,7 +251,7 @@ export const Previews = (props: PreviewsProps) => {
             type='file'
             accept={accepts.map(type => acceptMap.get(type)).join(',')}
             multiple={multiple}
-            disabled={!!max && data.length >= max}
+            disabled={!!max && validData.length >= max}
             onChange={e => e.target.files?.length && handleInputChange(e.target.files)}
           />
           {processing ? (
@@ -246,28 +259,105 @@ export const Previews = (props: PreviewsProps) => {
           ) : (
             <div className='absolute pointer-events-none flex flex-col gap-1 items-center justify-center'>
               <AttachFile
-                className={cn('text-icon-fade-contrast', { 'opacity-50': data.length >= max })}
+                className={cn('text-icon-fade-contrast', { 'opacity-50': validData.length >= max })}
               />
               <span className='text-sm text-foreground-tertiary'>{t('attachFile')}</span>
             </div>
           )}
         </div>
       )}
-      {placeholder && !data?.length && (
+      {placeholder && !validData?.length && (
         <span className='text-base text-secondary-foreground'>{placeholder}</span>
       )}
-      {data?.map((item, i) => {
+      {validData?.map((item, i) => {
         const fileType = getType(item);
+        const isPdf = fileType === 'pdf';
         const fileName =
           item.fileName ||
           item.url?.split('/').pop() +
             `.${item.contentType?.split('/').pop() || (fileType === 'video' ? 'mp4' : fileType === 'audio' ? 'mp3' : 'pdf')}`;
 
+        // Рендеринг контента файла
+        const fileContent = (
+          <span className='relative'>
+            {fileType === 'image' && (
+              <>
+                <img
+                  src={item.url}
+                  alt=''
+                  className={cn(
+                    'rounded-lg object-cover border border-line-primary',
+                    getSizeClass(),
+                  )}
+                  loading='lazy'
+                  onClick={() => setCurrentPreview(item)}
+                />
+                {title && (
+                  <span className='absolute bottom-2 left-2 display-block p-0.5 rounded-xl bg-background-on-image text-xs text-foreground-on-image w-[calc(100%-1rem)] truncate'>
+                    {title}
+                  </span>
+                )}
+              </>
+            )}
+            {fileType === 'video' && (
+              <div
+                className={cn(
+                  'flex flex-col items-center justify-center h-full w-full text-icon-theme rounded-lg border-2 border-line-secondary',
+                  getSizeClass(),
+                )}
+                onClick={() => setCurrentPreview(item)}
+              >
+                <VideoFileIcon />
+                {orientation === 'horizontal' && (
+                  <div className='text-sm mt-1 text-foreground-secondary w-full truncate text-center p-0.5'>
+                    {fileName}
+                  </div>
+                )}
+              </div>
+            )}
+            {fileType === 'audio' && (
+              <div
+                className={cn(
+                  'flex flex-col items-center justify-center h-full w-full text-icon-theme rounded-lg border-2 border-line-secondary',
+                  getSizeClass(),
+                )}
+                onClick={() => setCurrentPreview(item)}
+              >
+                <AudioFileIcon />
+                {orientation === 'horizontal' && (
+                  <div className='text-sm mt-1 text-foreground-secondary w-full truncate text-center p-0.5'>
+                    {fileName}
+                  </div>
+                )}
+              </div>
+            )}
+            {isPdf && (
+              <a
+                href={item.url}
+                target='_blank'
+                rel='noopener noreferrer'
+                className={cn(
+                  'flex flex-col items-center justify-center h-full w-full text-icon-theme rounded-lg border-2 border-line-secondary',
+                  getSizeClass(),
+                )}
+              >
+                <FileIcon />
+                {orientation === 'horizontal' && (
+                  <div className='text-sm mt-1 text-foreground-secondary w-full truncate text-center p-0.5'>
+                    {fileName}
+                  </div>
+                )}
+              </a>
+            )}
+          </span>
+        );
+
         return (
           <div
             key={item.fileName}
             className={cn(
-              'relative select-none cursor-pointer',
+              'relative select-none',
+              !isPdf && 'cursor-pointer',
               orientation === 'vertical'
                 ? 'grid grid-cols-[130px_1fr] items-center gap-4 w-full h-full'
                 : '',
@@ -275,87 +365,20 @@ export const Previews = (props: PreviewsProps) => {
               orientation === 'horizontal' ? getSizeClass() : '',
             )}
           >
-            <PreviewFull
-              type={getType(currentPreview)}
-              src={currentPreview?.url}
-              name={currentPreview?.fileName}
-              onPrev={getPrevHandler()}
-              onNext={getNextHandler()}
-              onRemove={(onRemove || item.onRemove) && (() => onRemoveAttachment(item, i))}
-            >
-              <span className='relative'>
-                {fileType === 'image' && (
-                  <>
-                    <img
-                      src={item.url}
-                      alt=''
-                      className={cn(
-                        'rounded-lg object-cover border border-line-primary',
-                        getSizeClass(),
-                      )}
-                      loading='lazy'
-                      onClick={() => setCurrentPreview(item)}
-                    />
-                    {title && (
-                      <span className='absolute bottom-2 left-2 display-block p-0.5 rounded-xl bg-background-on-image text-xs text-foreground-on-image w-[calc(100%-1rem)] truncate'>
-                        {title}
-                      </span>
-                    )}
-                  </>
-                )}
-                {fileType === 'video' && (
-                  <div
-                    className={cn(
-                      'flex flex-col items-center justify-center h-full w-full text-icon-theme rounded-lg border-2 border-line-secondary',
-                      getSizeClass(),
-                    )}
-                    onClick={() => setCurrentPreview(item)}
-                  >
-                    <VideoFileIcon />
-                    {orientation === 'horizontal' && (
-                      <div className='text-sm mt-1 text-foreground-secondary w-full truncate text-center p-0.5'>
-                        {fileName}
-                      </div>
-                    )}
-                  </div>
-                )}
-                {fileType === 'audio' && (
-                  <div
-                    className={cn(
-                      'flex flex-col items-center justify-center h-full w-full text-icon-theme rounded-lg border-2 border-line-secondary',
-                      getSizeClass(),
-                    )}
-                    onClick={() => setCurrentPreview(item)}
-                  >
-                    <AudioFileIcon />
-                    {orientation === 'horizontal' && (
-                      <div className='text-sm mt-1 text-foreground-secondary w-full truncate text-center p-0.5'>
-                        {fileName}
-                      </div>
-                    )}
-                  </div>
-                )}
-                {fileType === 'pdf' && (
-                  <a
-                    href={item.url}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    className={cn(
-                      'flex flex-col items-center justify-center h-full w-full text-icon-theme rounded-lg border-2 border-line-secondary',
-                      getSizeClass(),
-                    )}
-                    onClick={() => setCurrentPreview(item)}
-                  >
-                    <FileIcon />
-                    {orientation === 'horizontal' && (
-                      <div className='text-sm mt-1 text-foreground-secondary w-full truncate text-center p-0.5'>
-                        {fileName}
-                      </div>
-                    )}
-                  </a>
-                )}
-              </span>
-            </PreviewFull>
+            {isPdf ? (
+              fileContent
+            ) : (
+              <PreviewFull
+                type={getType(currentPreview)}
+                src={currentPreview?.url}
+                name={currentPreview?.fileName}
+                onPrev={getPrevHandler()}
+                onNext={getNextHandler()}
+                onRemove={(onRemove || item.onRemove) && (() => onRemoveAttachment(item, i))}
+              >
+                {fileContent}
+              </PreviewFull>
+            )}
             {orientation === 'vertical' && (
               <div className='flex flex-col justify-start flex-1 h-full py-2 group min-w-0 overflow-hidden'>
                 <div className='flex flex-row gap-2 items-center gap-2 pb-2'>
