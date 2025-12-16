@@ -12,7 +12,7 @@
     --krit-background-reopen: 259 85% 76%;
     --krit-background-reopen-fade: 258 84% 90%;
     --krit-background-secondary: 0 0% 93%;
-    --krit-background-sidebar: 60 1% 14%;
+    --krit-background-sidebar: 0 0% 15%;
     --krit-background-states-contrast-disabled: 0 0% 88%;
     --krit-background-states-contrast-fade-disabled: 227 21% 90%;
     --krit-background-states-contrast-fade-hover: 216 28% 79%;
@@ -27,7 +27,7 @@
     --krit-background-states-success-fade-hover: 132 82% 33%;
     --krit-background-states-success-hover: 132 82% 33%;
     --krit-background-states-theme-disabled: 234 12% 30%;
-    --krit-background-states-theme-hover: 210 98% 52%;
+    --krit-background-states-theme-hover: 66 100% 35%;
     --krit-background-states-theme-selected: 210 98% 52%;
     --krit-background-states-warning-fade-hover: 55 92% 94%;
     --krit-background-states-warning-hover: 54 69% 58%;
@@ -36,7 +36,7 @@
     --krit-background-success-tertiary: 133 50% 74%;
     --krit-background-tertiary: 0 0% 96%;
     --krit-background-theme: 65 100% 34%;
-    --krit-background-theme-fade: 65 100% 34%;
+    --krit-background-theme-fade: 65 60% 50%;
     --krit-background-transparent: 0 0% 100%;
     --krit-background-warning: 39 97% 73%;
     --krit-background-warning-fade: 37 100% 91%;
@@ -139,7 +139,7 @@
     --krit-background-reopen: 259 73% 48%;
     --krit-background-reopen-fade: 259 92% 38%;
     --krit-background-secondary: 0 0% 21%;
-    --krit-background-sidebar: 60 1% 14%;
+    --krit-background-sidebar: 0 0% 15%;
     --krit-background-states-contrast-disabled: 0 0% 21%;
     --krit-background-states-contrast-fade-disabled: 222 14% 22%;
     --krit-background-states-contrast-fade-hover: 223 12% 34%;
@@ -154,7 +154,7 @@
     --krit-background-states-success-fade-hover: 132 82% 22%;
     --krit-background-states-success-hover: 132 82% 33%;
     --krit-background-states-theme-disabled: 234 12% 30%;
-    --krit-background-states-theme-hover: 210 98% 52%;
+    --krit-background-states-theme-hover: 66 100% 35%;
     --krit-background-states-theme-selected: 210 98% 52%;
     --krit-background-states-warning-fade-hover: 58 82% 30%;
     --krit-background-states-warning-hover: 57 80% 46%;
@@ -163,7 +163,7 @@
     --krit-background-success-tertiary: 126 25% 49%;
     --krit-background-tertiary: 0 0% 23%;
     --krit-background-theme: 64 100% 31%;
-    --krit-background-theme-fade: 56 47% 23%;
+    --krit-background-theme-fade: 65 60% 50%;
     --krit-background-transparent: 224 19% 15%;
     --krit-background-warning: 40 96% 62%;
     --krit-background-warning-fade: 38 97% 82%;
@@ -209,7 +209,7 @@
     --krit-badge-priority-low: 117 76% 34%;
     --krit-badge-priority-middle: 36 100% 52%;
     --krit-badge-priority-no-priority: 227 17% 83%;
-    --krit-foreground-error: 353 41% 48%;
+    --krit-foreground-error: 0 0% 100%;
     --krit-foreground-link: 64 100% 31%;
     --krit-foreground-on-contrast: 0 0% 100%;
     --krit-foreground-primary: 222 24% 94%;
@@ -269,6 +269,7 @@
   /* MultiSelect - элементы с aria-selected:bg-background-theme-fade */
   .lightNordGold [aria-selected='true'].bg-background-theme-fade,
   .darkNordGold [aria-selected='true'].bg-background-theme-fade {
+    background-color: hsl(var(--krit-background-theme-fade)) !important;
     color: hsl(var(--krit-foreground-on-contrast)) !important;
   }
 
@@ -295,11 +296,64 @@
     color: hsl(var(--krit-foreground-on-contrast)) !important;
   }
 
-  /* Кнопка outline - зеленая обводка */
-  .lightNordGold button.border-2.border-line-primary,
-  .darkNordGold button.border-2.border-line-primary,
-  .lightNordGold .border-2.border-line-primary,
-  .darkNordGold .border-2.border-line-primary {
-    border-color: hsl(var(--krit-background-theme)) !important;
+  /* Кнопки outline - зеленая обводка (только для кнопок, не для селектов) */
+  .lightNordGold
+    button.border-line-primary:not([data-radix-select-trigger]):not([role='combobox']):not(
+      [aria-haspopup='listbox']
+    ),
+  .darkNordGold
+    button.border-line-primary:not([data-radix-select-trigger]):not([role='combobox']):not(
+      [aria-haspopup='listbox']
+    ) {
+    border-color: hsl(var(--krit-line-theme)) !important;
+  }
+
+  /* Select/MultiSelect - hover с полупрозрачным зеленым */
+  .lightNordGold [cmdk-item]:hover,
+  .darkNordGold [cmdk-item]:hover {
+    background-color: hsla(66, 100%, 35%, 0.3) !important;
+  }
+
+  /* Кнопки theme-filled - hover должен быть светлее зеленого, а не синим */
+  .lightNordGold button.bg-background-theme:hover,
+  .darkNordGold button.bg-background-theme:hover,
+  .lightNordGold .bg-background-theme:hover,
+  .darkNordGold .bg-background-theme:hover {
+    background-color: hsl(var(--krit-background-states-theme-hover)) !important;
+  }
+
+  /* Кнопки с классом hover:bg-background-theme-hover */
+  .lightNordGold .hover\:bg-background-theme-hover:hover,
+  .darkNordGold .hover\:bg-background-theme-hover:hover {
+    background-color: hsl(var(--krit-background-states-theme-hover)) !important;
+  }
+
+  /* Кнопки фильтров в таблице - зеленый фон когда фильтр активен */
+  .lightNordGold button.text-foreground-theme,
+  .darkNordGold button.text-foreground-theme {
+    background-color: hsl(var(--krit-background-theme)) !important;
+    color: hsl(var(--krit-foreground-on-contrast)) !important;
+  }
+
+  /* Иконки фильтров в таблице - зеленый цвет при hover */
+  .lightNordGold button:hover .text-foreground-tertiary,
+  .darkNordGold button:hover .text-foreground-tertiary,
+  .lightNordGold button:hover span .text-foreground-tertiary,
+  .darkNordGold button:hover span .text-foreground-tertiary {
+    color: hsl(var(--krit-foreground-theme)) !important;
+  }
+
+  /* Элементы с классом text-foreground-theme должны быть зелеными */
+  .lightNordGold .text-foreground-theme,
+  .darkNordGold .text-foreground-theme {
+    color: hsl(var(--krit-foreground-theme)) !important;
+  }
+
+  /* Текст в навигации (боковом меню) должен быть белым */
+  .lightNordGold .bg-background-sidebar .text-foreground-primary,
+  .darkNordGold .bg-background-sidebar .text-foreground-primary,
+  .lightNordGold .bg-background-sidebar button.text-foreground-primary,
+  .darkNordGold .bg-background-sidebar button.text-foreground-primary {
+    color: hsl(var(--krit-foreground-white)) !important;
   }
 }
