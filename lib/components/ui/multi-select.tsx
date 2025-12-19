@@ -3,15 +3,14 @@ import { FixedSizeList } from 'react-window';
 import { useTranslation } from '@/hooks/useTranslation';
 import { cn } from '@/utils';
 import ArrowDropDown from '@/assets/arrow_drop_down.svg?react';
-import CancelOutline from '@/assets/cancel_outline.svg?react';
 import CloseIcon from '@/assets/close.svg?react';
+import CloseCircleIcon from '@/assets/close_circle.svg?react';
 import ExpandMoreIcon from '@/assets/expand_more.svg?react';
 import { Button, ButtonVariant } from './button';
 import { Checkbox } from './checkbox';
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from './command';
 import { NetworkErrorMessage } from './network-error-message';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
-import { Separator } from './separator';
 
 const ALL_VALUE = Symbol('all');
 
@@ -54,6 +53,7 @@ export interface MultiSelectProps {
   required?: boolean;
   showBadge?: boolean;
   maxVisibleRowsBadge?: number;
+  showCountBadge?: boolean;
   defaultSearchedValue?: string;
   createLabel?: string;
   autoSelectSingleOption?: boolean;
@@ -169,6 +169,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
       required,
       showBadge = false,
       maxVisibleRowsBadge,
+      showCountBadge = true,
       defaultSearchedValue,
       createLabel,
       autoSelectSingleOption,
@@ -363,7 +364,10 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
     const renderSelectedBadges = React.useCallback(() => {
       if (!showBadge) {
         return (
-          <div className='truncate text-nowrap whitespace-nowrap' title={valueText}>
+          <div
+            className='truncate text-nowrap whitespace-nowrap text-sm text-foreground-primary font-normal'
+            title={valueText}
+          >
             {valueText}
           </div>
         );
@@ -518,26 +522,35 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
                   </span>
                 )}
                 {renderSelectedBadges()}
-                <ArrowDropDown className='w-6 h-6 shrink-0 text-icon-fade-contrast ml-auto' />
-                {(showReset || onRemoveClick) && valueText && (
-                  <span className='flex items-center'>
-                    <Separator orientation='vertical' className='w-px h-5 mr-2' />
-                    <div
-                      className='active:scale-90 transition-transform cursor-pointer'
-                      onClick={e => {
-                        e.stopPropagation();
-                        if (onRemoveClick) {
-                          hasAutoSelectedOnceRef.current = true;
-                          onRemoveClick();
-                        } else if (showReset && onChange) {
-                          hasAutoSelectedOnceRef.current = true;
-                          onChange([], []);
-                        }
-                      }}
-                    >
-                      <CancelOutline className='min-h-6 min-w-6 text-icon-fade-contrast' />
-                    </div>
-                  </span>
+                {showCountBadge && value.length > 1 && (
+                  <div className='bg-background-contrast-fade flex items-center justify-center h-4 px-2 py-1 rounded-[4px] shrink-0'>
+                    <span className='text-xs text-foreground-primary leading-4 tracking-[0.4px]'>
+                      {value.length}
+                    </span>
+                  </div>
+                )}
+                {(showReset || onRemoveClick) && valueText ? (
+                  <div
+                    className={cn(
+                      'flex items-center justify-center w-6 h-6 shrink-0 cursor-pointer ml-auto',
+                      disabled && 'cursor-not-allowed opacity-50',
+                    )}
+                    onClick={e => {
+                      e.stopPropagation();
+                      if (disabled) return;
+                      if (onRemoveClick) {
+                        hasAutoSelectedOnceRef.current = true;
+                        onRemoveClick();
+                      } else if (showReset && onChange) {
+                        hasAutoSelectedOnceRef.current = true;
+                        onChange([], []);
+                      }
+                    }}
+                  >
+                    <CloseCircleIcon className='w-6 h-6 text-icon-fade-contrast' />
+                  </div>
+                ) : (
+                  <ArrowDropDown className='w-6 h-6 shrink-0 text-icon-fade-contrast ml-auto' />
                 )}
               </>
             )}
