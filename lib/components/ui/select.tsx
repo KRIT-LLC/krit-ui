@@ -4,7 +4,7 @@ import * as SelectPrimitive from '@radix-ui/react-select';
 import { Check } from 'lucide-react';
 import { cn } from '@/utils';
 import ArrowDropDown from '@/assets/arrow_drop_down.svg?react';
-import CancelOutline from '@/assets/cancel_outline.svg?react';
+import CloseCircleIcon from '@/assets/close_circle.svg?react';
 import { NetworkErrorMessage } from './network-error-message';
 
 export interface OptionType {
@@ -137,19 +137,35 @@ const Select = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Trigger>
           <SelectValue placeholder={props.placeholder}>
             {renderValue(props.options.find(d => d.value === value) ?? { label: '', value: '' })}
           </SelectValue>
-          {clearable && props.value && (
-            <CancelOutline
-              width={18}
-              height={18}
+          {clearable && value ? (
+            <div
               className={cn(
-                'text-icon-fade-contrast pointer-events-auto absolute z-50 right-9',
+                'flex items-center justify-center w-6 h-6 shrink-0 cursor-pointer ml-auto pointer-events-auto z-10',
                 readOnly && 'cursor-not-allowed pointer-events-none opacity-95',
               )}
-              onClick={() => {
-                hasAutoSelectedOnceRef.current = true;
-                handleChange?.('');
+              onMouseDown={e => {
+                e.stopPropagation();
+                e.preventDefault();
+                if (!readOnly) {
+                  hasAutoSelectedOnceRef.current = true;
+                  handleChange?.('');
+                }
               }}
-            />
+              onClick={e => {
+                e.stopPropagation();
+                e.preventDefault();
+                if (!readOnly) {
+                  hasAutoSelectedOnceRef.current = true;
+                  handleChange?.('');
+                }
+              }}
+            >
+              <CloseCircleIcon className='w-6 h-6 text-icon-fade-contrast pointer-events-none' />
+            </div>
+          ) : (
+            <SelectPrimitive.Icon asChild>
+              <ArrowDropDown className='min-h-6 min-w-6 text-icon-fade-contrast ml-auto' />
+            </SelectPrimitive.Icon>
           )}
         </SelectTrigger>
         <SelectContent className={cn(isLoading && 'min-h-16', isError && 'min-h-20')}>
@@ -195,7 +211,11 @@ const SelectValue = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Value>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Value>
 >(({ className, ...props }, ref) => (
-  <SelectPrimitive.Value ref={ref} className={cn('text-sm', className)} {...props} />
+  <SelectPrimitive.Value
+    ref={ref}
+    className={cn('text-sm text-foreground-primary font-normal', className)}
+    {...props}
+  />
 ));
 SelectValue.displayName = 'SelectValue';
 
@@ -216,9 +236,6 @@ const SelectTrigger = React.forwardRef<
     {...props}
   >
     {children}
-    <SelectPrimitive.Icon asChild>
-      <ArrowDropDown className='min-h-6 min-w-6 text-icon-fade-contrast' />
-    </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 ));
 SelectTrigger.displayName = 'SelectTrigger';
