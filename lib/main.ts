@@ -36,6 +36,7 @@ export * from '@/components/ui/multi-select';
 export * from '@/components/ui/resizable';
 export * from '@/components/ui/theme-provider';
 export * from '@/components/ui/header';
+export * from '@/components/ui/page-layout';
 export * from '@/components/ui/tabs';
 export * from '@/components/ui/confirm-modal';
 export * from '@/components/ui/nav';
