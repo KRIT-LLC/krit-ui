@@ -164,6 +164,7 @@ module.exports = {
         float: '0px 2px 24px 0px rgba(0, 0, 0, 0.08), 0px 0px 2px 0px rgba(0, 0, 0, 0.08)',
         tooltip: '0px 4px 32px 0px rgba(0, 0, 0, 0.16), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)',
         'bottom-menu': '0px -4px 10px 0px rgba(0, 0, 0, 0.05)',
+        switch: '0 1px 10px 0 rgba(0, 0, 0, 0.20)',
       },
       colors: {
         border: 'hsl(var(--krit-border))',
