@@ -211,7 +211,7 @@
     --krit-badge-priority-no-priority: 227 17% 84%;
     --krit-foreground-error: 354 93% 65%;
     --krit-foreground-link: 216 97% 76%;
-    --krit-foreground-on-contrast: 224 19% 15%;
+    --krit-foreground-on-contrast: 0 0% 100%;
     --krit-foreground-primary: 0 0% 96%;
     --krit-foreground-quaternary: 227 7% 75%;
     --krit-foreground-secondary: 216 20% 70%;
