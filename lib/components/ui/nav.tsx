@@ -202,7 +202,7 @@ const NavItemComponent = ({
       <Popover key={index} open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
           <Button
-            variant='fade-contrast-transparent'
+            variant={item.variant || itemVariant(item)}
             className={buttonClasses}
             onClick={handleToggle}
           >
