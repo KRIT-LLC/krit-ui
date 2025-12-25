@@ -147,7 +147,7 @@ export function ThemeProvider({
   children,
   defaultTheme = 'system',
   storageKey = 'app-ui-theme',
-  themeVersion,
+  themeVersion = 'Krit',
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(
