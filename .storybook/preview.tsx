@@ -49,8 +49,9 @@ const preview: Preview = {
         icon: 'paintbrush',
         items: [
           { value: undefined, title: 'Default (no version)', icon: 'circle' },
-          { value: '2', title: 'Version 2', icon: 'circle' },
+          { value: 'Krit', title: 'Krit', icon: 'circle' },
           { value: 'NordGold', title: 'NordGold', icon: 'circle' },
+          { value: 'Hunter', title: 'Hunter', icon: 'circle' },
         ],
         dynamicTitle: true,
       },

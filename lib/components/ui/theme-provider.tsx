@@ -7,7 +7,7 @@ export type Theme = 'dark' | 'light' | 'system';
  * **Как расширять тип:**
  * Для добавления новой версии темы расширьте тип через union:
  * ```typescript
- * export type ThemeVersion = '2' | '3' | 'project_name';
+ * export type ThemeVersion = 'Krit' | 'NordGold' | 'Hunter';
  * ```
  *
  * **Правила именования классов в CSS:**
@@ -16,22 +16,27 @@ export type Theme = 'dark' | 'light' | 'system';
  * - Примеры корректных классов:
  *   - `light` (версия не указана или пустая строка)
  *   - `dark` (версия не указана или пустая строка)
- *   - `light2` (themeVersion='2')
- *   - `dark2` (themeVersion='2')
+ *   - `lightKrit` (themeVersion='Krit')
+ *   - `darkKrit` (themeVersion='Krit')
+ *   - `lightNordGold` (themeVersion='NordGold')
+ *   - `darkNordGold` (themeVersion='NordGold')
+ *   - `lightHunter` (themeVersion='Hunter')
+ *   - `darkHunter` (themeVersion='Hunter')
  *   - `light_project_name` (themeVersion='project_name')
  *   - `dark_project_name` (themeVersion='project_name')
  *
  * **Пример использования:**
- * При `themeVersion='2'` будут применяться классы `.light2` и `.dark2`.
+ * При `themeVersion='Krit'` будут применяться классы `.lightKrit` и `.darkKrit`.
  * При `themeVersion='NordGold'` будут применяться классы `.lightNordGold` и `.darkNordGold`.
- * Эти классы должны быть определены в соответствующем CSS файле (например, `colors2.css`, `colorsNordGold.css`).
+ * При `themeVersion='Hunter'` будут применяться классы `.lightHunter` и `.darkHunter`.
+ * Эти классы должны быть определены в соответствующем CSS файле (например, `colorsKrit.css`, `colorsNordGold.css`, `colorsHunter.css`).
  *
  * **Важно:**
  * - Значение `themeVersion` должно точно соответствовать постфиксу в CSS классах
  * - Классы автоматически удаляются из DOM перед применением новой темы
  * - Все классы, начинающиеся с `light` или `dark`, будут удалены при переключении темы
  */
-export type ThemeVersion = '2' | 'NordGold';
+export type ThemeVersion = 'Krit' | 'NordGold' | 'Hunter';
 
 const translations = {
   expand: 'Expand',
