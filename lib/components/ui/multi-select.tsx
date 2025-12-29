@@ -505,7 +505,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
             aria-expanded={open}
             disabled={disabled}
             className={cn(
-              'w-full justify-between px-3 overflow-hidden disabled:opacity-50',
+              'w-full justify-between px-3 overflow-hidden disabled:opacity-50 font-normal',
               triggerClassName,
               {
                 'h-auto overflow-visible hover:bg-[transparent] active:bg-[transparent]': showBadge,
