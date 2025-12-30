@@ -254,6 +254,8 @@ module.exports = {
         'gradient-fade-to-top': 'var(--krit-gradient-fade-to-top)',
         'fade-to-right':
           'linear-gradient(90deg, hsl(var(--krit-background-primary) / 0) 0%, hsl(var(--krit-background-primary)) 100%)',
+        'fade-to-left':
+          'linear-gradient(90deg, hsl(var(--krit-background-primary)) 0%, hsl(var(--krit-background-primary) / 0) 100%)',
       },
       transitionProperty: {
         height: 'height',
