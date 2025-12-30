@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
   DayPickerMultipleProps,
   DayPickerRangeProps,
@@ -6,14 +7,24 @@ import {
   SelectRangeEventHandler,
   SelectSingleEventHandler,
 } from 'react-day-picker';
-import { toRuDateString } from '@/date';
+import {
+  DateRange,
+  formatMultipleDatesMask,
+  formatRangeMask,
+  formatSingleDateMask,
+  parseDateString,
+  parseMultipleDatesString,
+  parseRangeString,
+  toRuDateString,
+} from '@/date';
 import { enUS, Locale, ru } from 'date-fns/locale';
-import { useTranslation } from '@/hooks/useTranslation';
 // TODO: Решить вопрос с локализацией
 import { cn } from '@/utils';
 import CalendarOutline from '@/assets/calendar_outline.svg?react';
+import CloseCircleIcon from '@/assets/close_circle.svg?react';
 import { Button } from './button';
 import { Calendar } from './calendar';
+import { Input } from './input';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 
 export interface DatePickerSingleProps extends DayPickerSingleProps {
@@ -23,6 +34,8 @@ export interface DatePickerSingleProps extends DayPickerSingleProps {
   error?: string | boolean;
   readOnly?: boolean;
   iconClassName?: string;
+  showReset?: boolean;
+  onRemoveClick?: () => void;
 }
 
 export interface DatePickerMultipleProps extends DayPickerMultipleProps {
@@ -32,11 +45,8 @@ export interface DatePickerMultipleProps extends DayPickerMultipleProps {
   error?: string | boolean;
   readOnly?: boolean;
   iconClassName?: string;
-}
-
-export interface DateRange {
-  from?: Date;
-  to?: Date;
+  showReset?: boolean;
+  onRemoveClick?: () => void;
 }
 
 interface DatePickerRangeProps extends DayPickerRangeProps {
@@ -46,6 +56,8 @@ interface DatePickerRangeProps extends DayPickerRangeProps {
   error?: string | boolean;
   readOnly?: boolean;
   iconClassName?: string;
+  showReset?: boolean;
+  onRemoveClick?: () => void;
 }
 
 export type DatePickerProps =
@@ -67,21 +79,25 @@ export type DatePickerProps =
  * @param {boolean} [props.readOnly] - Режим только для чтения
  * @param {string} [props.iconClassName] - Дополнительные классы для иконки календаря
  * @param {Locale} [props.locale] - Локализация календаря
+ * @param {boolean} [props.showReset] - Показывать кнопку сброса значения
+ * @param {Function} [props.onRemoveClick] - Обработчик клика по кнопке сброса
  * @example
  * <DatePicker
  *   mode="single"
  *   value={new Date()}
- *   placeholder="Выберите дату"
+ *   placeholder="Date filter"
  *   onChange={(date) => console.log(date)}
+ *   showReset
  * />
  */
 export function DatePicker({ className, locale, iconClassName, ...props }: DatePickerProps) {
-  const { t } = useTranslation();
-  const placeholder = (
-    <span className='text-foreground-tertiary font-normal'>
-      {props.placeholder || t('selectDate')}
-    </span>
-  );
+  // Константы
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  const [inputValue, setInputValue] = React.useState<string>('');
+  const [isInputMode, setIsInputMode] = React.useState(false);
+  const placeholder = 'placeholder' in props ? props.placeholder : undefined;
+
+  // Функции
   const getInputLocale = () => {
     if (locale) {
       return locale;
@@ -90,16 +106,169 @@ export function DatePicker({ className, locale, iconClassName, ...props }: DateP
     return browserLanguage.includes('ru') ? ru : enUS;
   };
 
-  const formatValue = () => {
+  const getDisplayValue = React.useCallback((): string => {
     switch (props.mode) {
       case 'single':
-        return props.value ? toRuDateString(props.value) : placeholder;
+        return props.value ? toRuDateString(props.value) : '';
       case 'multiple':
-        return props.value?.length ? props.value.map(toRuDateString).join(', ') : placeholder;
+        return props.value?.length ? props.value.map(toRuDateString).join(', ') : '';
       case 'range': {
         const value = props.selected || props.value;
-        const to = value?.to ? ' — ' + toRuDateString(value?.to) : '';
-        return value?.from ? toRuDateString(value.from) + to : placeholder;
+        if (!value?.from) return '';
+        const to = value?.to ? ' — ' + toRuDateString(value.to) : '';
+        return toRuDateString(value.from) + to;
+      }
+      default:
+        return '';
+    }
+  }, [props.mode, props.value, props.selected]);
+
+  const getMaskPlaceholder = (): string => {
+    switch (props.mode) {
+      case 'single':
+        return '__.__.__';
+      case 'multiple':
+        return '__.__.__, __.__.__';
+      case 'range':
+        return '__.__.__ — __.__.__';
+      default:
+        return '__.__.__';
+    }
+  };
+
+  const hasValue = () => {
+    switch (props.mode) {
+      case 'single':
+        return !!props.value;
+      case 'multiple':
+        return !!(props.value?.length && props.value.length > 0);
+      case 'range': {
+        const value = props.selected || props.value;
+        return !!value?.from;
+      }
+    }
+  };
+
+  const handleInputFocus = () => {
+    setIsInputMode(true);
+    const currentValue = getDisplayValue();
+    // Если значение пустое, показываем маску, иначе текущее значение
+    if (!currentValue) {
+      setInputValue(getMaskPlaceholder());
+      // Выделяем маску при фокусе, чтобы при вводе она заменялась
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.select();
+        }
+      }, 0);
+    } else {
+      setInputValue(currentValue);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (props.readOnly) return;
+
+    const newValue = e.target.value;
+
+    // Если пользователь начал вводить, убираем маску
+    if (newValue === getMaskPlaceholder()) {
+      setInputValue('');
+      return;
+    }
+
+    let formattedValue = '';
+
+    switch (props.mode) {
+      case 'single':
+        formattedValue = formatSingleDateMask(newValue);
+        break;
+      case 'multiple':
+        formattedValue = formatMultipleDatesMask(newValue);
+        break;
+      case 'range':
+        formattedValue = formatRangeMask(newValue);
+        break;
+    }
+
+    setInputValue(formattedValue);
+  };
+
+  const handleInputBlur = () => {
+    setIsInputMode(false);
+
+    // Если значение пустое или равно маске, очищаем
+    if (!props.onChange || inputValue.trim() === '' || inputValue === getMaskPlaceholder()) {
+      setInputValue('');
+      return;
+    }
+
+    const syntheticEvent = {} as React.MouseEvent<Element>;
+
+    switch (props.mode) {
+      case 'single': {
+        const parsed = parseDateString(inputValue);
+        if (parsed) {
+          const handler = props.onChange as SelectSingleEventHandler;
+          handler(parsed, parsed, {}, syntheticEvent);
+        } else {
+          setInputValue('');
+        }
+        break;
+      }
+      case 'multiple': {
+        const parsed = parseMultipleDatesString(inputValue);
+        if (parsed.length > 0) {
+          const handler = props.onChange as SelectMultipleEventHandler;
+          handler(parsed, new Date(), {}, syntheticEvent);
+        } else {
+          setInputValue('');
+        }
+        break;
+      }
+      case 'range': {
+        const parsed = parseRangeString(inputValue);
+        if (parsed && parsed.from) {
+          const handler = props.onChange as SelectRangeEventHandler;
+          const rangeValue: { from: Date; to?: Date } = {
+            from: parsed.from,
+            to: parsed.to,
+          };
+          handler(rangeValue, parsed.from, {}, syntheticEvent);
+        } else {
+          setInputValue('');
+        }
+        break;
+      }
+    }
+  };
+
+  const handleReset = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (props.readOnly) return;
+
+    if (props.onRemoveClick) {
+      props.onRemoveClick();
+      return;
+    }
+
+    if (!props.onChange) return;
+
+    switch (props.mode) {
+      case 'single': {
+        const handler = props.onChange as SelectSingleEventHandler;
+        handler(undefined, new Date(), {}, e);
+        break;
+      }
+      case 'multiple': {
+        const handler = props.onChange as SelectMultipleEventHandler;
+        handler([], new Date(), {}, e);
+        break;
+      }
+      case 'range': {
+        const handler = props.onChange as SelectRangeEventHandler;
+        handler({ from: undefined, to: undefined }, new Date(), {}, e);
+        break;
       }
     }
   };
@@ -140,6 +309,13 @@ export function DatePicker({ className, locale, iconClassName, ...props }: DateP
       (props.mode === 'range' ? createRangeHandler(props.onChange) : props.onChange),
   } as DatePickerProps;
 
+  // useEffect
+  React.useEffect(() => {
+    if (!isInputMode) {
+      setInputValue(getDisplayValue());
+    }
+  }, [props.value, props.selected, props.mode, isInputMode, getDisplayValue]);
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -148,14 +324,49 @@ export function DatePicker({ className, locale, iconClassName, ...props }: DateP
           size={'sm'}
           className={cn(
             'w-full justify-start text-left font-normal px-3 text-sm focus-visible:outline-none focus-visible:border-line-focused data-[state=open]:border-line-focused',
-            !props.value && 'text-foreground-secondary',
+            !hasValue() && !isInputMode && 'text-foreground-secondary',
             props.error ? 'border-line-error focus-visible:border-line-error' : '',
             className,
             props.readOnly && 'cursor-not-allowed pointer-events-none opacity-95',
           )}
         >
-          {formatValue()}
-          <CalendarOutline className={cn('ml-auto text-foreground-secondary', iconClassName)} />
+          <div
+            className='flex-1 flex items-center min-w-0'
+            onClick={e => {
+              e.stopPropagation();
+              inputRef.current?.focus();
+            }}
+          >
+            {hasValue() && !isInputMode && placeholder && (
+              <span className='text-foreground-secondary font-normal mr-1 whitespace-nowrap'>
+                {placeholder}:
+              </span>
+            )}
+            <Input
+              ref={inputRef}
+              type='text'
+              value={isInputMode ? inputValue : hasValue() ? getDisplayValue() : ''}
+              onChange={handleInputChange}
+              onFocus={handleInputFocus}
+              onBlur={handleInputBlur}
+              placeholder={!hasValue() && !isInputMode ? placeholder || '' : ''}
+              className='h-auto border-none px-0 py-0'
+              readOnly={props.readOnly}
+            />
+          </div>
+          {(props.showReset || props.onRemoveClick) && hasValue() ? (
+            <div
+              className={cn(
+                'flex items-center justify-center w-6 h-6 shrink-0 cursor-pointer ml-auto',
+                props.readOnly && 'cursor-not-allowed opacity-50',
+              )}
+              onClick={handleReset}
+            >
+              <CloseCircleIcon className='w-6 h-6 text-icon-fade-contrast' />
+            </div>
+          ) : (
+            <CalendarOutline className={cn('ml-auto text-foreground-secondary', iconClassName)} />
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className='w-auto p-0 rounded-lg'>
