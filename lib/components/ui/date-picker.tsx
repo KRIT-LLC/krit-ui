@@ -8,7 +8,6 @@ import {
   SelectSingleEventHandler,
 } from 'react-day-picker';
 import {
-  DateRange,
   formatMultipleDatesMask,
   formatRangeMask,
   formatSingleDateMask,
@@ -18,6 +17,7 @@ import {
   toRuDateString,
 } from '@/date';
 import { enUS, Locale, ru } from 'date-fns/locale';
+import { useTranslation } from '@/hooks/useTranslation';
 // TODO: Решить вопрос с локализацией
 import { cn } from '@/utils';
 import CalendarOutline from '@/assets/calendar_outline.svg?react';
@@ -27,8 +27,14 @@ import { Calendar } from './calendar';
 import { Input } from './input';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 
+export interface DateRange {
+  from?: Date;
+  to?: Date;
+}
+
 export interface DatePickerSingleProps extends DayPickerSingleProps {
   placeholder?: string;
+  innerLabel?: string;
   value?: Date;
   onChange?: SelectSingleEventHandler;
   error?: string | boolean;
@@ -40,6 +46,7 @@ export interface DatePickerSingleProps extends DayPickerSingleProps {
 
 export interface DatePickerMultipleProps extends DayPickerMultipleProps {
   placeholder?: string;
+  innerLabel?: string;
   value?: Date[];
   onChange?: SelectMultipleEventHandler;
   error?: string | boolean;
@@ -51,6 +58,7 @@ export interface DatePickerMultipleProps extends DayPickerMultipleProps {
 
 interface DatePickerRangeProps extends DayPickerRangeProps {
   placeholder?: string;
+  innerLabel?: string;
   value?: DateRange;
   onChange?: SelectRangeEventHandler;
   error?: string | boolean;
@@ -73,7 +81,8 @@ export type DatePickerProps =
  * @param {Object} props - Свойства компонента
  * @param {'single' | 'multiple' | 'range'} [props.mode] - Режим выбора даты
  * @param {Date | Date[] | DateRange} [props.value] - Выбранные даты в зависимости от режима
- * @param {string} [props.placeholder] - Плейсхолдер для пустого состояния
+ * @param {string} [props.placeholder] - Плейсхолдер для инпута. Если задан innerLabel, placeholder игнорируется в неактивном состоянии (резервируется место под маску).
+ * @param {string} [props.innerLabel] - Метка, отображаемая перед значением с двоеточием. Если задана, резервирует место под маску, но скрывает её до фокуса.
  * @param {Function} [props.onChange] - Обработчик изменения даты
  * @param {string | boolean} [props.error] - Ошибка валидации
  * @param {boolean} [props.readOnly] - Режим только для чтения
@@ -86,16 +95,20 @@ export type DatePickerProps =
  *   mode="single"
  *   value={new Date()}
  *   placeholder="Date filter"
+ *   innerLabel="Дата"
  *   onChange={(date) => console.log(date)}
  *   showReset
  * />
  */
 export function DatePicker({ className, locale, iconClassName, ...props }: DatePickerProps) {
   // Константы
+  const { t } = useTranslation();
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [inputValue, setInputValue] = React.useState<string>('');
   const [isInputMode, setIsInputMode] = React.useState(false);
+  const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
   const placeholder = 'placeholder' in props ? props.placeholder : undefined;
+  const innerLabel = 'innerLabel' in props ? props.innerLabel : undefined;
 
   // Функции
   const getInputLocale = () => {
@@ -151,6 +164,7 @@ export function DatePicker({ className, locale, iconClassName, ...props }: DateP
 
   const handleInputFocus = () => {
     setIsInputMode(true);
+    setIsPopoverOpen(true);
     const currentValue = getDisplayValue();
     // Если значение пустое, показываем маску, иначе текущее значение
     if (!currentValue) {
@@ -316,43 +330,85 @@ export function DatePicker({ className, locale, iconClassName, ...props }: DateP
     }
   }, [props.value, props.selected, props.mode, isInputMode, getDisplayValue]);
 
+  const valueText = isInputMode ? inputValue : hasValue() ? getDisplayValue() : '';
+  const maskPlaceholder = getMaskPlaceholder();
+  const defaultPlaceholder = placeholder || t('selectDate');
+
+  const placeholderText = !hasValue() && !isInputMode ? (innerLabel ? '' : defaultPlaceholder) : '';
+
   return (
-    <Popover>
+    <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
       <PopoverTrigger asChild>
         <Button
           variant={'fade-contrast-outlined'}
           size={'sm'}
           className={cn(
-            'w-full justify-start text-left font-normal px-3 text-sm focus-visible:outline-none focus-visible:border-line-focused data-[state=open]:border-line-focused',
+            'justify-start text-left font-normal px-3 text-sm focus-visible:outline-none focus-visible:border-line-focused data-[state=open]:border-line-focused',
             !hasValue() && !isInputMode && 'text-foreground-secondary',
             props.error ? 'border-line-error focus-visible:border-line-error' : '',
             className,
             props.readOnly && 'cursor-not-allowed pointer-events-none opacity-95',
           )}
+          onClick={() => {
+            if (!props.readOnly) {
+              setIsPopoverOpen(true);
+              inputRef.current?.focus();
+            }
+          }}
         >
           <div
-            className='flex-1 flex items-center min-w-0'
+            className='flex items-center flex-shrink-0'
             onClick={e => {
               e.stopPropagation();
-              inputRef.current?.focus();
+              if (!props.readOnly) {
+                setIsPopoverOpen(true);
+                inputRef.current?.focus();
+              }
             }}
           >
-            {hasValue() && !isInputMode && placeholder && (
+            {innerLabel && (
               <span className='text-foreground-secondary font-normal mr-1 whitespace-nowrap'>
-                {placeholder}:
+                {innerLabel}:
               </span>
             )}
-            <Input
-              ref={inputRef}
-              type='text'
-              value={isInputMode ? inputValue : hasValue() ? getDisplayValue() : ''}
-              onChange={handleInputChange}
-              onFocus={handleInputFocus}
-              onBlur={handleInputBlur}
-              placeholder={!hasValue() && !isInputMode ? placeholder || '' : ''}
-              className='h-auto border-none px-0 py-0'
-              readOnly={props.readOnly}
-            />
+            <div className="inline-grid [grid-template-areas:'stack'] items-center min-w-[20px] w-fit">
+              {/* Скрытые элементы для вычисления ширины (берется максимальная) */}
+              {/* 1. Маска задает базовую ширину */}
+              <span
+                aria-hidden='true'
+                className='[grid-area:stack] invisible whitespace-pre px-0 py-0 text-sm font-normal tracking-[0.1px] leading-5 pointer-events-none'
+              >
+                {maskPlaceholder}
+              </span>
+              {/* 2. Плейсхолдер (если нет innerLabel) */}
+              {!innerLabel && defaultPlaceholder && (
+                <span
+                  aria-hidden='true'
+                  className='[grid-area:stack] invisible whitespace-pre px-0 py-0 text-sm font-normal tracking-[0.1px] leading-5 pointer-events-none'
+                >
+                  {defaultPlaceholder}
+                </span>
+              )}
+              {/* 3. Текущее значение */}
+              <span
+                aria-hidden='true'
+                className='[grid-area:stack] invisible whitespace-pre px-0 py-0 text-sm font-normal tracking-[0.1px] leading-5 pointer-events-none'
+              >
+                {valueText || ' '}
+              </span>
+
+              <Input
+                ref={inputRef}
+                type='text'
+                value={valueText}
+                onChange={handleInputChange}
+                onFocus={handleInputFocus}
+                onBlur={handleInputBlur}
+                placeholder={placeholderText}
+                className='[grid-area:stack] w-[0px] min-w-full h-auto border-none px-0 py-0 !bg-transparent'
+                readOnly={props.readOnly}
+              />
+            </div>
           </div>
           {(props.showReset || props.onRemoveClick) && hasValue() ? (
             <div

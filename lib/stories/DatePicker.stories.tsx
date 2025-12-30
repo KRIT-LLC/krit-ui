@@ -119,7 +119,7 @@ export const WithInnerLabel: Story = {
     const [date, setDate] = useState<Date>(new Date());
     return (
       <DatePicker
-        placeholder='Дата начала'
+        innerLabel='Дата начала'
         value={date}
         className='max-w-[300px]'
         onChange={setDate as SelectSingleEventHandler}
@@ -139,7 +139,7 @@ export const RangeWithLabel: Story = {
     });
     return (
       <DatePicker
-        placeholder='Период'
+        innerLabel='Период'
         mode='range'
         value={range}
         onChange={setRange as unknown as SelectRangeEventHandler}
@@ -198,6 +198,99 @@ export const ManualInputRange: Story = {
           Попробуйте ввести диапазон вручную, например: 12122025 — 15122025
         </div>
       </div>
+    );
+  },
+};
+
+// Разница между placeholder и innerLabel
+export const PlaceholderVsInnerLabel: Story = {
+  render: () => {
+    const [date1, setDate1] = useState<Date>();
+    const [date2, setDate2] = useState<Date>(new Date());
+    const [date3, setDate3] = useState<Date>(new Date());
+    return (
+      <div className='space-y-6'>
+        <div>
+          <h3 className='text-sm font-medium mb-2'>Только placeholder (пропадает при фокусе)</h3>
+          <DatePicker
+            placeholder='Выберите дату'
+            value={date1}
+            className='max-w-[300px]'
+            onChange={setDate1 as SelectSingleEventHandler}
+            mode='single'
+          />
+          <div className='text-xs text-gray-600 mt-1'>
+            Placeholder виден только когда инпут пустой и не в фокусе
+          </div>
+        </div>
+        <div>
+          <h3 className='text-sm font-medium mb-2'>
+            Только innerLabel (показывается перед значением с двоеточием)
+          </h3>
+          <DatePicker
+            innerLabel='Дата'
+            value={date2}
+            className='max-w-[300px]'
+            onChange={setDate2 as SelectSingleEventHandler}
+            mode='single'
+            showReset
+          />
+          <div className='text-xs text-gray-600 mt-1'>
+            InnerLabel виден перед значением. Место под маску зарезервировано, но маска скрыта до
+            фокуса.
+          </div>
+        </div>
+        <div>
+          <h3 className='text-sm font-medium mb-2'>Placeholder + innerLabel вместе</h3>
+          <DatePicker
+            placeholder='Введите дату'
+            innerLabel='Дата начала'
+            value={date3}
+            className='max-w-[300px]'
+            onChange={setDate3 as SelectSingleEventHandler}
+            mode='single'
+            showReset
+          />
+          <div className='text-xs text-gray-600 mt-1'>
+            InnerLabel имеет приоритет: метка показывается перед значением, placeholder игнорируется
+            (резервируется место под маску).
+          </div>
+        </div>
+      </div>
+    );
+  },
+};
+
+// Примеры с innerLabel для разных режимов
+export const MultipleWithInnerLabel: Story = {
+  render: () => {
+    const [dates, setDates] = useState<Date[]>();
+    return (
+      <DatePicker
+        className='max-w-[300px]'
+        innerLabel='Даты'
+        mode='multiple'
+        value={dates}
+        onChange={setDates}
+        showReset
+      />
+    );
+  },
+};
+
+// Диапазон с innerLabel (пустой)
+export const RangeWithInnerLabelEmpty: Story = {
+  render: () => {
+    const [range, setRange] = useState<{ from?: Date; to?: Date }>();
+    return (
+      <DatePicker
+        innerLabel='Период выполнения'
+        mode='range'
+        value={range}
+        onChange={setRange as unknown as SelectRangeEventHandler}
+        className='max-w-[400px]'
+        showReset
+      />
     );
   },
 };

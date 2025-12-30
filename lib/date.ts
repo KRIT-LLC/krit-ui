@@ -1,15 +1,11 @@
 import { format, isValid, parse } from 'date-fns';
 import { ru } from 'date-fns/locale';
+import { DateRange } from './main';
 
 export const toRuDateString = (date: Date | string) => {
   if (!date) return '';
   return format(typeof date === 'string' ? new Date(date) : date, 'dd.MM.yyyy');
 };
-
-export interface DateRange {
-  from?: Date;
-  to?: Date;
-}
 
 // Утилиты для форматирования маски ввода
 export const formatSingleDateMask = (value: string): string => {
