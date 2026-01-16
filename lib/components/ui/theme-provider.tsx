@@ -69,6 +69,7 @@ const translations = {
   apply: 'Apply',
   showAll: 'Show all',
   chooseAll: 'Choose all',
+  withoutSort: 'Without sort',
 };
 
 export type Translations = keyof typeof translations;

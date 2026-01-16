@@ -20,10 +20,16 @@ export * from '@/components/ui/form';
 export * from '@/components/ui/input';
 export * from '@/components/ui/label';
 export * from '@/components/ui/network-error-message';
+export * from '@/components/ui/notification';
+export * from '@/components/ui/notificationVariants';
 export * from '@/components/ui/popover';
+export * from '@/components/ui/post-card';
 export * from '@/components/ui/preloader';
+export * from '@/components/ui/pagination';
+export * from '@/components/ui/profile';
 export * from '@/components/ui/select';
 export * from '@/components/ui/table';
+export * from '@/components/ui/tree-view';
 export * from '@/components/ui/toast';
 export * from '@/components/ui/toaster';
 export * from '@/components/ui/separator';
@@ -53,6 +59,8 @@ export * from '@/components/ui/filters-column-header';
 export * from '@/components/ui/number-input';
 export * from '@/components/ui/sheet';
 export * from '@/components/ui/scroll-area';
+export * from '@/components/ui/widget-plan-fact';
+export * from '@/components/ui/sort-component';
 
 export * from '@/utils';
 
