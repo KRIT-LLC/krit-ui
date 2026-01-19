@@ -277,3 +277,142 @@ export const AllVariantsAndSizes: Story = {
     },
   },
 };
+
+// Выравнивание иконок: однострочный vs многострочный текст
+export const IconAlignment: Story = {
+  render: () => (
+    <div className='flex flex-col gap-4 w-full max-w-2xl'>
+      <div>
+        <h3 className='text-sm font-medium mb-2'>Однострочный текст (иконка визуально по центру)</h3>
+        <Notification variant='info' size='default'>
+          Короткое информационное сообщение
+        </Notification>
+      </div>
+      <div>
+        <h3 className='text-sm font-medium mb-2'>Многострочный текст (иконка выравнивается по первой строке)</h3>
+        <Notification variant='info' size='default'>
+          При сохранении приёмки заказа будет закрыт. Все операции, ожидающие проверки результата, будут
+          автоматически подтверждены. После закрытия, изменения будут недоступны.
+        </Notification>
+      </div>
+      <div>
+        <h3 className='text-sm font-medium mb-2'>Очень длинный многострочный текст</h3>
+        <Notification variant='success' size='default'>
+          Это очень длинный текст уведомления, который занимает несколько строк и демонстрирует, как иконка
+          остается выровненной по первой строке текста. Обратите внимание, что иконка не центрируется
+          вертикально относительно всего блока, а выравнивается с первой строкой, что улучшает читаемость
+          и восприятие информации.
+        </Notification>
+      </div>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Демонстрация выравнивания иконки: для однострочного текста иконка визуально центрирована, для многострочного — выравнивается по первой строке.',
+      },
+    },
+  },
+};
+
+// Все варианты с разным контентом
+export const AllVariantsShowcase: Story = {
+  render: () => (
+    <div className='flex flex-col gap-4 w-full max-w-2xl'>
+      <div>
+        <h3 className='text-sm font-medium mb-3'>Размер: default</h3>
+        <div className='flex flex-col gap-3'>
+          <Notification variant='error' size='default'>
+            Ошибка при выполнении операции
+          </Notification>
+          <Notification variant='success' size='default'>
+            Операция выполнена успешно
+          </Notification>
+          <Notification variant='info' size='default'>
+            Информационное сообщение для пользователя
+          </Notification>
+        </div>
+      </div>
+      <div>
+        <h3 className='text-sm font-medium mb-3'>Размер: sm</h3>
+        <div className='flex flex-col gap-3'>
+          <Notification variant='error' size='sm'>
+            Ошибка при выполнении операции
+          </Notification>
+          <Notification variant='success' size='sm'>
+            Операция выполнена успешно
+          </Notification>
+          <Notification variant='info' size='sm'>
+            Информационное сообщение для пользователя
+          </Notification>
+        </div>
+      </div>
+      <div>
+        <h3 className='text-sm font-medium mb-3'>С кнопкой закрытия</h3>
+        <div className='flex flex-col gap-3'>
+          <Notification variant='error' size='default' showClose onClose={action('error-closed')}>
+            Ошибка при выполнении операции. Проверьте введенные данные.
+          </Notification>
+          <Notification variant='success' size='default' showClose onClose={action('success-closed')}>
+            Данные успешно сохранены в системе
+          </Notification>
+          <Notification variant='info' size='default' showClose onClose={action('info-closed')}>
+            При сохранении приёмки заказа будет закрыт. Все операции будут подтверждены.
+          </Notification>
+        </div>
+      </div>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Полная демонстрация всех вариантов уведомлений с разными размерами и опциями.',
+      },
+    },
+  },
+};
+
+// Реальный пример из приложения
+export const RealWorldExample: Story = {
+  render: () => (
+    <div className='flex flex-col gap-4 w-full max-w-2xl'>
+      <div>
+        <h3 className='text-sm font-medium mb-3'>Модальное окно приемки заказа</h3>
+        <Notification variant='info' size='default'>
+          При сохранении приёмки заказа будет закрыт. Все операции, ожидающие проверки результата, будут
+          автоматически подтверждены. После закрытия, изменения будут недоступны.
+        </Notification>
+      </div>
+      <div>
+        <h3 className='text-sm font-medium mb-3'>Уведомления об успехе</h3>
+        <div className='flex flex-col gap-3'>
+          <Notification variant='success' size='default'>
+            Заказ успешно принят
+          </Notification>
+          <Notification variant='success' size='default'>
+            Операция успешно выполнена
+          </Notification>
+        </div>
+      </div>
+      <div>
+        <h3 className='text-sm font-medium mb-3'>Уведомления об ошибках</h3>
+        <div className='flex flex-col gap-3'>
+          <Notification variant='error' size='default'>
+            Не удалось выполнить операцию
+          </Notification>
+          <Notification variant='error' size='default'>
+            Превышены трудозатраты на исполнителя. Пожалуйста, проверьте данные и попробуйте снова.
+          </Notification>
+        </div>
+      </div>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Примеры реальных уведомлений из приложения с типичными сценариями использования.',
+      },
+    },
+  },
+};
