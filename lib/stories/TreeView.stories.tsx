@@ -238,8 +238,22 @@ const settingsData: SettingsNode[] = [
 // История оборудования с таблицей
 export const MachineryHierarchy: Story = {
   render: () => {
-    const [nodes, setNodes] = useState<MachineryNode[]>(machineryData);
     const [selected, setSelected] = useState<string | null>('1-1-3');
+
+    const handleDoubleClick = (nodeId: string) => {
+      setSelected(nodeId);
+    };
+
+    // Добавляем обработчик onDoubleClick к каждой ноде
+    const addHandlers = (items: MachineryNode[]): MachineryNode[] => {
+      return items.map((item) => ({
+        ...item,
+        onDoubleClick: () => handleDoubleClick(item.id as string),
+        children: item.children ? addHandlers(item.children as MachineryNode[]) : undefined,
+      }));
+    };
+
+    const [nodes, setNodes] = useState<MachineryNode[]>(addHandlers(machineryData));
 
     const handleExpand = (node: MachineryNode) => {
       const updateNode = (items: MachineryNode[]): MachineryNode[] => {
@@ -254,10 +268,6 @@ export const MachineryHierarchy: Story = {
         });
       };
       setNodes(updateNode(nodes));
-    };
-
-    const handleDoubleClick = (node: MachineryNode) => {
-      setSelected(node.id as string);
     };
 
     const config: TreeViewConfig<MachineryNode> = {
@@ -328,12 +338,11 @@ export const MachineryHierarchy: Story = {
         <TreeView
           nodes={nodes}
           selected={selected}
-          onExpand={handleExpand}
-          onDoubleClick={handleDoubleClick}
           config={config}
           headers={['Название', '']}
           columnWidths={['auto', 60]}
           columnAlignments={['left', 'center']}
+          onExpand={handleExpand}
         />
       </div>
     );
@@ -351,8 +360,22 @@ export const MachineryHierarchy: Story = {
 // История настроек
 export const SettingsHierarchy: Story = {
   render: () => {
-    const [nodes, setNodes] = useState<SettingsNode[]>(settingsData);
     const [selected, setSelected] = useState<string | null>('3-1-1');
+
+    const handleDoubleClick = (nodeId: string) => {
+      setSelected(nodeId);
+    };
+
+    // Добавляем обработчик onDoubleClick к каждой ноде
+    const addHandlers = (items: SettingsNode[]): SettingsNode[] => {
+      return items.map((item) => ({
+        ...item,
+        onDoubleClick: () => handleDoubleClick(item.id as string),
+        children: item.children ? addHandlers(item.children as SettingsNode[]) : undefined,
+      }));
+    };
+
+    const [nodes, setNodes] = useState<SettingsNode[]>(addHandlers(settingsData));
 
     const handleExpand = (node: SettingsNode) => {
       const updateNode = (items: SettingsNode[]): SettingsNode[] => {
@@ -367,10 +390,6 @@ export const SettingsHierarchy: Story = {
         });
       };
       setNodes(updateNode(nodes));
-    };
-
-    const handleDoubleClick = (node: SettingsNode) => {
-      setSelected(node.id as string);
     };
 
     const config: TreeViewConfig<SettingsNode> = {
@@ -411,10 +430,9 @@ export const SettingsHierarchy: Story = {
         <TreeView
           nodes={nodes}
           selected={selected}
-          onExpand={handleExpand}
-          onDoubleClick={handleDoubleClick}
           config={config}
           headers={['Название']}
+          onExpand={handleExpand}
         />
       </div>
     );
@@ -480,8 +498,22 @@ export const Basic: Story = {
       },
     ];
 
-    const [nodes, setNodes] = useState<SimpleNode[]>(simpleData);
     const [selected, setSelected] = useState<string | null>(null);
+
+    const handleDoubleClick = (nodeId: string) => {
+      setSelected(nodeId);
+    };
+
+    // Добавляем обработчик onDoubleClick к каждой ноде
+    const addHandlers = (items: SimpleNode[]): SimpleNode[] => {
+      return items.map((item) => ({
+        ...item,
+        onDoubleClick: () => handleDoubleClick(item.id as string),
+        children: item.children ? addHandlers(item.children as SimpleNode[]) : undefined,
+      }));
+    };
+
+    const [nodes, setNodes] = useState<SimpleNode[]>(addHandlers(simpleData));
 
     const handleExpand = (node: SimpleNode) => {
       const updateNode = (items: SimpleNode[]): SimpleNode[] => {
@@ -496,10 +528,6 @@ export const Basic: Story = {
         });
       };
       setNodes(updateNode(nodes));
-    };
-
-    const handleDoubleClick = (node: SimpleNode) => {
-      setSelected(node.id as string);
     };
 
     const config: TreeViewConfig<SimpleNode> = {
@@ -523,11 +551,10 @@ export const Basic: Story = {
         <TreeView
           nodes={nodes}
           selected={selected}
-          onExpand={handleExpand}
-          onDoubleClick={handleDoubleClick}
           config={config}
           headers={['Название', 'Значение']}
           columnWidths={[300, 200]}
+          onExpand={handleExpand}
         />
       </div>
     );
@@ -598,8 +625,22 @@ export const MultiColumn: Story = {
       },
     ];
 
-    const [nodes, setNodes] = useState<DataNode[]>(multiColumnData);
     const [selected, setSelected] = useState<string | null>(null);
+
+    const handleDoubleClick = (nodeId: string) => {
+      setSelected(nodeId);
+    };
+
+    // Добавляем обработчик onDoubleClick к каждой ноде
+    const addHandlers = (items: DataNode[]): DataNode[] => {
+      return items.map((item) => ({
+        ...item,
+        onDoubleClick: () => handleDoubleClick(item.id as string),
+        children: item.children ? addHandlers(item.children as DataNode[]) : undefined,
+      }));
+    };
+
+    const [nodes, setNodes] = useState<DataNode[]>(addHandlers(multiColumnData));
 
     const handleExpand = (node: DataNode) => {
       const updateNode = (items: DataNode[]): DataNode[] => {
@@ -614,10 +655,6 @@ export const MultiColumn: Story = {
         });
       };
       setNodes(updateNode(nodes));
-    };
-
-    const handleDoubleClick = (node: DataNode) => {
-      setSelected(node.id as string);
     };
 
     const config: TreeViewConfig<DataNode> = {
@@ -647,12 +684,11 @@ export const MultiColumn: Story = {
         <TreeView
           nodes={nodes}
           selected={selected}
-          onExpand={handleExpand}
-          onDoubleClick={handleDoubleClick}
           config={config}
           headers={['Название', 'Статус', 'Значение', 'Дата']}
           columnWidths={[300, 120, 120, 120]}
           columnAlignments={['left', 'left', 'right', 'center']}
+          onExpand={handleExpand}
         />
       </div>
     );
