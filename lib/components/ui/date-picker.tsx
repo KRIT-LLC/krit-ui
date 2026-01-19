@@ -343,7 +343,7 @@ export function DatePicker({ className, locale, iconClassName, ...props }: DateP
           variant={'fade-contrast-outlined'}
           size={'sm'}
           className={cn(
-            'justify-start text-left font-normal px-3 text-sm focus-visible:outline-none focus-visible:border-line-focused data-[state=open]:border-line-focused',
+            'justify-start text-left font-normal px-3 text-sm focus-visible:outline-none focus-visible:border-line-focused data-[state=open]:border-line-focused w-full',
             !hasValue() && !isInputMode && 'text-foreground-secondary',
             props.error ? 'border-line-error focus-visible:border-line-error' : '',
             className,
