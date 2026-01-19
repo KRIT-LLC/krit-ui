@@ -60,10 +60,13 @@ const Notification = React.forwardRef<HTMLDivElement, NotificationProps>(
 
     const closeIconSize = size === 'sm' ? 'h-3 w-3' : 'h-4 w-4';
 
+    // line-height равен высоте иконки для визуального выравнивания
+    const textLineHeight = size === 'sm' ? 'leading-5' : 'leading-6';
+
     return (
       <div ref={ref} className={cn(notificationVariants({ variant, size }), className)} {...props}>
-        {displayIcon && <div className='flex-shrink-0'>{displayIcon}</div>}
-        <div className={cn('flex-1 min-w-0 text-sm leading-5')}>{children}</div>
+        {displayIcon && <div className='flex-shrink-0 self-start'>{displayIcon}</div>}
+        <div className={cn('flex-1 min-w-0 text-sm', textLineHeight)}>{children}</div>
         {showClose && (
           <Button
             type='button'
@@ -71,7 +74,7 @@ const Notification = React.forwardRef<HTMLDivElement, NotificationProps>(
             size='icon'
             onClick={onClose}
             className={cn(
-              'flex-shrink-0 h-auto w-auto p-1 text-foreground/50 hover:text-foreground',
+              'flex-shrink-0 h-auto w-auto p-1 text-foreground/50 hover:text-foreground self-start',
               variant === 'error' && 'text-red-300 hover:text-red-50',
             )}
             aria-label='Закрыть уведомление'
