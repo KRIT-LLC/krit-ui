@@ -1,4 +1,4 @@
-import { createContext, useCallback, useEffect, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 
 export type Theme = 'dark' | 'light' | 'system';
 /**
@@ -26,10 +26,11 @@ export type Theme = 'dark' | 'light' | 'system';
  *   - `dark_project_name` (themeVersion='project_name')
  *
  * **Пример использования:**
- * При `themeVersion='Krit'` будут применяться классы `.lightKrit` и `.darkKrit`.
- * При `themeVersion='NordGold'` будут применяться классы `.lightNordGold` и `.darkNordGold`.
- * При `themeVersion='Hunter'` будут применяться классы `.lightHunter` и `.darkHunter`.
+ * При `themeVersion='Krit'` будут применяться классы `.light`, `.lightKrit` и `.dark`, `.darkKrit`.
+ * При `themeVersion='NordGold'` будут применяться классы `.light`, `.lightNordGold` и `.dark`, `.darkNordGold`.
+ * При `themeVersion='Hunter'` будут применяться классы `.light`, `.lightHunter` и `.dark`, `.darkHunter`.
  * Эти классы должны быть определены в соответствующем CSS файле (например, `colorsKrit.css`, `colorsNordGold.css`, `colorsHunter.css`).
+ * Базовые классы `.light` и `.dark` всегда добавляются вместе с классами версии темы.
  *
  * **Важно:**
  * - Значение `themeVersion` должно точно соответствовать постфиксу в CSS классах
@@ -155,34 +156,32 @@ export function ThemeProvider({
     () => (localStorage.getItem(storageKey) as Theme) || defaultTheme,
   );
 
-  const getThemeClass = useCallback(
-    (baseTheme: 'dark' | 'light'): string => {
-      return themeVersion ? `${baseTheme}${themeVersion}` : baseTheme;
-    },
-    [themeVersion],
-  );
-
   useEffect(() => {
     const root = window.document.documentElement;
 
     // Удаляем все классы тем, которые начинаются с 'light' или 'dark'
-    const classesToRemove = Array.from(root.classList).filter(
-      className => className.startsWith('light') || className.startsWith('dark'),
-    );
-    classesToRemove.forEach(className => root.classList.remove(className));
+    Array.from(root.classList)
+      .filter(className => className.startsWith('light') || className.startsWith('dark'))
+      .forEach(className => root.classList.remove(className));
+
+    // Определяем базовую тему (light или dark)
+    const baseTheme: 'light' | 'dark' =
+      theme === 'system'
+        ? window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light'
+        : theme;
 
     if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light';
-      const themeClass = getThemeClass(systemTheme);
-      setTheme(systemTheme);
-      root.classList.add(themeClass);
-    } else {
-      const themeClass = getThemeClass(theme);
-      root.classList.add(themeClass);
+      setTheme(baseTheme);
     }
-  }, [theme, getThemeClass]);
+
+    // Добавляем базовый класс и класс с версией (если указана)
+    root.classList.add(baseTheme);
+    if (themeVersion) {
+      root.classList.add(`${baseTheme}${themeVersion}`);
+    }
+  }, [theme, themeVersion]);
 
   const value: ThemeProviderState = {
     theme,
