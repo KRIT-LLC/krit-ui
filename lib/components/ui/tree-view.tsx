@@ -1,6 +1,5 @@
 import { Fragment, ReactNode } from 'react';
-import cn from 'classnames';
-
+import { cn } from '@/utils';
 import { ArrowDropDownIcon } from '@/assets';
 
 export interface TreeNode<T = unknown> {
@@ -82,16 +81,8 @@ export interface TreeViewProps<T extends TreeNode> {
  * ```
  */
 export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
-  const {
-    nodes,
-    selected,
-    config,
-    headers,
-    className,
-    columnWidths,
-    columnAlignments,
-    onExpand,
-  } = props;
+  const { nodes, selected, config, headers, className, columnWidths, columnAlignments, onExpand } =
+    props;
 
   const getColumnWidth = (index: number): React.CSSProperties | undefined => {
     if (!columnWidths || !columnWidths[index]) return undefined;
@@ -154,10 +145,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
 
       return (
         <Fragment key={nodeId}>
-          <tr
-            onClick={() => node.onClick?.()}
-            onDoubleClick={() => node.onDoubleClick?.()}
-          >
+          <tr onClick={() => node.onClick?.()} onDoubleClick={() => node.onDoubleClick?.()}>
             <td
               className={cn('p-0', {
                 'bg-background-primary-selected': isSelected,
