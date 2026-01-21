@@ -26,7 +26,7 @@ interface PageLayoutProps {
  */
 export const PageLayout = ({ headerSlot, filterSlot, contentSlot }: PageLayoutProps) => {
   return (
-    <div className='relative min-h-screen flex flex-col py-4 gap-4'>
+    <div className='relative min-h-screen flex flex-col pt-4 gap-4'>
       {(headerSlot || filterSlot) && (
         <div className='px-8 flex flex-col gap-4'>
           {headerSlot && <div>{headerSlot}</div>}

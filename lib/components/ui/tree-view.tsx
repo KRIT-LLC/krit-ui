@@ -147,12 +147,11 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
         <Fragment key={nodeId}>
           <tr onClick={() => node.onClick?.()} onDoubleClick={() => node.onDoubleClick?.()}>
             <td
-              className={cn('p-0', {
+              className={cn('p-0 border-r border-line-primary', {
                 'bg-background-primary-selected': isSelected,
+                'border-r-0': cellValues.length === 0,
               })}
-              style={{
-                ...getColumnWidth(0),
-              }}
+              style={getColumnWidth(0)}
             >
               <div className='flex items-stretch'>
                 {/* Spacers for indentation and guide lines */}
@@ -180,7 +179,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
 
                 <div className='flex items-center py-1 flex-1 min-w-0 relative'>
                   {/* Vertical line from parent icon to children */}
-                  {hasNested && isExpanded && (
+                  {!!children?.length && isExpanded && (
                     <div className='absolute left-3 top-1/2 bottom-0 w-[1px] -translate-x-1/2 bg-line-contrast' />
                   )}
                   <div className='relative z-10 flex'>
@@ -216,11 +215,12 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
             {cellValues.map((value, index) => (
               <td
                 key={index}
-                className={cn('py-1 align-middle', {
+                className={cn('py-1 align-middle border-r border-line-primary', {
                   'text-left': getColumnAlignment(index + 1) === 'left',
                   'text-center': getColumnAlignment(index + 1) === 'center',
                   'text-right': getColumnAlignment(index + 1) === 'right',
                   'bg-background-primary-selected': isSelected,
+                  'border-r-0': index === cellValues.length - 1,
                 })}
                 style={getColumnWidth(index + 1)}
               >
@@ -228,7 +228,13 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
               </td>
             ))}
           </tr>
-          {!!children?.length && isExpanded && renderNodes(children, [...guides, !isLastChild])}
+          {!!children?.length && isExpanded &&
+            renderNodes(
+              children,
+              isLastChild && guides.length > 0
+                ? [...guides.slice(0, -1), false, false]
+                : [...guides, !isLastChild],
+            )}
         </Fragment>
       );
     });
@@ -244,7 +250,12 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
           <thead className='sticky top-0 z-10 bg-background-secondary'>
             <tr>
               <th
-                className='px-2 py-2 text-left text-foreground-primary text-sm font-medium leading-5 tracking-[0.25px]'
+                className={cn(
+                  'px-2 py-2 text-left text-foreground-primary text-sm font-medium leading-5 tracking-[0.25px] border-r border-line-primary',
+                  {
+                    'border-r-0': headersArray.length === 1,
+                  },
+                )}
                 style={getColumnWidth(0)}
               >
                 {headersArray[0] || ''}
@@ -253,11 +264,12 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
                 <th
                   key={index}
                   className={cn(
-                    'px-2 py-2 text-foreground-primary text-sm font-medium leading-5 tracking-[0.25px]',
+                    'px-2 py-2 text-foreground-primary text-sm font-medium leading-5 tracking-[0.25px] border-r border-line-primary',
                     {
                       'text-left': getColumnAlignment(index + 1) === 'left',
                       'text-center': getColumnAlignment(index + 1) === 'center',
                       'text-right': getColumnAlignment(index + 1) === 'right',
+                      'border-r-0': index === headersArray.slice(1).length - 1,
                     },
                   )}
                   style={getColumnWidth(index + 1)}
