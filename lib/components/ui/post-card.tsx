@@ -9,6 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from './dropdown-menu';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from './resizable';
 
 export interface DropdownAction {
   /** Текст действия */
@@ -278,7 +279,7 @@ const PostCardLeftPanelItem = ({
   return (
     <li
       className={cn(
-        'px-4 py-3 flex flex-col gap-2 text-sm leading-5 border-t border-line-primary last:border-t-0 text-foreground-primary cursor-pointer',
+        'px-4 py-3 flex flex-col gap-2 text-sm leading-5 border-t border-line-primary first:border-t-0 text-foreground-primary cursor-pointer',
         {
           'bg-background-primary-selected': selected,
         },
@@ -353,9 +354,22 @@ const PostCardLeftPanel = ({
 };
 PostCardLeftPanel.displayName = 'PostCardLeftPanel';
 
+export interface PostCardLeftPanelResizableConfig {
+  /** Размер левой панели по умолчанию в процентах */
+  defaultSize?: number;
+  /** Минимальный размер левой панели в процентах */
+  minSize?: number;
+  /** Максимальный размер левой панели в процентах */
+  maxSize?: number;
+  /** ID для автоматического сохранения размера панели */
+  autoSaveId?: string;
+}
+
 interface PostCardProps {
   /** Слот для левой панели (отображается слева, высота равна headerSlot + bodySlot/sidebarSlot) */
   leftPanelSlot?: React.ReactNode;
+  /** Конфигурация для изменения размера левой панели. Если передана, левая панель становится изменяемой */
+  leftPanelResizable?: PostCardLeftPanelResizableConfig;
   /** Слот для заголовка карточки (отображается сверху на всю ширину) */
   headerSlot?: React.ReactNode;
   /** Слот для основного контента карточки (отображается слева) */
@@ -377,11 +391,13 @@ interface PostCardProps {
  * @component
  * @param {PostCardProps} props - Пропсы компонента
  * @param {React.ReactNode} [props.leftPanelSlot] - Слот для левой панели (отображается слева)
+ * @param {PostCardLeftPanelResizableConfig} [props.leftPanelResizable] - Конфигурация для изменения размера левой панели
  * @param {React.ReactNode} [props.headerSlot] - Слот для заголовка карточки
  * @param {React.ReactNode} [props.bodySlot] - Слот для основного контента
  * @param {React.ReactNode} [props.sidebarSlot] - Слот для сайдбара
  * @param {React.ReactNode} [props.contentSlot] - Слот для дополнительного контента (отображается под bodySlot и sidebarSlot)
  * @param {string} [props.className] - Дополнительные CSS-классы
+ * @param {boolean} [props.withTopBorder] - Отображать ли верхнюю границу
  * @returns {JSX.Element}
  *
  * @example
@@ -392,9 +408,18 @@ interface PostCardProps {
  *   sidebarSlot={<PostCardSidebar>...</PostCardSidebar>}
  *   contentSlot={<div>Дополнительный контент</div>}
  * />
+ *
+ * @example
+ * <PostCard
+ *   leftPanelSlot={<PostCardLeftPanel>...</PostCardLeftPanel>}
+ *   leftPanelResizable={{ defaultSize: 25, minSize: 15, maxSize: 50, autoSaveId: 'machinery-panel' }}
+ *   headerSlot={<PostCardHeader titlePrefix="223-CR" titleText="Title" />}
+ *   bodySlot={<PostCardBody sections={[...]} />}
+ * />
  */
 const PostCard = ({
   leftPanelSlot,
+  leftPanelResizable,
   headerSlot,
   bodySlot,
   sidebarSlot,
@@ -408,6 +433,56 @@ const PostCard = ({
     return null;
   }
 
+  const mainContent = (
+    <div className='flex flex-col flex-1 min-w-0'>
+      {headerSlot}
+      {(bodySlot || sidebarSlot) && (
+        <div className='flex gap-6 px-6 py-6'>
+          {bodySlot && <div className='flex-1 min-w-0'>{bodySlot}</div>}
+          {sidebarSlot && <div className='w-[340px] flex-shrink-0'>{sidebarSlot}</div>}
+        </div>
+      )}
+      {contentSlot && <div className='px-6 pb-6'>{contentSlot}</div>}
+    </div>
+  );
+
+  // Если передана конфигурация для Resizable, используем ResizablePanelGroup
+  if (leftPanelSlot && leftPanelResizable) {
+    const { defaultSize = 25, minSize = 15, maxSize = 50, autoSaveId } = leftPanelResizable;
+
+    return (
+      <div
+        className={cn(
+          'bg-background-primary flex w-full h-full',
+          { 'border-t border-line-primary': withTopBorder },
+          className,
+        )}
+      >
+        <ResizablePanelGroup
+          direction='horizontal'
+          className='flex-1 overflow-hidden'
+          autoSaveId={autoSaveId}
+        >
+          <ResizablePanel
+            defaultSize={defaultSize}
+            minSize={minSize}
+            maxSize={maxSize}
+            className='overflow-auto'
+          >
+            <div className='h-full bg-background-primary border-r border-line-primary'>
+              {leftPanelSlot}
+            </div>
+          </ResizablePanel>
+          <ResizableHandle withHandle />
+          <ResizablePanel minSize={50} className='overflow-hidden'>
+            {mainContent}
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      </div>
+    );
+  }
+
+  // Стандартная логика без Resizable
   return (
     <div
       className={cn(
@@ -419,16 +494,7 @@ const PostCard = ({
       {leftPanelSlot && (
         <div className='w-[346px] flex-shrink-0 border-r border-line-primary'>{leftPanelSlot}</div>
       )}
-      <div className='flex flex-col flex-1 min-w-0'>
-        {headerSlot}
-        {(bodySlot || sidebarSlot) && (
-          <div className='flex gap-6 px-6 py-6'>
-            {bodySlot && <div className='flex-1 min-w-0'>{bodySlot}</div>}
-            {sidebarSlot && <div className='w-[340px] flex-shrink-0'>{sidebarSlot}</div>}
-          </div>
-        )}
-        {contentSlot && <div className='px-6 pb-6'>{contentSlot}</div>}
-      </div>
+      {mainContent}
     </div>
   );
 };
