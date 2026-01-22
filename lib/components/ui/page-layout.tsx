@@ -33,7 +33,7 @@ export const PageLayout = ({ headerSlot, filterSlot, contentSlot }: PageLayoutPr
           {filterSlot && <div>{filterSlot}</div>}
         </div>
       )}
-      {contentSlot && <div className='flex-1'>{contentSlot}</div>}
+      {contentSlot && <div className='flex-1 flex flex-col'>{contentSlot}</div>}
     </div>
   );
 };
