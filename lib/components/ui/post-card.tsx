@@ -453,7 +453,7 @@ const PostCard = ({
     return (
       <div
         className={cn(
-          'bg-background-primary flex w-full h-full',
+          'bg-background-primary flex w-full h-full flex-1 flex flex-col',
           { 'border-t border-line-primary': withTopBorder },
           className,
         )}
@@ -467,7 +467,7 @@ const PostCard = ({
             defaultSize={defaultSize}
             minSize={minSize}
             maxSize={maxSize}
-            className='overflow-auto'
+            className='overflow-auto flex-1'
           >
             <div className='h-full bg-background-primary border-r border-line-primary'>
               {leftPanelSlot}
@@ -486,7 +486,7 @@ const PostCard = ({
   return (
     <div
       className={cn(
-        'bg-background-primary flex w-full',
+        'bg-background-primary flex w-full flex-1',
         { 'border-t border-line-primary': withTopBorder },
         className,
       )}
