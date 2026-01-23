@@ -90,7 +90,11 @@ const PostCardHeader = ({
         {titlePrefix && (
           <span className='text-foreground-tertiary whitespace-nowrap'>{titlePrefix}</span>
         )}
-        {titleText && <span className='text-foreground-primary truncate'>{titleText}</span>}
+        {titleText && (
+          <span className='text-foreground-primary truncate' title={titleText}>
+            {titleText}
+          </span>
+        )}
       </div>
       <div className='flex items-center gap-2 flex-shrink-0'>
         {buttonsSlot}
