@@ -300,6 +300,8 @@
 ![search.svg](search.svg)
 #### SearchEmptyIcon
 ![search_empty.svg](search_empty.svg)
+#### SellOutlineIcon
+![sell_outline.svg](sell_outline.svg)
 #### SettingsIcon
 ![settings.svg](settings.svg)
 #### SettingsOutlineIcon

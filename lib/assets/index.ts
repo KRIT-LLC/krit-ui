@@ -149,6 +149,7 @@ export { default as SaveIcon } from '@/assets/save.svg?react';
 export { default as SaveFillIcon } from '@/assets/save_fill.svg?react';
 export { default as SearchIcon } from '@/assets/search.svg?react';
 export { default as SearchEmptyIcon } from '@/assets/search_empty.svg?react';
+export { default as SellOutlineIcon } from '@/assets/sell_outline.svg?react';
 export { default as SettingsIcon } from '@/assets/settings.svg?react';
 export { default as SettingsOutlineIcon } from '@/assets/settings_outline.svg?react';
 export { default as ShoppingBasketIcon } from '@/assets/shopping_basket.svg?react';
