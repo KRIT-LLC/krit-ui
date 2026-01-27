@@ -78,5 +78,6 @@ export * from '@/hooks/useTableStates';
 export * from '@/hooks/useStoredFields';
 export * from '@/lib/attachments';
 export * from '@/hooks/useColumnFilters';
+export * from '@/lib/selectUtils';
 
 export * from '@/assets';
