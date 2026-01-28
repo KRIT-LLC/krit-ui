@@ -5,10 +5,13 @@ import {
   ContentType,
   defaultAccepts,
   MAX_AUDIO_SIZE_MB,
+  MAX_ARCHIVE_SIZE_MB,
+  MAX_EXCEL_SIZE_MB,
   MAX_IMAGE_SIZE_MB,
   MAX_PDF_SIZE_MB,
   MAX_TOTAL_SIZE_MB,
   MAX_VIDEO_SIZE_MB,
+  MAX_WORD_SIZE_MB,
 } from '@/lib/attachments';
 import { compressFile } from '@/lib/file';
 import { Loader2 } from 'lucide-react';
@@ -20,6 +23,10 @@ import AttachFile from '@/assets/attach_file.svg?react';
 import { useConfirm } from '../../hooks/useConfirm';
 import { Input } from './input';
 import { PreviewFull } from './previewFull';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip';
+
+// Типы файлов, которые открываются в модальном окне (не скачиваются)
+const PREVIEW_TYPES: ContentType[] = ['image', 'video', 'audio'];
 
 export interface PreviewsProps {
   className?: string;
@@ -38,6 +45,9 @@ export interface PreviewsProps {
     total?: number;
     audio?: number;
     pdf?: number;
+    word?: number;
+    excel?: number;
+    archive?: number;
   };
   withCompress?: boolean;
   handleFileLimit?: (filetype: ContentType) => void;
@@ -100,6 +110,9 @@ export const Previews = (props: PreviewsProps) => {
       total: MAX_TOTAL_SIZE_MB,
       audio: MAX_AUDIO_SIZE_MB,
       pdf: MAX_PDF_SIZE_MB,
+      word: MAX_WORD_SIZE_MB,
+      excel: MAX_EXCEL_SIZE_MB,
+      archive: MAX_ARCHIVE_SIZE_MB,
     },
     withCompress = true,
     onAdd,
@@ -110,41 +123,61 @@ export const Previews = (props: PreviewsProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation();
 
-  const getType = (attachment?: AttachmentItem) => {
-    const contentType = attachment?.contentType?.split('/')[0].toLowerCase();
-    if (contentType === 'application' && attachment?.contentType?.includes('pdf')) return 'pdf';
-    return contentType as ContentType;
+  // Определение типа файла по MIME типу
+  const getContentTypeFromMime = (mimeType: string): ContentType | null => {
+    const mime = mimeType.toLowerCase();
+    
+    if (mime.includes('pdf')) return 'pdf';
+    if (mime.includes('wordprocessingml') || mime === 'application/msword') return 'word';
+    if (mime.includes('spreadsheetml') || mime.includes('ms-excel')) return 'excel';
+    if (mime === 'application/zip' || mime.includes('rar') || mime.includes('7z')) return 'archive';
+    if (mime.includes('image')) return 'image';
+    if (mime.includes('video')) return 'video';
+    if (mime.includes('audio')) return 'audio';
+    
+    return null;
+  };
+
+  const getType = (attachment?: AttachmentItem): ContentType => {
+    if (!attachment?.contentType) return 'image';
+    return getContentTypeFromMime(attachment.contentType) || 'image';
   };
 
   // Фильтруем битые файлы (без url или contentType)
   const validData = data.filter(item => item?.url && item?.contentType);
 
-  // Фильтруем PDF файлы из навигации слайдера
-  const nonPdfItems = validData.filter(item => getType(item) !== 'pdf');
-  const [currentPreview, setCurrentPreview] = useState<AttachmentItem>(nonPdfItems[0]);
+  // Фильтруем файлы для навигации слайдера (только те, что открываются в модальном окне)
+  const previewableItems = validData.filter(item => PREVIEW_TYPES.includes(getType(item)));
+  const [currentPreview, setCurrentPreview] = useState<AttachmentItem>(previewableItems[0]);
 
   // Обновляем currentPreview при изменении данных
   useEffect(() => {
     const valid = data.filter(item => item?.url && item?.contentType);
-    const nonPdf = valid.filter(item => getType(item) !== 'pdf');
-    setCurrentPreview(prev => (nonPdf.includes(prev) ? prev : nonPdf[0]));
+    const previewable = valid.filter(item => PREVIEW_TYPES.includes(getType(item)));
+    setCurrentPreview(prev => (previewable.includes(prev) ? prev : previewable[0]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   const getPrevHandler = () => {
-    const prevItem = nonPdfItems[nonPdfItems.indexOf(currentPreview) - 1];
+    const prevItem = previewableItems[previewableItems.indexOf(currentPreview) - 1];
     return prevItem ? () => setCurrentPreview(prevItem) : undefined;
   };
 
   const getNextHandler = () => {
-    const nextItem = nonPdfItems[nonPdfItems.indexOf(currentPreview) + 1];
+    const nextItem = previewableItems[previewableItems.indexOf(currentPreview) + 1];
     return nextItem ? () => setCurrentPreview(nextItem) : undefined;
   };
 
   const mbToBytes = (mb: number = 0) => mb * 1024 * 1024;
   const bytesToMb = (bytes: number = 0) => (bytes / (1024 * 1024)).toFixed(2);
-  const isImage = (file: File) => file.type.includes('image');
-  const isAudio = (file: File) => file.type.includes('audio');
-  const isPdf = (file: File) => file.type.includes('pdf');
+  
+  // Используем единую функцию для определения типа файла
+  const isImage = (file: File) => getContentTypeFromMime(file.type) === 'image';
+  const isAudio = (file: File) => getContentTypeFromMime(file.type) === 'audio';
+  const isPdf = (file: File) => getContentTypeFromMime(file.type) === 'pdf';
+  const isWord = (file: File) => getContentTypeFromMime(file.type) === 'word';
+  const isExcel = (file: File) => getContentTypeFromMime(file.type) === 'excel';
+  const isArchive = (file: File) => getContentTypeFromMime(file.type) === 'archive';
 
   const [processing, setProcessing] = useState(false);
 
@@ -153,6 +186,9 @@ export const Previews = (props: PreviewsProps) => {
       if (isImage(file)) return file.size < mbToBytes(maxSizes.image);
       else if (isAudio(file)) return file.size < mbToBytes(maxSizes.audio);
       else if (isPdf(file)) return file.size < mbToBytes(maxSizes.pdf);
+      else if (isWord(file)) return file.size < mbToBytes(maxSizes.word);
+      else if (isExcel(file)) return file.size < mbToBytes(maxSizes.excel);
+      else if (isArchive(file)) return file.size < mbToBytes(maxSizes.archive);
       else return file.size < mbToBytes(maxSizes.video);
     };
 
@@ -163,11 +199,17 @@ export const Previews = (props: PreviewsProps) => {
         audio?: number;
         pdf?: number;
         video?: number;
+        word?: number;
+        excel?: number;
+        archive?: number;
       },
     ) => {
       if (isImage(file)) return maxSizes.image;
       if (isAudio(file)) return maxSizes.audio;
       if (isPdf(file)) return maxSizes.pdf;
+      if (isWord(file)) return maxSizes.word;
+      if (isExcel(file)) return maxSizes.excel;
+      if (isArchive(file)) return maxSizes.archive;
       return maxSizes.video;
     };
 
@@ -193,6 +235,12 @@ export const Previews = (props: PreviewsProps) => {
           notifyError(`${t('audioSizeLimitMB')} ${maxSizes.audio}(MB) (${file.name})`);
         else if (isPdf(file))
           notifyError(`${t('pdfSizeLimitMB')} ${maxSizes.pdf}(MB) (${file.name})`);
+        else if (isWord(file))
+          notifyError(`${t('videoSizeLimitMB')} ${maxSizes.word}(MB) (${file.name})`);
+        else if (isExcel(file))
+          notifyError(`${t('videoSizeLimitMB')} ${maxSizes.excel}(MB) (${file.name})`);
+        else if (isArchive(file))
+          notifyError(`${t('videoSizeLimitMB')} ${maxSizes.archive}(MB) (${file.name})`);
         else notifyError(`${t('videoSizeLimitMB')} ${maxSizes.video}(MB) (${file.name})`);
       }
     }
@@ -271,11 +319,11 @@ export const Previews = (props: PreviewsProps) => {
       )}
       {validData?.map((item, i) => {
         const fileType = getType(item);
-        const isPdf = fileType === 'pdf';
+        const isDownloadable = !PREVIEW_TYPES.includes(fileType);
         const fileName =
           item.fileName ||
           item.url?.split('/').pop() +
-            `.${item.contentType?.split('/').pop() || (fileType === 'video' ? 'mp4' : fileType === 'audio' ? 'mp3' : 'pdf')}`;
+            `.${item.contentType?.split('/').pop() || (fileType === 'video' ? 'mp4' : fileType === 'audio' ? 'mp3' : fileType === 'word' ? 'docx' : fileType === 'excel' ? 'xlsx' : fileType === 'archive' ? 'zip' : 'pdf')}`;
 
         // Рендеринг контента файла
         const fileContent = (
@@ -309,9 +357,18 @@ export const Previews = (props: PreviewsProps) => {
               >
                 <VideoFileIcon />
                 {orientation === 'horizontal' && (
-                  <div className='text-sm mt-1 text-foreground-secondary w-full truncate text-center p-0.5'>
-                    {fileName}
-                  </div>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className='text-sm mt-1 text-foreground-secondary w-full truncate text-center p-0.5'>
+                          {fileName}
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{fileName}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 )}
               </div>
             )}
@@ -325,17 +382,27 @@ export const Previews = (props: PreviewsProps) => {
               >
                 <AudioFileIcon />
                 {orientation === 'horizontal' && (
-                  <div className='text-sm mt-1 text-foreground-secondary w-full truncate text-center p-0.5'>
-                    {fileName}
-                  </div>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className='text-sm mt-1 text-foreground-secondary w-full truncate text-center p-0.5'>
+                          {fileName}
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{fileName}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 )}
               </div>
             )}
-            {isPdf && (
+            {isDownloadable && (
               <a
                 href={item.url}
                 target='_blank'
                 rel='noopener noreferrer'
+                download={fileName}
                 className={cn(
                   'flex flex-col items-center justify-center h-full w-full text-icon-theme rounded-lg border-2 border-line-secondary',
                   getSizeClass(),
@@ -343,9 +410,18 @@ export const Previews = (props: PreviewsProps) => {
               >
                 <FileIcon />
                 {orientation === 'horizontal' && (
-                  <div className='text-sm mt-1 text-foreground-secondary w-full truncate text-center p-0.5'>
-                    {fileName}
-                  </div>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className='text-sm mt-1 text-foreground-secondary w-full truncate text-center p-0.5'>
+                          {fileName}
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{fileName}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 )}
               </a>
             )}
@@ -357,7 +433,7 @@ export const Previews = (props: PreviewsProps) => {
             key={item.fileName}
             className={cn(
               'relative select-none',
-              !isPdf && 'cursor-pointer',
+              !isDownloadable && 'cursor-pointer',
               orientation === 'vertical'
                 ? 'grid grid-cols-[130px_1fr] items-center gap-4 w-full h-full'
                 : '',
@@ -365,7 +441,7 @@ export const Previews = (props: PreviewsProps) => {
               orientation === 'horizontal' ? getSizeClass() : '',
             )}
           >
-            {isPdf ? (
+            {isDownloadable ? (
               fileContent
             ) : (
               <PreviewFull
@@ -382,9 +458,18 @@ export const Previews = (props: PreviewsProps) => {
             {orientation === 'vertical' && (
               <div className='flex flex-col justify-start flex-1 h-full py-2 group min-w-0 overflow-hidden'>
                 <div className='flex flex-row gap-2 items-center gap-2 pb-2'>
-                  <span className='text-sm text-foreground-primary line-clamp-2' title={fileName}>
-                    {fileName}
-                  </span>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className='text-sm text-foreground-primary line-clamp-2 cursor-default'>
+                          {fileName}
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{fileName}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                   {(onRemove || item.onRemove) && (
                     <div
                       onClick={() => onRemoveAttachment(item, i)}

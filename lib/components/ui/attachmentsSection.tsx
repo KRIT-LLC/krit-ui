@@ -27,6 +27,9 @@ export interface AttachmentsSectionProps {
     total?: number;
     audio?: number;
     pdf?: number;
+    word?: number;
+    excel?: number;
+    archive?: number;
   };
   /** Включение сжатия изображений */
   withCompress?: boolean;
