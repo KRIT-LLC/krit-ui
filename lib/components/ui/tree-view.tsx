@@ -158,9 +158,10 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
                 {Array.from({ length: level }).map((_, i) => (
                   <div key={i} className='relative w-6 flex-shrink-0'>
                     {/* Vertical line for ancestors */}
-                    {guides[i] && !(i === level - 1 && isLastChild) && (
-                      <div className='absolute left-1/2 top-0 bottom-0 w-[1px] -translate-x-1/2 bg-line-contrast' />
-                    )}
+                    {(guides[i] || (i < level - 1 && guides[level - 1])) &&
+                      !(i === level - 1 && isLastChild) && (
+                        <div className='absolute left-1/2 top-0 bottom-0 w-[1px] -translate-x-1/2 bg-line-contrast' />
+                      )}
                     {/* Connection lines for current level */}
                     {i === level - 1 && (
                       <>
@@ -228,13 +229,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
               </td>
             ))}
           </tr>
-          {!!children?.length && isExpanded &&
-            renderNodes(
-              children,
-              isLastChild && guides.length > 0
-                ? [...guides.slice(0, -1), false, false]
-                : [...guides, !isLastChild],
-            )}
+          {!!children?.length && isExpanded && renderNodes(children, [...guides, !isLastChild])}
         </Fragment>
       );
     });
