@@ -287,6 +287,44 @@ export function DatePicker({ className, locale, iconClassName, ...props }: DateP
     }
   };
 
+  // Нормализация выбора одной даты
+  // Предотвращает сброс выбора при повторном клике на ту же дату
+  const createSingleHandler = (onChange?: SelectSingleEventHandler): SelectSingleEventHandler => {
+    return (selectedDate, selectedDay, activeModifiers, e) => {
+      if (!onChange) return;
+
+      const currentValue = props.selected || props.value;
+
+      // Если выбранная дата совпадает с текущей, оставляем текущую дату
+      // вместо того чтобы сбрасывать выбор (undefined)
+      if (selectedDate === undefined && currentValue && selectedDay) {
+        // Проверяем, совпадает ли выбранный день с текущим значением
+        // Сравниваем только дату без времени
+        if (currentValue instanceof Date) {
+          const currentDateOnly = new Date(
+            currentValue.getFullYear(),
+            currentValue.getMonth(),
+            currentValue.getDate(),
+          );
+          const selectedDateOnly = new Date(
+            selectedDay.getFullYear(),
+            selectedDay.getMonth(),
+            selectedDay.getDate(),
+          );
+
+          if (currentDateOnly.getTime() === selectedDateOnly.getTime()) {
+            // Повторный клик на ту же дату - оставляем текущую дату
+            onChange(currentValue, selectedDay, activeModifiers, e);
+            return;
+          }
+        }
+      }
+
+      // В остальных случаях используем стандартное поведение
+      onChange(selectedDate, selectedDay, activeModifiers, e);
+    };
+  };
+
   // Нормализация выбора диапазона дат
   const createRangeHandler = (onChange?: SelectRangeEventHandler): SelectRangeEventHandler => {
     return (_, selectedDay, activeModifiers, e) => {
@@ -320,7 +358,11 @@ export function DatePicker({ className, locale, iconClassName, ...props }: DateP
     selected: props.selected || props.value,
     onSelect:
       props.onSelect ||
-      (props.mode === 'range' ? createRangeHandler(props.onChange) : props.onChange),
+      (props.mode === 'single'
+        ? createSingleHandler(props.onChange)
+        : props.mode === 'range'
+          ? createRangeHandler(props.onChange)
+          : props.onChange),
   } as DatePickerProps;
 
   // useEffect
