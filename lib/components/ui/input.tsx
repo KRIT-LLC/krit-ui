@@ -51,10 +51,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <input
           type={passwordVisible ? 'text' : type}
           className={cn(
-            'flex h-9 w-full rounded-lg border border-line-primary bg-[transparent] blur-none px-3 pr-[0.95rem] py-2 text-sm tracking-[0.1px] leading-5 transition-colors duration-300 ease-in-out ring-offset-background file:border-0 file:bg-[transparent] file:text-sm font-normal placeholder:text-foreground-secondary focus-visible:outline-none focus-visible:border-line-focused disabled:cursor-not-allowed disabled:opacity-50 truncate line-clamp-1',
+            'flex h-9 w-full rounded-lg border border-line-primary bg-[transparent] blur-none pl-3 py-2 text-sm tracking-[0.1px] leading-5 transition-colors duration-300 ease-in-out ring-offset-background file:border-0 file:bg-[transparent] file:text-sm font-normal placeholder:text-foreground-secondary focus-visible:outline-none focus-visible:border-line-focused disabled:cursor-not-allowed disabled:opacity-50 truncate line-clamp-1',
             error ? 'border-line-error focus-visible:border-line-error' : '',
             !shouldWrapWithRelative && className,
-            (rightIcon || withCount) && 'pr-14',
+            rightIcon || withCount || type === 'password' ? 'pr-8' : 'pr-3',
             props.readOnly && 'cursor-not-allowed pointer-events-none opacity-95',
           )}
           ref={ref}
