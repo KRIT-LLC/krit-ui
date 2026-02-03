@@ -2,6 +2,7 @@ import { Fragment, ReactNode, useMemo, useRef } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { cn } from '@/utils';
 import { ArrowDropDownIcon } from '@/assets';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip';
 
 export interface TreeNode<T = unknown> {
   id: number | string;
@@ -23,6 +24,8 @@ export interface TreeViewConfig<T extends TreeNode> {
   getNodeFooterText: (node: T) => string | undefined;
   getNodeCellValues: (node: T) => ReactNode[];
   getNodeHeadingClassName?: (node: T) => string | undefined;
+  getNodeHeadingMaxLength?: (node: T) => number | undefined;
+  renderTooltip?: (node: T) => ReactNode;
   renderExpandIcon?: (node: T, isExpanded: boolean, onClick: () => void) => ReactNode;
 }
 
@@ -87,6 +90,15 @@ export interface TreeViewProps<T extends TreeNode> {
  * />
  * ```
  */
+const truncateText = (
+  text: string | number | undefined,
+  maxLength: number | undefined,
+): string | number | undefined => {
+  if (!maxLength || text === undefined || text === null) return text;
+  const textStr = String(text);
+  return textStr.length > maxLength ? `${textStr.slice(0, maxLength)}...` : textStr;
+};
+
 export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
   const {
     nodes,
@@ -212,7 +224,9 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
     const hasNested = config.hasNestedNodes(node);
     const isExpanded = config.isNodeExpanded(node);
     const isSelected = selected ? config.isNodeSelected(node, selected) : false;
-    const headingText = config.getNodeHeadingText(node);
+    const headingTextRaw = config.getNodeHeadingText(node);
+    const headingMaxLength = config.getNodeHeadingMaxLength?.(node);
+    const headingText = truncateText(headingTextRaw, headingMaxLength);
     const footerText = config.getNodeFooterText(node);
     const cellValues = config.getNodeCellValues(node);
 
@@ -266,18 +280,41 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
                   : renderDefaultExpandIcon(hasNested, isExpanded, () => onExpand(node))}
               </div>
               <div className='flex flex-col gap-[2px] min-w-0 ml-2'>
-                <span
-                  className={cn(
-                    'text-foreground-primary text-xs font-normal leading-4 truncate',
-                    {
-                      'cursor-pointer': shouldShowCursor,
-                    },
-                    config.getNodeHeadingClassName?.(node),
-                  )}
-                  title={String(headingText ?? '')}
-                >
-                  {headingText}
-                </span>
+                {config.renderTooltip ? (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span
+                          className={cn(
+                            'text-foreground-primary text-xs font-normal leading-4 truncate',
+                            {
+                              'cursor-pointer': shouldShowCursor,
+                            },
+                            config.getNodeHeadingClassName?.(node),
+                          )}
+                        >
+                          {headingText}
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent className='max-w-[300px]'>
+                        {config.renderTooltip(node)}
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                ) : (
+                  <span
+                    className={cn(
+                      'text-foreground-primary text-xs font-normal leading-4 truncate',
+                      {
+                        'cursor-pointer': shouldShowCursor,
+                      },
+                      config.getNodeHeadingClassName?.(node),
+                    )}
+                    title={String(headingText ?? '')}
+                  >
+                    {headingText}
+                  </span>
+                )}
                 {footerText && (
                   <span
                     className='text-foreground-secondary text-xs font-normal leading-4 tracking-[0.4px] truncate'
@@ -321,7 +358,9 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
       const hasNested = config.hasNestedNodes(node);
       const isExpanded = config.isNodeExpanded(node);
       const isSelected = selected ? config.isNodeSelected(node, selected) : false;
-      const headingText = config.getNodeHeadingText(node);
+      const headingTextRaw = config.getNodeHeadingText(node);
+      const headingMaxLength = config.getNodeHeadingMaxLength?.(node);
+      const headingText = truncateText(headingTextRaw, headingMaxLength);
       const footerText = config.getNodeFooterText(node);
       const cellValues = config.getNodeCellValues(node);
 
@@ -376,18 +415,41 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
                       : renderDefaultExpandIcon(hasNested, isExpanded, () => onExpand(node))}
                   </div>
                   <div className='flex flex-col gap-[2px] min-w-0 ml-2'>
-                    <span
-                      className={cn(
-                        'text-foreground-primary text-xs font-normal leading-4 truncate',
-                        {
-                          'cursor-pointer': shouldShowCursor,
-                        },
-                        config.getNodeHeadingClassName?.(node),
-                      )}
-                      title={String(headingText ?? '')}
-                    >
-                      {headingText}
-                    </span>
+                    {config.renderTooltip ? (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <span
+                              className={cn(
+                                'text-foreground-primary text-xs font-normal leading-4 truncate',
+                                {
+                                  'cursor-pointer': shouldShowCursor,
+                                },
+                                config.getNodeHeadingClassName?.(node),
+                              )}
+                            >
+                              {headingText}
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent className='max-w-[300px]'>
+                            {config.renderTooltip(node)}
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ) : (
+                      <span
+                        className={cn(
+                          'text-foreground-primary text-xs font-normal leading-4 truncate',
+                          {
+                            'cursor-pointer': shouldShowCursor,
+                          },
+                          config.getNodeHeadingClassName?.(node),
+                        )}
+                        title={String(headingText ?? '')}
+                      >
+                        {headingText}
+                      </span>
+                    )}
                     {footerText && (
                       <span
                         className='text-foreground-secondary text-xs font-normal leading-4 tracking-[0.4px] truncate'
