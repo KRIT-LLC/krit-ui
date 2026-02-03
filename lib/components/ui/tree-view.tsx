@@ -90,15 +90,6 @@ export interface TreeViewProps<T extends TreeNode> {
  * />
  * ```
  */
-const truncateText = (
-  text: string | number | undefined,
-  maxLength: number | undefined,
-): string | number | undefined => {
-  if (!maxLength || text === undefined || text === null) return text;
-  const textStr = String(text);
-  return textStr.length > maxLength ? `${textStr.slice(0, maxLength)}...` : textStr;
-};
-
 export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
   const {
     nodes,
@@ -224,9 +215,8 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
     const hasNested = config.hasNestedNodes(node);
     const isExpanded = config.isNodeExpanded(node);
     const isSelected = selected ? config.isNodeSelected(node, selected) : false;
-    const headingTextRaw = config.getNodeHeadingText(node);
+    const headingText = config.getNodeHeadingText(node);
     const headingMaxLength = config.getNodeHeadingMaxLength?.(node);
-    const headingText = truncateText(headingTextRaw, headingMaxLength);
     const footerText = config.getNodeFooterText(node);
     const cellValues = config.getNodeCellValues(node);
 
@@ -292,6 +282,9 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
                             },
                             config.getNodeHeadingClassName?.(node),
                           )}
+                          style={
+                            headingMaxLength ? { maxWidth: `${headingMaxLength}ch` } : undefined
+                          }
                         >
                           {headingText}
                         </span>
@@ -310,6 +303,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
                       },
                       config.getNodeHeadingClassName?.(node),
                     )}
+                    style={headingMaxLength ? { maxWidth: `${headingMaxLength}ch` } : undefined}
                     title={String(headingText ?? '')}
                   >
                     {headingText}
@@ -358,9 +352,8 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
       const hasNested = config.hasNestedNodes(node);
       const isExpanded = config.isNodeExpanded(node);
       const isSelected = selected ? config.isNodeSelected(node, selected) : false;
-      const headingTextRaw = config.getNodeHeadingText(node);
+      const headingText = config.getNodeHeadingText(node);
       const headingMaxLength = config.getNodeHeadingMaxLength?.(node);
-      const headingText = truncateText(headingTextRaw, headingMaxLength);
       const footerText = config.getNodeFooterText(node);
       const cellValues = config.getNodeCellValues(node);
 
@@ -427,6 +420,9 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
                                 },
                                 config.getNodeHeadingClassName?.(node),
                               )}
+                              style={
+                                headingMaxLength ? { maxWidth: `${headingMaxLength}ch` } : undefined
+                              }
                             >
                               {headingText}
                             </span>
@@ -445,6 +441,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
                           },
                           config.getNodeHeadingClassName?.(node),
                         )}
+                        style={headingMaxLength ? { maxWidth: `${headingMaxLength}ch` } : undefined}
                         title={String(headingText ?? '')}
                       >
                         {headingText}
