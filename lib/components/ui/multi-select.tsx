@@ -59,6 +59,7 @@ export interface MultiSelectProps {
   autoSelectSingleOption?: boolean;
   onCreate?: (query: string) => void;
   renderOption?: (option: MultiSelectOptionType, isChecked: boolean) => React.ReactNode;
+  renderBadge?: (option: MultiSelectOptionType, onRemove: () => void) => React.ReactNode;
   onRefetch?: () => void;
   onOpenChange?: (open: boolean) => void;
   onSearch?: (value: string) => void;
@@ -122,6 +123,7 @@ const CommandAddItem = ({
  * @param {boolean} [props.required] - Флаг обязательного поля
  * @param {boolean} [props.showBadge=false] - Флаг отображения выбранных значений в виде бейджей
  * @param {number} [props.maxVisibleRowsBadge] - Максимальное количество строк для отображения бейджей
+ * @param {(option: MultiSelectOptionType, onRemove: () => void) => React.ReactNode} [props.renderBadge] - Функция для кастомного рендеринга бейджа выбранного элемента
  * @param {string} [props.defaultSearchedValue] - Значение поиска по умолчанию
  * @param {string} [props.createLabel] - Текст для создания новой опции
  * @param {boolean} [props.autoSelectSingleOption] - Автоматически выбирать единственную доступную опцию
@@ -175,6 +177,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
       autoSelectSingleOption,
       onCreate,
       renderOption,
+      renderBadge,
       onRefetch,
       onOpenChange,
       onSearch,
@@ -402,6 +405,23 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
           {visibleBadges.map(selectedValue => {
             const option = filteredActualOptions.find(opt => opt.value === selectedValue);
             if (option) {
+              const handleRemove = (e?: React.MouseEvent) => {
+                if (e) {
+                  e.stopPropagation();
+                }
+                handleSelect(option);
+              };
+
+              // Если передана функция renderBadge, используем её
+              if (renderBadge) {
+                return (
+                  <React.Fragment key={option.value}>
+                    {renderBadge(option, handleRemove)}
+                  </React.Fragment>
+                );
+              }
+
+              // Иначе используем стандартный рендеринг
               return (
                 <div
                   key={option.value}
@@ -410,10 +430,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
                   <span className='truncate whitespace-nowrap w-[100px]'>{option.label}</span>
                   <span
                     className='w-5 h-5 flex items-center justify-center cursor-pointer rounded-full bg-background-primary'
-                    onClick={e => {
-                      e.stopPropagation();
-                      handleSelect(option);
-                    }}
+                    onClick={handleRemove}
                   >
                     <CloseIcon className='w-4 h-4 bg-icon-tertiary text-foreground-tertiary' />
                   </span>
@@ -430,7 +447,15 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
           )}
         </div>
       );
-    }, [value, filteredActualOptions, handleSelect, showBadge, maxVisibleRowsBadge, valueText]);
+    }, [
+      value,
+      filteredActualOptions,
+      handleSelect,
+      showBadge,
+      maxVisibleRowsBadge,
+      valueText,
+      renderBadge,
+    ]);
 
     const itemBaseClass =
       'relative flex cursor-default select-none items-center text-sm outline-none rounded-none py-2 px-3 aria-selected:bg-background-theme-fade aria-selected:text-foreground';
