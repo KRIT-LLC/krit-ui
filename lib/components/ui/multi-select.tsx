@@ -253,22 +253,38 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
 
     const [expandedGroups, setExpandedGroups] = React.useState<Record<string, boolean>>({});
 
+    // Рекурсивная функция для инициализации expandedGroups для всех уровней вложенности
+    const initializeExpandedGroups = React.useCallback(
+      (
+        opts: InternalMultiSelectOptionType[],
+        result: Record<string, boolean>,
+      ): Record<string, boolean> => {
+        opts.forEach(opt => {
+          const key = String(opt.value);
+          if (typeof opt.value !== 'symbol') {
+            // Используем defaultExpanded из опции, если задан, иначе сохраняем текущее состояние или false
+            if (result[key] === undefined) {
+              result[key] = opt.defaultExpanded ?? false;
+            }
+            // Рекурсивно обрабатываем children, если это группы
+            const children = opt.children || [];
+            if (Array.isArray(children) && children.length > 0) {
+              initializeExpandedGroups(children as InternalMultiSelectOptionType[], result);
+            }
+          }
+        });
+        return result;
+      },
+      [],
+    );
+
     React.useEffect(() => {
       if (!hasGroups) return;
       setExpandedGroups(prev => {
         const next: Record<string, boolean> = { ...prev };
-        internalOptions.forEach(opt => {
-          const key = String(opt.value);
-          if (typeof opt.value !== 'symbol') {
-            // Используем defaultExpanded из опции, если задан, иначе сохраняем текущее состояние или false
-            if (next[key] === undefined) {
-              next[key] = opt.defaultExpanded ?? false;
-            }
-          }
-        });
-        return next;
+        return initializeExpandedGroups(internalOptions, next);
       });
-    }, [internalOptions, hasGroups]);
+    }, [internalOptions, hasGroups, initializeExpandedGroups]);
 
     const toggleGroup = React.useCallback((groupValue: string | typeof ALL_VALUE) => {
       if (typeof groupValue === 'symbol') return;
@@ -519,6 +535,89 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
       [getOptionKey, itemBaseClass, handleSelect, renderItemContent],
     );
 
+    // Рекурсивная функция для рендеринга групп любого уровня вложенности
+    const renderGroupRecursive = React.useCallback(
+      (group: InternalMultiSelectOptionType, level: number = 0): React.ReactNode => {
+        const groupKey = String(group.value);
+        const children = group.children || [];
+        const isGroup = Array.isArray(children) && children.length > 0;
+
+        if (!isGroup) {
+          // Если это не группа, рендерим как обычную опцию
+          const isChecked = value.includes(group.value as string);
+          const itemHidden = shouldFilter
+            ? !group.label.toLowerCase().includes(search.toLowerCase())
+            : false;
+          return renderCommandItem({
+            opt: group,
+            isChecked,
+            hidden: itemHidden,
+            onSelect: () => handleSelect(group),
+          });
+        }
+
+        // Это группа - рендерим с возможностью раскрытия/сворачивания
+        const expanded = !!expandedGroups[groupKey];
+        const matchesSearch = shouldFilter
+          ? group.label.toLowerCase().includes(search.toLowerCase())
+          : true;
+        const visibleChildren = shouldFilter
+          ? children.filter(c => (c.label || '').toLowerCase().includes(search.toLowerCase()))
+          : children;
+
+        return (
+          <div key={groupKey} className='flex flex-col'>
+            <div
+              className={cn(
+                'flex items-center text-sm px-3 py-2 cursor-pointer select-none',
+                'hover:bg-background-theme-fade',
+                group.disabled && 'opacity-50 pointer-events-none cursor-not-allowed',
+                !matchesSearch && visibleChildren.length === 0 && 'hidden',
+              )}
+              onClick={() => toggleGroup(group.value)}
+            >
+              <ExpandMoreIcon
+                className={cn(
+                  'w-4 h-4 mr-2 text-icon-fade-contrast transition-transform',
+                  expanded ? 'rotate-180' : 'rotate-0',
+                )}
+              />
+              <span title={group.label} className='truncate'>
+                {group.label}
+              </span>
+            </div>
+
+            <div
+              className={cn(
+                'pl-6 overflow-hidden transition-[max-height] duration-200 ease-in-out',
+                expanded ? 'max-h-[999px]' : 'max-h-0',
+              )}
+            >
+              {visibleChildren.length === 0 ? (
+                <div className='py-2 px-3 text-sm text-muted-foreground select-none'>
+                  {t('notFound')}
+                </div>
+              ) : (
+                visibleChildren.map(child =>
+                  renderGroupRecursive(child as InternalMultiSelectOptionType, level + 1),
+                )
+              )}
+            </div>
+          </div>
+        );
+      },
+      [
+        expandedGroups,
+        shouldFilter,
+        search,
+        toggleGroup,
+        value,
+        handleSelect,
+        renderCommandItem,
+        t,
+      ],
+    );
+
     return (
       <Popover open={open} onOpenChange={onOpenChange} modal={true} {...props}>
         <PopoverTrigger asChild>
@@ -644,82 +743,9 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
                       onSelect: () => handleSelect(allOption),
                     })}
 
-                  {internalOptions.map(opt => {
-                    const group = opt as InternalMultiSelectOptionType;
-                    const groupKey = String(group.value);
-                    const children = group.children || [];
-                    const isGroup = Array.isArray(children);
-
-                    // Search filtering per group/children (does not affect expand/collapse visibility)
-                    const matchesSearch = shouldFilter
-                      ? group.label.toLowerCase().includes(search.toLowerCase())
-                      : true;
-                    const visibleChildren = shouldFilter
-                      ? children.filter(c =>
-                          (c.label || '').toLowerCase().includes(search.toLowerCase()),
-                        )
-                      : children;
-
-                    if (isGroup) {
-                      const expanded = !!expandedGroups[groupKey];
-                      return (
-                        <div key={groupKey} className='flex flex-col'>
-                          <div
-                            className={cn(
-                              'flex items-center text-sm px-3 py-2 cursor-pointer select-none',
-                              'hover:bg-background-theme-fade',
-                              group.disabled && 'opacity-50 pointer-events-none cursor-not-allowed',
-                              !matchesSearch && visibleChildren.length === 0 && 'hidden',
-                            )}
-                            onClick={() => toggleGroup(group.value)}
-                          >
-                            <ExpandMoreIcon
-                              className={cn(
-                                'w-4 h-4 mr-2 text-icon-fade-contrast transition-transform',
-                                expanded ? 'rotate-180' : 'rotate-0',
-                              )}
-                            />
-                            <span title={group.label} className='truncate'>
-                              {group.label}
-                            </span>
-                          </div>
-
-                          <div
-                            className={cn(
-                              'pl-6 overflow-hidden transition-[max-height] duration-200 ease-in-out',
-                              expanded ? 'max-h-[999px]' : 'max-h-0',
-                            )}
-                          >
-                            {children.length === 0 ? (
-                              <div className='py-2 px-3 text-sm text-muted-foreground select-none'>
-                                {t('notFound')}
-                              </div>
-                            ) : (
-                              visibleChildren.map(child =>
-                                renderCommandItem({
-                                  opt: child,
-                                  isChecked: value.includes(child.value),
-                                  onSelect: () => handleSelect(child),
-                                }),
-                              )
-                            )}
-                          </div>
-                        </div>
-                      );
-                    }
-
-                    // Render as a simple item if no children
-                    const isChecked = value.includes(group.value as string);
-                    const itemHidden = shouldFilter
-                      ? !group.label.toLowerCase().includes(search.toLowerCase())
-                      : false;
-                    return renderCommandItem({
-                      opt: group,
-                      isChecked,
-                      hidden: itemHidden,
-                      onSelect: () => handleSelect(group),
-                    });
-                  })}
+                  {internalOptions.map(opt =>
+                    renderGroupRecursive(opt as InternalMultiSelectOptionType),
+                  )}
                 </div>
               )}
             </CommandList>
