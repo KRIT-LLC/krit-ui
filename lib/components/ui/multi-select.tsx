@@ -311,6 +311,9 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
       (option: InternalMultiSelectOptionType | MultiSelectOptionType) => {
         if (!onChange) return;
 
+        // Блокируем выбор disabled опций
+        if (option.disabled) return;
+
         if (option.value === ALL_VALUE) {
           if (isAllSelected) {
             onChange([], []);
@@ -525,8 +528,16 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
             itemBaseClass,
             isChecked && 'bg-background-theme-fade text-foreground',
             hidden && 'hidden',
+            opt?.disabled && 'cursor-not-allowed opacity-60',
           )}
-          onSelect={onSelect || (() => handleSelect(opt))}
+          onSelect={() => {
+            if (opt?.disabled) return;
+            if (onSelect) {
+              onSelect();
+            } else {
+              handleSelect(opt);
+            }
+          }}
           disabled={opt?.disabled}
         >
           {renderItemContent(opt, isChecked)}
@@ -552,7 +563,6 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
             opt: group,
             isChecked,
             hidden: itemHidden,
-            onSelect: () => handleSelect(group),
           });
         }
 
@@ -606,16 +616,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
           </div>
         );
       },
-      [
-        expandedGroups,
-        shouldFilter,
-        search,
-        toggleGroup,
-        value,
-        handleSelect,
-        renderCommandItem,
-        t,
-      ],
+      [expandedGroups, shouldFilter, search, toggleGroup, value, renderCommandItem, t],
     );
 
     return (
@@ -740,7 +741,6 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
                     renderCommandItem({
                       opt: allOption,
                       isChecked: isAllSelected,
-                      onSelect: () => handleSelect(allOption),
                     })}
 
                   {internalOptions.map(opt =>
