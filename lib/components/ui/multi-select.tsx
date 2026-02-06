@@ -199,18 +199,19 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
 
     const filteredActualOptions = React.useMemo(() => {
       const flat: MultiSelectOptionType[] = [];
-      options.forEach(opt => {
-        const children = (opt as unknown as InternalMultiSelectOptionType)?.children as
-          | MultiSelectOptionType[]
-          | undefined;
-        if (Array.isArray(children) && children.length > 0) {
-          children.forEach(child => {
-            if (!child.hidden) flat.push(child);
-          });
-        } else {
-          if (!opt.hidden) flat.push(opt);
-        }
-      });
+      const collectLeaves = (opts: MultiSelectOptionType[]): void => {
+        opts.forEach(opt => {
+          const children = (opt as unknown as InternalMultiSelectOptionType)?.children as
+            | MultiSelectOptionType[]
+            | undefined;
+          if (Array.isArray(children) && children.length > 0) {
+            collectLeaves(children);
+          } else {
+            if (!opt.hidden) flat.push(opt);
+          }
+        });
+      };
+      collectLeaves(options);
       return flat;
     }, [options]);
 
