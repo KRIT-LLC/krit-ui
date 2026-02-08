@@ -42,7 +42,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       <div
         ref={ref}
         className={cn(
-          'relative rounded-lg border border-line-primary transition duration-100 ease-in-out',
+          'flex flex-col gap-1 px-5 py-3 relative rounded-lg border border-line-primary transition duration-100 ease-in-out',
           onClick && 'cursor-pointer',
           checked &&
             'ring-[3px] ring-primary bg-background-primary-selected border-b-line-secondary',
@@ -71,8 +71,12 @@ interface CardHeaderProps {
 }
 /**
  * Заголовок карточки с возможностью выбора
- * @typedef {Object} CardHeaderProps
- * @property {React.ReactNode} [right] - Элементы справа от заголовка
+ */
+interface CardHeaderProps {
+  // Элементы справа от заголовка
+  right?: React.ReactNode;
+}
+/**
  * @extends CardProps
  */
 const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
@@ -80,18 +84,16 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
     return (
       <div
         ref={ref}
-        className={cn('flex flex-col space-y-1.5 px-5 pt-3 pb-1 text-sm font-normal', className)}
+        className={cn('flex flex-col space-y-1.5 pb-1 text-sm font-normal', className)}
         {...props}
       >
-        <div className='flex items-center'>
+        <div className='flex items-center gap-2'>
           {onSelect && (
-            <div className='w-6 h-6 p-[2px] mr-2'>
-              <Checkbox
-                checked={checked}
-                onClick={e => e.stopPropagation()}
-                onCheckedChange={checked => onSelect(!!checked)}
-              />
-            </div>
+            <Checkbox
+              checked={checked}
+              onClick={e => e.stopPropagation()}
+              onCheckedChange={checked => onSelect(!!checked)}
+            />
           )}
           <div className='w-full flex justify-between items-center'>
             <div className='flex gap-3 text-foreground/50 items-center'>
@@ -112,20 +114,20 @@ CardHeader.displayName = 'CardHeader';
 
 interface CardTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
   leftOffset?: boolean;
-  showArrow?: boolean;
 }
 /**
  * Основной заголовок карточки
- * @typedef {Object} CardTitleProps
- * @property {boolean} [leftOffset] - Сдвиг вправо для выравнивания
- * @property {boolean} [showArrow] - Показать стрелку справа
  */
+interface CardTitleProps {
+  // Сдвиг вправо для выравнивания
+  leftOffset?: boolean;
+}
 const CardTitle = React.forwardRef<HTMLParagraphElement, CardTitleProps>(
-  ({ className, leftOffset, showArrow, children, ...props }, ref) => (
+  ({ className, leftOffset = false, children, ...props }, ref) => (
     <h3
       ref={ref}
       className={cn(
-        'px-5 pr-10 text-sm flex gap-2 font-normal leading-6',
+        'pr-10 text-sm flex gap-2 font-normal leading-6',
         leftOffset && 'ml-8',
         className,
       )}
@@ -133,7 +135,6 @@ const CardTitle = React.forwardRef<HTMLParagraphElement, CardTitleProps>(
     >
       <div className='w-full flex justify-between items-center'>
         <div className='w-full break-words inline-block'>{children}</div>
-        <div className='text-foreground/50'>{showArrow && <ChevronRight />}</div>
       </div>
     </h3>
   ),
@@ -150,7 +151,7 @@ const CardDescription = React.forwardRef<HTMLParagraphElement, CardDescriptionPr
     <div
       ref={ref}
       className={cn(
-        'px-5 pr-10 pt-0 text-sm font-normal text-foreground/60',
+        'pr-10 pt-0 text-sm font-normal text-foreground/60',
         leftOffset && 'ml-8',
         className,
       )}
@@ -167,19 +168,17 @@ CardDescription.displayName = 'CardDescription';
 
 interface CardContentProps extends React.HTMLAttributes<HTMLDivElement> {
   leftOffset?: boolean;
-  showArrow?: boolean;
 }
 
 const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
-  ({ className, leftOffset, showArrow, children, ...props }, ref) => (
+  ({ className, leftOffset, children, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('px-5 pt-0 text-sm font-normal', leftOffset && 'ml-8', className)}
+      className={cn('pt-0 text-sm font-normal', leftOffset && 'ml-8', className)}
       {...props}
     >
       <div className='flex justify-between items-center'>
         <div>{children}</div>
-        <div className='text-foreground/50'>{showArrow && <ChevronRight />}</div>
       </div>
     </div>
   ),
@@ -194,7 +193,7 @@ const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
   ({ className, leftOffset, children, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('flex items-center p-5 pt-1 pb-3', leftOffset && 'ml-8', className)}
+      className={cn('flex items-center pt-1 pb-3', leftOffset && 'ml-8', className)}
       {...props}
     >
       <div className='flex gap-3 text-sm text-foreground-secondary items-center'>
@@ -220,10 +219,13 @@ interface CardEditActionsProps {
 }
 /**
  * Действия редактирования карточки (сохранение/удаление)
- * @typedef {Object} CardEditActionsProps
- * @property {(e: ActionClickEvent) => Promise<void> | void} [onSave] - Колбэк сохранения
- * @property {(e: ActionClickEvent) => Promise<void> | void} [onRemove] - Колбэк удаления
  */
+interface CardEditActionsProps {
+  // Колбэк сохранения
+  onSave?: (e: ActionClickEvent) => Promise<void> | void;
+  // Колбэк удаления
+  onRemove?: (e: ActionClickEvent) => Promise<void> | void;
+}
 const CardEditActions = ({ onSave, onRemove }: CardEditActionsProps) => {
   const [isSaving, setIsSaving] = React.useState(false);
   const [isRemoving, setIsRemoving] = React.useState(false);
@@ -251,7 +253,7 @@ const CardEditActions = ({ onSave, onRemove }: CardEditActionsProps) => {
       {onSave && (
         <Save
           className={cn(
-            'w-7 h-7 text-primary',
+            'w-6 h-6 text-primary',
             isSaving ? 'opacity-20 pointer-events-none' : 'cursor-pointer',
           )}
           onClick={handleSaveClick}
@@ -260,7 +262,7 @@ const CardEditActions = ({ onSave, onRemove }: CardEditActionsProps) => {
       {onRemove && (
         <Delete
           className={cn(
-            'text-destructive-foreground',
+            'w-6 h-6 text-destructive',
             isRemoving ? 'opacity-20 pointer-events-none' : 'cursor-pointer',
           )}
           onClick={handleRemoveClick}

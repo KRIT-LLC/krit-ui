@@ -48,7 +48,7 @@ export const WithArrow: StoryObj<typeof Card> = {
   args: { showArrow: true },
   render: args => (
     <Card {...args} className='w-[400px]'>
-      <CardTitle showArrow>Card with Arrow</CardTitle>
+      <CardTitle>Card with Arrow</CardTitle>
       <CardContent>Hover to see arrow interaction</CardContent>
     </Card>
   ),
@@ -85,25 +85,29 @@ export const WithEditActions: StoryObj<typeof Card> = {
 };
 
 export const FullFeaturedCard: StoryObj<typeof Card> = {
-  render: () => (
-    <Card className='w-[500px]'>
-      <CardHeader right={<span>🆕 New item</span>}>
-        <CardTitle leftOffset>Featured Card</CardTitle>
-        <CardDescription>Detailed description</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className='space-y-2'>
-          <p>Main content section</p>
-          <ul className='list-disc pl-4'>
-            <li>Feature 1</li>
-            <li>Feature 2</li>
-          </ul>
-        </div>
-      </CardContent>
-      <CardFooter>
-        <span>Created: 2024-03-15</span>
-        <span>Author: John Doe</span>
-      </CardFooter>
-    </Card>
-  ),
+  render: () => {
+    const [checked, setChecked] = React.useState(false);
+
+    return (
+      <Card className='w-[500px]'>
+        <CardHeader right={<span>🆕 New item</span>} checked={checked} onSelect={setChecked}>
+          <CardTitle leftOffset>Featured Card</CardTitle>
+          <CardDescription>Detailed description</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className='space-y-2'>
+            <p>Main content section</p>
+            <ul className='list-disc pl-4'>
+              <li>Feature 1</li>
+              <li>Feature 2</li>
+            </ul>
+          </div>
+        </CardContent>
+        <CardFooter>
+          <span>Created: 2024-03-15</span>
+          <span>Author: John Doe</span>
+        </CardFooter>
+      </Card>
+    );
+  },
 };

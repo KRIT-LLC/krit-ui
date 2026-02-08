@@ -35,6 +35,9 @@
     --krit-muted: 210 40% 96.1%;
     --krit-muted-foreground: 0 0% 66%;
 
+    --krit-destructive: 354 70% 58%;
+    --krit-destructive-foreground: 0 0% 100%;
+
     --krit-radius: 0.5rem;
   }
 
@@ -62,6 +65,8 @@
     --krit-purple: 241 98% 69%;
     --krit-muted: 223 47% 11%;
     --krit-muted-foreground: 0 0% 52%;
+    --krit-destructive: 355 65% 45%;
+    --krit-destructive-foreground: 0 0% 100%;
   }
 }
 
