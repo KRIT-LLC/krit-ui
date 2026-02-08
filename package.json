@@ -52,6 +52,7 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@react-input/mask": "^2.0.4",
     "@tanstack/react-table": "^8.21.3",
+    "@tanstack/react-virtual": "^3.13.18",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
