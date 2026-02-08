@@ -45,7 +45,7 @@ export const Basic: Story = {
     <Table {...args}>
       <TableCaption>Список сотрудников</TableCaption>
       <TableHeader>
-        <TableRow>
+        <TableRow isHeader>
           <TableHead>Имя</TableHead>
           <TableHead>Должность</TableHead>
           <TableHead>Отдел</TableHead>
@@ -89,7 +89,7 @@ export const WithFooter: Story = {
     <Table {...args}>
       <TableCaption>Отчет по продажам за месяц</TableCaption>
       <TableHeader>
-        <TableRow>
+        <TableRow isHeader>
           <TableHead>Товар</TableHead>
           <TableHead>Количество</TableHead>
           <TableHead className='text-right'>Сумма</TableHead>
@@ -134,7 +134,7 @@ export const Striped: Story = {
   render: args => (
     <Table {...args}>
       <TableHeader>
-        <TableRow>
+        <TableRow isHeader>
           <TableHead>Проект</TableHead>
           <TableHead>Статус</TableHead>
           <TableHead>Срок</TableHead>
@@ -187,7 +187,7 @@ export const Compact: Story = {
   render: args => (
     <Table {...args}>
       <TableHeader>
-        <TableRow>
+        <TableRow isHeader>
           <TableHead className='w-[100px]'>ID</TableHead>
           <TableHead>Пользователь</TableHead>
           <TableHead>Email</TableHead>
@@ -230,7 +230,7 @@ export const WithCustomStyles: Story = {
   render: args => (
     <Table {...args} rootClassName='border rounded-lg'>
       <TableHeader>
-        <TableRow className='border-b'>
+        <TableRow className='border-b' isHeader>
           <TableHead className='bg-background-tertiary/50'>Категория</TableHead>
           <TableHead className='bg-background-tertiary/50'>Бюджет</TableHead>
           <TableHead className='bg-background-tertiary/50 text-right'>Факт</TableHead>
@@ -272,7 +272,7 @@ export const WithRowSelection: Story = {
     return (
       <Table {...args}>
         <TableHeader>
-          <TableRow>
+          <TableRow isHeader>
             <TableHead>Название</TableHead>
             <TableHead>Автор</TableHead>
             <TableHead className='text-right'>Год</TableHead>
@@ -313,7 +313,7 @@ export const Empty: Story = {
   render: args => (
     <Table {...args}>
       <TableHeader>
-        <TableRow>
+        <TableRow isHeader>
           <TableHead>Дата</TableHead>
           <TableHead>Событие</TableHead>
           <TableHead className='text-right'>Статус</TableHead>
@@ -342,7 +342,7 @@ export const WithScroll: Story = {
   render: args => (
     <Table {...args} rootClassName='max-w-md border rounded-lg'>
       <TableHeader>
-        <TableRow>
+        <TableRow isHeader>
           <TableHead>Продукт</TableHead>
           <TableHead>Январь</TableHead>
           <TableHead>Февраль</TableHead>
