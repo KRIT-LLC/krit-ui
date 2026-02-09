@@ -54,6 +54,7 @@ interface DataTableProps<TData, TValue> {
   rowHoverContent?: (row: TData) => React.ReactNode;
   hideHeader?: boolean;
   variant?: 'table' | 'list';
+  striped?: boolean;
 }
 
 /**
@@ -116,6 +117,7 @@ export function DataTable<TData, TValue>({
   rowHoverContent,
   hideHeader = false,
   variant = 'table',
+  striped = true,
 }: DataTableProps<TData, TValue>) {
   const wrapperRef = React.useRef<HTMLDivElement>(null);
   const [hoveredRow, setHoveredRow] = React.useState<TData | null>(null);
@@ -199,7 +201,7 @@ export function DataTable<TData, TValue>({
       onMouseLeave={handleRowMouseLeave}
       className={cn('relative flex flex-1 flex-col h-full', className)}
     >
-      <Table>
+      <Table striped={striped}>
         {!hideHeader && (
           <TableHeader
             className={cn(isStickyHeader && 'sticky top-0 bg-background z-20', headerClassName)}
