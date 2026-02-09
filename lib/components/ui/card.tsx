@@ -262,7 +262,7 @@ const CardEditActions = ({ onSave, onRemove }: CardEditActionsProps) => {
       {onRemove && (
         <Delete
           className={cn(
-            'w-6 h-6 text-destructive',
+            'w-6 h-6 text-foreground-error',
             isRemoving ? 'opacity-20 pointer-events-none' : 'cursor-pointer',
           )}
           onClick={handleRemoveClick}

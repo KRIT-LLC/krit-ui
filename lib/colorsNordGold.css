@@ -82,8 +82,6 @@
     --krit-badge-priority-low: 117 76% 34%;
     --krit-badge-priority-middle: 36 100% 52%;
     --krit-badge-priority-no-priority: 227 17% 83%;
-    --krit-destructive: 354 70% 58%;
-    --krit-destructive-foreground: 0 0% 100%;
     --krit-foreground-error: 354 93% 65%;
     --krit-foreground-link: 65 100% 34%;
     --krit-foreground-on-contrast: 0 0% 100%;
@@ -211,8 +209,6 @@
     --krit-badge-priority-low: 117 76% 34%;
     --krit-badge-priority-middle: 36 100% 52%;
     --krit-badge-priority-no-priority: 227 17% 83%;
-    --krit-destructive: 355 65% 45%;
-    --krit-destructive-foreground: 0 0% 100%;
     --krit-foreground-error: 0 0% 100%;
     --krit-foreground-link: 64 100% 31%;
     --krit-foreground-on-contrast: 0 0% 100%;
