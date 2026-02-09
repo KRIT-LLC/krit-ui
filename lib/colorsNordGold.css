@@ -297,12 +297,10 @@
   }
 
   /* Кнопки outline - зеленая обводка (только для кнопок, не для селектов) */
-  .lightNordGold
-    button.border-line-primary:not([data-radix-select-trigger]):not([role='combobox']):not(
+  .lightNordGold button.border-line-primary:not([data-radix-select-trigger]):not([role='combobox']):not(
       [aria-haspopup='listbox']
     ),
-  .darkNordGold
-    button.border-line-primary:not([data-radix-select-trigger]):not([role='combobox']):not(
+  .darkNordGold button.border-line-primary:not([data-radix-select-trigger]):not([role='combobox']):not(
       [aria-haspopup='listbox']
     ) {
     border-color: hsl(var(--krit-line-theme)) !important;
