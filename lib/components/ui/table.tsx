@@ -2,12 +2,6 @@ import * as React from 'react';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/utils';
 
-interface TableContextValue {
-  striped: boolean;
-}
-
-const TableContext = React.createContext<TableContextValue>({ striped: true });
-
 /**
  * Контейнер таблицы с поддержкой прокрутки и базовой стилизацией.
  *
@@ -15,7 +9,6 @@ const TableContext = React.createContext<TableContextValue>({ striped: true });
  * @param {object} props - Параметры компонента
  * @param {string} [props.className] - Дополнительные CSS-классы для элемента table
  * @param {string} [props.rootClassName] - Дополнительные CSS-классы для контейнера
- * @param {boolean} [props.striped=true] - Чередование фона строк (полосатые строки)
  * @param {React.Ref<HTMLTableElement>} ref - Реф для доступа к DOM-элементу таблицы
  * @returns {React.ReactElement} Контейнер таблицы с вложенной таблицей
  */
@@ -23,16 +16,11 @@ const Table = React.forwardRef<
   HTMLTableElement,
   React.HTMLAttributes<HTMLTableElement> & {
     rootClassName?: string;
-    striped?: boolean;
   }
->(({ className, rootClassName, striped = true, children, ...props }, ref) => (
-  <TableContext.Provider value={{ striped }}>
-    <div className={cn('relative w-full h-full flex items-start overflow-auto', rootClassName)}>
-      <table ref={ref} className={cn('w-full caption-bottom text-sm', className)} {...props}>
-        {children}
-      </table>
-    </div>
-  </TableContext.Provider>
+>(({ className, rootClassName, ...props }, ref) => (
+  <div className={cn('relative w-full h-full flex items-start overflow-auto', rootClassName)}>
+    <table ref={ref} className={cn('w-full caption-bottom text-sm', className)} {...props} />
+  </div>
 ));
 Table.displayName = 'Table';
 
@@ -121,26 +109,27 @@ TableFooter.displayName = 'TableFooter';
  */
 const TableRow = React.forwardRef<
   HTMLTableRowElement,
-  React.HTMLAttributes<HTMLTableRowElement> & { dataIndex?: number; variant?: 'table' | 'list' }
->(({ className, dataIndex, variant = 'table', ...props }, ref) => {
-  const { striped } = React.useContext(TableContext);
-  return (
-    <tr
-      ref={ref}
-      data-index={dataIndex}
-      className={cn(
-        variant === 'list'
-          ? 'border-b border-line-primary data-[state=selected]:bg-background-tertiary'
-          : cn(
-              'transition-colors hover:bg-background-primary-hover data-[state=selected]:bg-background-tertiary',
-              striped && 'even:bg-background-secondary',
-            ),
-        className,
-      )}
-      {...props}
-    />
-  );
-});
+  React.HTMLAttributes<HTMLTableRowElement> & {
+    dataIndex?: number;
+    variant?: 'table' | 'list';
+    isHeader?: boolean;
+  }
+>(({ className, dataIndex, variant = 'table', isHeader = false, ...props }, ref) => (
+  <tr
+    ref={ref}
+    data-index={dataIndex}
+    className={cn(
+      variant === 'list'
+        ? 'border-b border-line-primary data-[state=selected]:bg-background-tertiary'
+        : 'transition-colors data-[state=selected]:bg-background-tertiary',
+      !isHeader && variant === 'table'
+        ? 'hover:bg-background-primary-hover even:bg-background-secondary'
+        : '',
+      className,
+    )}
+    {...props}
+  />
+));
 TableRow.displayName = 'TableRow';
 
 /**

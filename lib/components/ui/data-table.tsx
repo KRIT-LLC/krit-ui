@@ -16,9 +16,9 @@ import {
   VisibilityState,
 } from '@tanstack/react-table';
 import { cn } from '@/utils';
+import { Pagination, PaginationProps } from './pagination';
 import { Skeleton } from './skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './table';
-import { Pagination, PaginationProps } from './pagination';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -207,7 +207,12 @@ export function DataTable<TData, TValue>({
             className={cn(isStickyHeader && 'sticky top-0 bg-background z-20', headerClassName)}
           >
             {table.getHeaderGroups().map(headerGroup => (
-              <TableRow key={headerGroup.id} className='border-line-primary' variant={variant}>
+              <TableRow
+                key={headerGroup.id}
+                className='border-line-primary'
+                variant={variant}
+                isHeader
+              >
                 {headerGroup.headers.map(header => {
                   return (
                     <TableHead
@@ -336,7 +341,6 @@ export function DataTable<TData, TValue>({
     </div>
   );
 }
-
 
 interface TruncatedCellProps {
   width?: number;
