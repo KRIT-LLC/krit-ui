@@ -109,15 +109,22 @@ TableFooter.displayName = 'TableFooter';
  */
 const TableRow = React.forwardRef<
   HTMLTableRowElement,
-  React.HTMLAttributes<HTMLTableRowElement> & { dataIndex?: number; variant?: 'table' | 'list' }
->(({ className, dataIndex, variant = 'table', ...props }, ref) => (
+  React.HTMLAttributes<HTMLTableRowElement> & {
+    dataIndex?: number;
+    variant?: 'table' | 'list';
+    isHeader?: boolean;
+  }
+>(({ className, dataIndex, variant = 'table', isHeader = false, ...props }, ref) => (
   <tr
     ref={ref}
     data-index={dataIndex}
     className={cn(
       variant === 'list'
         ? 'border-b border-line-primary data-[state=selected]:bg-background-tertiary'
-        : 'transition-colors hover:bg-background-primary-hover data-[state=selected]:bg-background-tertiary even:bg-background-secondary',
+        : 'transition-colors data-[state=selected]:bg-background-tertiary',
+      !isHeader && variant === 'table'
+        ? 'hover:bg-background-primary-hover even:bg-background-secondary'
+        : '',
       className,
     )}
     {...props}
