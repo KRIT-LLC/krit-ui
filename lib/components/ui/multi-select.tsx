@@ -529,7 +529,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
             itemBaseClass,
             isChecked && 'bg-background-theme-fade text-foreground',
             hidden && 'hidden',
-            opt?.disabled && 'cursor-not-allowed opacity-60',
+            opt?.disabled && 'cursor-not-allowed',
           )}
           onSelect={() => {
             if (opt?.disabled) return;
