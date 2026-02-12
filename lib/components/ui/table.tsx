@@ -128,7 +128,6 @@ const TableRow = React.forwardRef<
   }
 >(({ className, dataIndex, variant = 'table', isHeader = false, ...props }, ref) => {
   const { striped } = React.useContext(TableContext);
-  console.log('striped', striped);
   return (
     <tr
       ref={ref}
