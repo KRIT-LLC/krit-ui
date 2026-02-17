@@ -110,6 +110,8 @@
 ![cup_outline.svg](cup_outline.svg)
 #### DarkModeIcon
 ![dark_mode.svg](dark_mode.svg)
+#### DarkModeOutlineIcon
+![dark_mode_outline.svg](dark_mode_outline.svg)
 #### DashboardIcon
 ![dashboard.svg](dashboard.svg)
 #### DeleteIcon
@@ -218,6 +220,8 @@
 ![legend_toggle.svg](legend_toggle.svg)
 #### LightModeIcon
 ![light_mode.svg](light_mode.svg)
+#### LightModeOutlineIcon
+![light_mode_outline.svg](light_mode_outline.svg)
 #### LocalFireDepartmentIcon
 ![local_fire_department.svg](local_fire_department.svg)
 #### LocationMapOutlineIcon
