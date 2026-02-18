@@ -25,6 +25,8 @@ export interface TreeViewConfig<T extends TreeNode> {
   getNodeCellValues: (node: T) => ReactNode[];
   getNodeHeadingClassName?: (node: T) => string | undefined;
   getNodeHeadingMaxLength?: (node: T) => number | undefined;
+  /** Возвращает готовый ReactNode для footer (например ссылку). Если undefined — рендерится getNodeFooterText в span. */
+  getNodeFooterNode?: (node: T, options: { text: string; className: string }) => ReactNode | undefined;
   renderTooltip?: (node: T) => ReactNode;
   renderExpandIcon?: (node: T, isExpanded: boolean, onClick: () => void) => ReactNode;
 }
@@ -203,6 +205,23 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
     );
   };
 
+  const baseFooterClassName =
+    'text-foreground-secondary text-xs font-normal leading-4 tracking-[0.4px] truncate';
+
+  const renderFooter = (node: T, footerText: string | undefined): ReactNode => {
+    if (!footerText) return null;
+    const customNode = config.getNodeFooterNode?.(node, {
+      text: footerText,
+      className: baseFooterClassName,
+    });
+    if (customNode) return customNode;
+    return (
+      <span className={baseFooterClassName} title={String(footerText)}>
+        {footerText}
+      </span>
+    );
+  };
+
   const renderSingleRow = (
     node: T,
     guides: boolean[],
@@ -309,14 +328,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
                     {headingText}
                   </span>
                 )}
-                {footerText && (
-                  <span
-                    className='text-foreground-secondary text-xs font-normal leading-4 tracking-[0.4px] truncate'
-                    title={String(footerText ?? '')}
-                  >
-                    {footerText}
-                  </span>
-                )}
+                {renderFooter(node, footerText)}
               </div>
             </div>
           </div>
@@ -447,14 +459,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
                         {headingText}
                       </span>
                     )}
-                    {footerText && (
-                      <span
-                        className='text-foreground-secondary text-xs font-normal leading-4 tracking-[0.4px] truncate'
-                        title={String(footerText ?? '')}
-                      >
-                        {footerText}
-                      </span>
-                    )}
+                    {renderFooter(node, footerText)}
                   </div>
                 </div>
               </div>
