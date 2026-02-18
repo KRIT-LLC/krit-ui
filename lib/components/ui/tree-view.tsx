@@ -27,6 +27,8 @@ export interface TreeViewConfig<T extends TreeNode> {
   getNodeHeadingMaxLength?: (node: T) => number | undefined;
   /** Возвращает готовый ReactNode для footer (например ссылку). Если undefined — рендерится getNodeFooterText в span. */
   getNodeFooterNode?: (node: T, options: { text: string; className: string }) => ReactNode | undefined;
+  /** Дополнительные CSS-классы для стандартного футера (когда getNodeFooterNode не используется). */
+  getNodeFooterClassName?: (node: T) => string | undefined;
   renderTooltip?: (node: T) => ReactNode;
   renderExpandIcon?: (node: T, isExpanded: boolean, onClick: () => void) => ReactNode;
 }
@@ -210,13 +212,14 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
 
   const renderFooter = (node: T, footerText: string | undefined): ReactNode => {
     if (!footerText) return null;
+    const footerClassName = cn(baseFooterClassName, config.getNodeFooterClassName?.(node));
     const customNode = config.getNodeFooterNode?.(node, {
       text: footerText,
-      className: baseFooterClassName,
+      className: footerClassName,
     });
     if (customNode) return customNode;
     return (
-      <span className={baseFooterClassName} title={String(footerText)}>
+      <span className={footerClassName} title={String(footerText)}>
         {footerText}
       </span>
     );
