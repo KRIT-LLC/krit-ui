@@ -99,9 +99,10 @@ export const ConfirmModal = (props: ConfirmModalProps) => {
   };
 
   const renderDescription = () => {
+    if (description === null || description === '') return null;
     return (
       <>
-        {renderTextWithBoldMarkdown(description || t('confirmAction'))}
+        {renderTextWithBoldMarkdown(description ?? t('confirmAction'))}
         {inputRequired && <span className='text-foreground-error'>*</span>}
       </>
     );
