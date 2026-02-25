@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import { Column, Table } from '@tanstack/react-table';
 import { enUS, Locale, ru } from 'date-fns/locale';
-import { ListFilter } from 'lucide-react';
+import { ArrowUpDown, ListFilter } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { cn } from '@/utils';
 import CalendarOutlineIcon from '@/assets/calendar_outline.svg?react';
@@ -14,7 +14,7 @@ import { Input } from './input';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 import { Options, SelectHeaderFilter } from './select-header-filter';
 
-type FilterType = 'search' | 'date-range' | 'select' | 'reset';
+type FilterType = 'search' | 'date-range' | 'select' | 'reset' | 'sort';
 
 interface BaseFilterProps {
   type: FilterType;
@@ -24,10 +24,18 @@ interface BaseFilterProps {
   locale?: Locale;
   options?: Options<any>;
   excludeFilterValues?: unknown[];
+  /** Включить сортировку по клику на заголовок */
+  sortable?: boolean;
+  /** Текущее направление сортировки (если не передано — берётся из column.getIsSorted()) */
+  sorted?: ColumnSortDirection;
+  /** Контент заголовка (подпись колонки) */
+  children?: React.ReactNode;
 }
 
+/** Состояние сортировки колонки (TanStack Table getIsSorted()) */
+export type ColumnSortDirection = false | 'asc' | 'desc';
+
 interface FiltersColumnHeaderProps extends BaseFilterProps {
-  children?: React.ReactNode;
   className?: string;
 }
 
@@ -39,7 +47,37 @@ const FilterContent = ({
   locale,
   options,
   excludeFilterValues,
+  sortable = false,
+  sorted: sortedProp,
+  children,
 }: BaseFilterProps) => {
+  const sorted = sortedProp ?? column?.getIsSorted();
+  const handleSortClick = () => {
+    if (column?.getCanSort?.()) {
+      column.toggleSorting(sorted === 'asc');
+    }
+  };
+
+  const renderSortHeader = (forceShow = false) => {
+    const showSort = forceShow || (sortable && column);
+    if (!showSort || !column) return children;
+    return (
+      <div
+        role='button'
+        tabIndex={0}
+        className='flex items-center gap-1 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-line-primary focus-visible:ring-offset-1 rounded'
+        onClick={handleSortClick}
+      >
+        <ArrowUpDown
+          className={cn('h-4 w-4 shrink-0 text-icon', {
+            'rotate-180': sorted === 'asc',
+          })}
+        />
+        {children}
+      </div>
+    );
+  };
+
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -158,6 +196,8 @@ const FilterContent = ({
           />
         );
       }
+      case 'sort':
+        return null;
       default:
         return null;
     }
@@ -168,12 +208,18 @@ const FilterContent = ({
     switch (type) {
       case 'search':
         return (
-          <div className='flex flex-col gap-2 w-auto p-2 rounded-lg bg-background'>
+          <form
+            className='flex flex-col gap-2 w-auto p-2 rounded-lg bg-background'
+            onSubmit={e => {
+              e.preventDefault();
+              handleSearchApply();
+            }}
+          >
             <Input value={search} onChange={e => setSearch(e.target.value)} />
-            <Button variant='fade-contrast-filled' onClick={handleSearchApply}>
+            <Button type='submit' variant='fade-contrast-filled' onClick={handleSearchApply}>
               {applyText || t('apply')}
             </Button>
-          </div>
+          </form>
         );
 
       case 'date-range':
@@ -192,7 +238,13 @@ const FilterContent = ({
 
       case 'select':
         return (
-          <div className='flex flex-col gap-2 w-auto p-2 rounded-lg bg-background'>
+          <form
+            className='flex flex-col gap-2 w-auto p-2 rounded-lg bg-background'
+            onSubmit={e => {
+              e.preventDefault();
+              handleSelectApply();
+            }}
+          >
             <SelectHeaderFilter
               checked={checked}
               onCheckedChange={setChecked}
@@ -200,10 +252,10 @@ const FilterContent = ({
               options={options}
               table={table}
             />
-            <Button variant='fade-contrast-filled' onClick={handleSelectApply}>
+            <Button type='submit' variant='fade-contrast-filled' onClick={handleSelectApply}>
               {applyText || t('apply')}
             </Button>
-          </div>
+          </form>
         );
 
       default:
@@ -211,30 +263,41 @@ const FilterContent = ({
     }
   };
 
-  // Reset filter is a simple button, no popover
+  // Только сортировка — без фильтра, только заголовок с иконкой
+  if (type === 'sort') {
+    return <>{renderSortHeader(true)}</>;
+  }
+
+  // Сброс фильтров — кнопка без popover
   if (type === 'reset') {
     return (
-      <Button variant='fade-contrast-transparent' size='icon' onClick={handleReset}>
-        {getFilterIcon()}
-      </Button>
+      <>
+        {renderSortHeader()}
+        <Button variant='fade-contrast-transparent' size='icon' onClick={handleReset}>
+          {getFilterIcon()}
+        </Button>
+      </>
     );
   }
 
-  // Other filters use popover
+  // Остальные типы — popover с фильтром
   return (
-    <Popover open={isOpen} onOpenChange={setIsOpen} modal={true}>
-      <PopoverTrigger asChild>
-        <Button
-          className='p-1'
-          variant='fade-contrast-transparent'
-          size='icon'
-          icon={getFilterIcon()}
-        />
-      </PopoverTrigger>
-      <PopoverContent className='w-auto rounded-lg bg-background p-0'>
-        {renderFilterContent()}
-      </PopoverContent>
-    </Popover>
+    <>
+      {renderSortHeader()}
+      <Popover open={isOpen} onOpenChange={setIsOpen} modal={true}>
+        <PopoverTrigger asChild>
+          <Button
+            className='p-1'
+            variant='fade-contrast-transparent'
+            size='icon'
+            icon={getFilterIcon()}
+          />
+        </PopoverTrigger>
+        <PopoverContent className='w-auto rounded-lg bg-background p-0'>
+          {renderFilterContent()}
+        </PopoverContent>
+      </Popover>
+    </>
   );
 };
 
@@ -248,10 +311,11 @@ export const FiltersColumnHeader = ({
   options,
   excludeFilterValues,
   className,
+  sortable = false,
+  sorted,
 }: FiltersColumnHeaderProps) => {
   return (
     <div className={cn('flex flex-row gap-2 items-center justify-between', className)}>
-      {children}
       <FilterContent
         type={type}
         column={column}
@@ -260,7 +324,11 @@ export const FiltersColumnHeader = ({
         locale={locale}
         options={options}
         excludeFilterValues={excludeFilterValues}
-      />
+        sortable={sortable}
+        sorted={sorted}
+      >
+        {children}
+      </FilterContent>
     </div>
   );
 };

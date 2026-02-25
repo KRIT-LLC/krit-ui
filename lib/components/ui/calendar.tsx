@@ -51,7 +51,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         cell: 'h-9 w-9 text-center p-0 relative [&:has([aria-selected].day-range-start)]:rounded-l-md [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected])]:bg-background-tertiary first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
         day: cn(
           buttonVariants({ variant: 'fade-contrast-transparent' }),
-          'h-9 w-9 p-0 text-sm font-normal transition-all hover:bg-background-secondary hover:text-foreground aria-selected:opacity-100',
+          'h-9 w-9 p-0 text-sm font-normal transition-all hover:bg-background-success-fade hover:text-foreground aria-selected:opacity-100',
         ),
         day_range_start: 'day-range-start hover:!text-primary !text-foreground-on-contrast',
         day_range_end: 'day-range-end hover:!text-primary !text-foreground-on-contrast',
@@ -62,7 +62,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         day_outside: 'day-outside text-foreground-secondary opacity-50 hover:text-foreground/90',
         day_disabled: 'text-foreground-secondary opacity-50',
         day_range_middle:
-          'bg-none aria-selected:bg-background-tertiary aria-selected:hover:bg-none aria-selected:hover:bg-background-secondary aria-selected:text-foreground',
+          'bg-none aria-selected:bg-background-tertiary aria-selected:hover:bg-none aria-selected:hover:hover:bg-background-success-fade aria-selected:text-foreground',
         day_hidden: 'invisible',
         ...classNames,
       }}
