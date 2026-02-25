@@ -68,12 +68,12 @@ const FilterContent = ({
         className='flex items-center gap-1 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-line-primary focus-visible:ring-offset-1 rounded'
         onClick={handleSortClick}
       >
+        {children}
         <ArrowUpDown
           className={cn('h-4 w-4 shrink-0 text-icon', {
-            'rotate-180': sorted === 'asc',
+            'text-foreground-theme': !!sorted,
           })}
         />
-        {children}
       </div>
     );
   };
@@ -214,6 +214,12 @@ const FilterContent = ({
               e.preventDefault();
               handleSearchApply();
             }}
+            onKeyDown={e => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleSearchApply();
+              }
+            }}
           >
             <Input value={search} onChange={e => setSearch(e.target.value)} />
             <Button type='submit' variant='fade-contrast-filled' onClick={handleSearchApply}>
@@ -243,6 +249,12 @@ const FilterContent = ({
             onSubmit={e => {
               e.preventDefault();
               handleSelectApply();
+            }}
+            onKeyDown={e => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleSelectApply();
+              }
             }}
           >
             <SelectHeaderFilter
