@@ -62,7 +62,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         day_outside: 'day-outside text-foreground-secondary opacity-50 hover:text-foreground/90',
         day_disabled: 'text-foreground-secondary opacity-50',
         day_range_middle:
-          'bg-none aria-selected:bg-background-tertiary aria-selected:hover:bg-none aria-selected:hover:hover:bg-background-success-fade aria-selected:text-foreground',
+          'bg-none aria-selected:bg-background-tertiary aria-selected:hover:bg-none aria-selected:hover:bg-background-success-fade aria-selected:text-foreground',
         day_hidden: 'invisible',
         ...classNames,
       }}
