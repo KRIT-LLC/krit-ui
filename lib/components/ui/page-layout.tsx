@@ -26,14 +26,16 @@ interface PageLayoutProps {
  */
 export const PageLayout = ({ headerSlot, filterSlot, contentSlot }: PageLayoutProps) => {
   return (
-    <div className='relative min-h-screen flex flex-col pt-4 gap-4'>
+    <div className='relative flex min-h-0 flex-1 flex-col overflow-y-auto pt-4 gap-4'>
       {(headerSlot || filterSlot) && (
-        <div className='px-8 flex flex-col gap-4'>
+        <div className='flex-shrink-0 px-8 flex flex-col gap-4'>
           {headerSlot && <div>{headerSlot}</div>}
           {filterSlot && <div>{filterSlot}</div>}
         </div>
       )}
-      {contentSlot && <div className='flex-1 flex flex-col'>{contentSlot}</div>}
+      {contentSlot && (
+        <div className='flex min-h-0 flex-1 flex-col'>{contentSlot}</div>
+      )}
     </div>
   );
 };
