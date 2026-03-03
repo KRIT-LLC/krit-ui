@@ -163,11 +163,11 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      'h-12 text-left font-normal text-foreground-secondary [&:has([role=checkbox])]:pr-0',
-      variant === 'list' ? 'align-top' : 'align-middle',
+      'min-h-9 text-left font-medium text-foreground-primary [&:has([role=checkbox])]:pr-0',
+      'align-middle',
       variant === 'list'
-        ? 'py-4 first:pl-0 last:pr-0 [&:not(:first-child)]:pl-4'
-        : 'px-4 border-r border-line-primary last:border-r-0',
+        ? 'py-2 first:pl-0 last:pr-0 [&:not(:first-child)]:pl-2'
+        : 'p-2 border-r border-line-primary last:border-r-0',
       className,
     )}
     {...props}
@@ -192,11 +192,11 @@ const TableCell = React.forwardRef<
   <td
     ref={ref}
     className={cn(
-      variant === 'list' ? 'align-top' : 'align-middle',
+      'align-top text-foreground-primary',
       '[&:has([role=checkbox])]:pr-0',
       variant === 'list'
-        ? 'py-4 first:pl-0 last:pr-0 [&:not(:first-child)]:pl-4'
-        : 'p-4 border-r border-line-primary last:border-r-0',
+        ? 'py-2 first:pl-0 last:pr-0 [&:not(:first-child)]:pl-2'
+        : 'p-2 border-r border-line-primary last:border-r-0',
       className,
     )}
     {...props}
