@@ -19,6 +19,7 @@ import { cn } from '@/utils';
 import { Pagination, PaginationProps } from './pagination';
 import { Skeleton } from './skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './table';
+import { useColumnSizing } from '@/hooks/useColumnSizing';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -55,6 +56,12 @@ interface DataTableProps<TData, TValue> {
   hideHeader?: boolean;
   variant?: 'table' | 'list';
   striped?: boolean;
+  /**
+   * Уникальный ключ таблицы для сохранения ширин столбцов в localStorage.
+   * Если не передан — ресайзинг работает только в рамках текущей сессии (без сохранения).
+   * Если проп вообще не нужен — не передавайте его, поведение таблицы не изменится.
+   */
+  columnSizingStorageKey?: string;
 }
 
 /**
@@ -118,9 +125,13 @@ export function DataTable<TData, TValue>({
   hideHeader = false,
   variant = 'table',
   striped = true,
+  columnSizingStorageKey,
 }: DataTableProps<TData, TValue>) {
   const wrapperRef = React.useRef<HTMLDivElement>(null);
   const [hoveredRow, setHoveredRow] = React.useState<TData | null>(null);
+
+  const { columnSizing, onColumnSizingChange } = useColumnSizing(columnSizingStorageKey);
+
   const table = useReactTable({
     getRowId,
     data,
@@ -136,42 +147,38 @@ export function DataTable<TData, TValue>({
       expanded,
       columnVisibility,
       columnFilters,
+      ...(columnSizingStorageKey !== undefined ? { columnSizing } : {}),
     },
     manualSorting,
     enableRowSelection,
     enableMultiRowSelection,
-    enableColumnResizing: false,
+    enableColumnResizing: columnSizingStorageKey !== undefined,
+    columnResizeMode: 'onChange',
     onPaginationChange,
     onRowSelectionChange,
     onSortingChange,
     onExpandedChange,
     onColumnVisibilityChange,
     onColumnFiltersChange,
+    ...(columnSizingStorageKey !== undefined ? { onColumnSizingChange } : {}),
     // @ts-expect-error – допускаем наличие подстрок для вложенных строк
     getSubRows: row => row.subRows,
   });
 
   const getCellPadding = () => {
     if (variant === 'list') {
-      // Для варианта list минимальные паддинги только на первой и последней ячейке
-      switch (horizontalPadding) {
-        case 'small':
-          return 'first:pl-0 last:pr-0';
-        case 'large':
-          return 'first:pl-0 last:pr-0';
-        case 'medium':
-        default:
-          return 'first:pl-0 last:pr-0';
-      }
+      return 'first:pl-0 last:pr-0';
     }
+    // Базовый padding 8px (p-2) из table.tsx. Дополнительно: первая колонка +16px слева, последняя +16px справа.
+    // small: 8+8=16px, medium: 8+16=24px, large: 8+24=32px
     switch (horizontalPadding) {
       case 'small':
-        return 'first:pl-6 last:pr-6';
+        return 'first:pl-4 last:pr-4';
       case 'large':
-        return 'first:pl-10 last:pr-10';
+        return 'first:pl-8 last:pr-8';
       case 'medium':
       default:
-        return 'first:pl-8 last:pr-8';
+        return 'first:pl-6 last:pr-6';
     }
   };
 
@@ -214,6 +221,11 @@ export function DataTable<TData, TValue>({
                 isHeader
               >
                 {headerGroup.headers.map(header => {
+                  const hideRightBorder =
+                    (header.column.columnDef.meta as { hideRightBorder?: boolean } | undefined)
+                      ?.hideRightBorder ?? false;
+                  const canResize =
+                    columnSizingStorageKey !== undefined && header.column.getCanResize();
                   return (
                     <TableHead
                       key={header.id}
@@ -222,12 +234,28 @@ export function DataTable<TData, TValue>({
                         minWidth: header.getSize(),
                         width: header.getSize(),
                       }}
-                      className={variant === 'list' ? '' : getCellPadding()}
+                      className={cn(
+                        'relative',
+                        variant === 'list' ? '' : getCellPadding(),
+                        hideRightBorder && variant === 'table' && 'border-r-0',
+                      )}
                       variant={variant}
                     >
                       {header.isPlaceholder
                         ? null
                         : flexRender(header.column.columnDef.header, header.getContext())}
+                      {canResize && (
+                        <div
+                          onMouseDown={header.getResizeHandler()}
+                          onTouchStart={header.getResizeHandler()}
+                          className={cn(
+                            'absolute right-0 top-0 h-full w-1 cursor-col-resize select-none touch-none',
+                            'opacity-0 hover:opacity-100 bg-foreground-theme transition-opacity',
+                            header.column.getIsResizing() && 'opacity-100 bg-foreground-theme',
+                          )}
+                          style={{ transform: 'translateX(50%)' }}
+                        />
+                      )}
                     </TableHead>
                   );
                 })}
@@ -241,6 +269,9 @@ export function DataTable<TData, TValue>({
                 Array.from({ length: 5 }).map((_, key) => (
                   <TableRow key={key} variant={variant}>
                     {headerGroup.headers.map(header => {
+                      const hideRightBorder =
+                        (header.column.columnDef.meta as { hideRightBorder?: boolean } | undefined)
+                          ?.hideRightBorder ?? false;
                       return (
                         <TableCell
                           key={header.id}
@@ -249,7 +280,10 @@ export function DataTable<TData, TValue>({
                             minWidth: header.column.getSize(),
                             width: header.column.getSize(),
                           }}
-                          className={variant === 'list' ? '' : getCellPadding()}
+                          className={cn(
+                            variant === 'list' ? '' : getCellPadding(),
+                            hideRightBorder && variant === 'table' && 'border-r-0',
+                          )}
                           variant={variant}
                         >
                           <Skeleton className={cn('w-full', skeletonClassName)} />
@@ -271,19 +305,27 @@ export function DataTable<TData, TValue>({
                   onMouseEnter={e => handleRowMouseEnter(e, row.original)}
                   variant={variant}
                 >
-                  {row.getVisibleCells().map(cell => (
-                    <TableCell
-                      key={cell.id}
-                      style={{
-                        minWidth: cell.column.getSize(),
-                        width: cell.column.getSize(),
-                      }}
-                      className={variant === 'list' ? '' : getCellPadding()}
-                      variant={variant}
-                    >
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
+                  {row.getVisibleCells().map(cell => {
+                    const hideRightBorder =
+                      (cell.column.columnDef.meta as { hideRightBorder?: boolean } | undefined)
+                        ?.hideRightBorder ?? false;
+                    return (
+                      <TableCell
+                        key={cell.id}
+                        style={{
+                          minWidth: cell.column.getSize(),
+                          width: cell.column.getSize(),
+                        }}
+                        className={cn(
+                          variant === 'list' ? '' : getCellPadding(),
+                          hideRightBorder && variant === 'table' && 'border-r-0',
+                        )}
+                        variant={variant}
+                      >
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    );
+                  })}
                 </TableRow>
                 {row.getIsExpanded() && (
                   <TableRow key={`${row.id}-expanded`} variant={variant}>

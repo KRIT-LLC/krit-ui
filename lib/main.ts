@@ -74,6 +74,8 @@ export * from '@/lib/zod';
 export * from '@/hooks/useSidebar';
 export * from '@/lib/cookies';
 export * from '@/hooks/useStoredTabs';
+export * from '@/hooks/useStoredExpand';
+export * from '@/hooks/useColumnSizing';
 export * from '@/hooks/useTableStates';
 export * from '@/hooks/useStoredFields';
 export * from '@/lib/attachments';
