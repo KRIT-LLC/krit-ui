@@ -257,10 +257,11 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
           type='text'
           inputMode='decimal'
           className={cn(
-            'flex h-9 w-full rounded-lg border border-line transition-colors bg-background px-3 py-2 text-sm placeholder:text-foreground-primary/50 hover:border-background-hover focus-visible:outline-none focus-visible:border-background-focused disabled:cursor-not-allowed disabled:opacity-50 aria-[invalid=true]:border-line-error',
+            'flex h-9 w-full rounded-lg border border-line-primary bg-[transparent] blur-none pl-3 py-2 text-sm tracking-[0.1px] leading-5 transition-colors duration-300 ease-in-out ring-offset-background file:border-0 file:bg-[transparent] file:text-sm font-normal placeholder:text-foreground-secondary focus-visible:outline-none focus-visible:border-line-focused disabled:cursor-not-allowed disabled:opacity-50 truncate line-clamp-1',
             '[&~label>svg]:text-icon-secondary',
             'has-[+p.text-foreground-error]:border-line-error',
-            icon && 'pr-8',
+            icon ? 'pr-8' : 'pr-3',
+            props.readOnly && 'cursor-not-allowed pointer-events-none opacity-95',
             className,
           )}
           ref={ref}
@@ -270,11 +271,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
           onKeyDown={e => e.key === 'Enter' && onEnter?.(e)}
           onFocus={props.onFocus || (event => event.target.setAttribute('autocomplete', 'off'))}
         />
-        {icon && (
-          <span className='absolute right-3 top-1/2 transform -translate-y-1/2 text-icon-secondary'>
-            {icon}
-          </span>
-        )}
+        {icon && <span className='absolute right-1.5 top-1/2 -translate-y-1/2'>{icon}</span>}
       </div>
     );
 
