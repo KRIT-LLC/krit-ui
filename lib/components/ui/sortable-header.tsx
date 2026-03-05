@@ -10,12 +10,19 @@ interface SortableHeaderProps {
 }
 
 export const SortableHeader = ({ className, children, column }: SortableHeaderProps) => {
+  const sortDirection = column.getIsSorted();
+
   return (
     <div
       className={cn('flex items-center gap-1 cursor-pointer', className)}
-      onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+      onClick={() => column.toggleSorting(sortDirection === 'asc')}
     >
-      <SortIcon className='h-4 w-4 shrink-0 text-icon' />
+      <SortIcon
+        className={cn(
+          'h-4 w-4 shrink-0 text-icon transition-transform',
+          sortDirection === 'desc' && 'rotate-180',
+        )}
+      />
       {children}
     </div>
   );
