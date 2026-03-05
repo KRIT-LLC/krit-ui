@@ -8,7 +8,7 @@ import CloseCircleIcon from '@/assets/close_circle.svg?react';
 import ExpandMoreIcon from '@/assets/expand_more.svg?react';
 import { Button, ButtonVariant } from './button';
 import { Checkbox } from './checkbox';
-import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from './command';
+import { Command, CommandInput, CommandItem, CommandList } from './command';
 import { NetworkErrorMessage } from './network-error-message';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 
@@ -547,6 +547,27 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
       [getOptionKey, itemBaseClass, handleSelect, renderItemContent],
     );
 
+    const hasMatchingLeaf = React.useCallback(
+      (opt: InternalMultiSelectOptionType, query: string): boolean => {
+        const children = opt.children || [];
+        if (Array.isArray(children) && children.length > 0) {
+          return children.some(child =>
+            hasMatchingLeaf(child as InternalMultiSelectOptionType, query),
+          );
+        }
+        if (opt.hidden) return false;
+        return opt.label.toLowerCase().includes(query.toLowerCase());
+      },
+      [],
+    );
+
+    const hasAnyMatch = React.useMemo(() => {
+      if (!shouldFilter || !search) return true;
+      return internalOptions.some(opt =>
+        hasMatchingLeaf(opt as InternalMultiSelectOptionType, search),
+      );
+    }, [shouldFilter, search, internalOptions, hasMatchingLeaf]);
+
     // Рекурсивная функция для рендеринга групп любого уровня вложенности
     const renderGroupRecursive = React.useCallback(
       (group: InternalMultiSelectOptionType, level: number = 0): React.ReactNode => {
@@ -555,7 +576,6 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
         const isGroup = Array.isArray(children) && children.length > 0;
 
         if (!isGroup) {
-          // Если это не группа, рендерим как обычную опцию
           const isChecked = value.includes(group.value as string);
           const itemHidden = shouldFilter
             ? !group.label.toLowerCase().includes(search.toLowerCase())
@@ -567,14 +587,24 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
           });
         }
 
-        // Это группа - рендерим с возможностью раскрытия/сворачивания
         const expanded = !!expandedGroups[groupKey];
-        const matchesSearch = shouldFilter
-          ? group.label.toLowerCase().includes(search.toLowerCase())
+        const groupHasMatch = shouldFilter
+          ? hasMatchingLeaf(group, search)
           : true;
+
         const visibleChildren = shouldFilter
-          ? children.filter(c => (c.label || '').toLowerCase().includes(search.toLowerCase()))
+          ? children.filter(child => {
+              const childChildren = (child as InternalMultiSelectOptionType).children || [];
+              const isChildGroup =
+                Array.isArray(childChildren) && childChildren.length > 0;
+              if (isChildGroup) {
+                return hasMatchingLeaf(child as InternalMultiSelectOptionType, search);
+              }
+              return (child.label || '').toLowerCase().includes(search.toLowerCase());
+            })
           : children;
+
+        if (shouldFilter && !groupHasMatch) return null;
 
         return (
           <div key={groupKey} className='flex flex-col'>
@@ -583,7 +613,6 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
                 'flex items-center text-sm px-3 py-2 cursor-pointer select-none',
                 'hover:bg-background-theme-fade',
                 group.disabled && 'opacity-50 pointer-events-none cursor-not-allowed',
-                !matchesSearch && visibleChildren.length === 0 && 'hidden',
               )}
               onClick={() => toggleGroup(group.value)}
             >
@@ -604,20 +633,14 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
                 expanded ? 'max-h-[999px]' : 'max-h-0',
               )}
             >
-              {visibleChildren.length === 0 ? (
-                <div className='py-2 px-3 text-sm text-muted-foreground select-none'>
-                  {t('notFound')}
-                </div>
-              ) : (
-                visibleChildren.map(child =>
-                  renderGroupRecursive(child as InternalMultiSelectOptionType, level + 1),
-                )
+              {visibleChildren.map(child =>
+                renderGroupRecursive(child as InternalMultiSelectOptionType, level + 1),
               )}
             </div>
           </div>
         );
       },
-      [expandedGroups, shouldFilter, search, toggleGroup, value, renderCommandItem, t],
+      [expandedGroups, shouldFilter, search, toggleGroup, value, renderCommandItem, hasMatchingLeaf],
     );
 
     return (
@@ -703,8 +726,8 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
               center
               onRefetch={onRefetch}
             />
-            {!isLoading && !isError && !canCreateOption && (
-              <CommandEmpty>{t('notFound')}</CommandEmpty>
+            {!isLoading && !isError && !canCreateOption && !hasAnyMatch && (
+              <div className='py-6 text-center text-sm'>{t('notFound')}</div>
             )}
             <CommandList
               className={cn(
