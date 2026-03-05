@@ -528,7 +528,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
                 <th
                   key={index}
                   className={cn(
-                    'px-2 py-[8px] text-foreground-primary text-sm font-medium leading-5 tracking-[0.25px] border-r border-line-primary',
+                    'px-2 py-[8px] text-foreground-primary text-sm font-medium leading-5 tracking-[0.25px] border-r border-line-primary min-w-0 overflow-hidden',
                     {
                       'text-left': getColumnAlignment(index + 1) === 'left',
                       'text-center': getColumnAlignment(index + 1) === 'center',
@@ -538,7 +538,9 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
                   )}
                   style={getColumnWidth(index + 1)}
                 >
-                  {header}
+                  <span className='block truncate' title={String(header)}>
+                    {header}
+                  </span>
                 </th>
               ))}
             </tr>

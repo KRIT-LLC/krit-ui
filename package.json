@@ -1,7 +1,7 @@
 {
   "name": "krit-ui",
   "private": true,
-  "version": "0.0.21",
+  "version": "0.0.22",
   "type": "module",
   "files": [
     "dist",
@@ -21,6 +21,7 @@
   },
   "scripts": {
     "pack": "npm run build && npm pack",
+    "version:patch": "npm version patch --no-git-tag-version",
     "dev": "vite",
     "watch": "tsc --watch",
     "build": "tsc -p tsconfig.build.json && vite build",
