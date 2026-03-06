@@ -20,7 +20,7 @@ export const SortableHeader = ({ className, children, column }: SortableHeaderPr
       <SortIcon
         className={cn(
           'h-4 w-4 shrink-0 text-icon transition-transform',
-          sortDirection === 'desc' && 'rotate-180',
+          sortDirection === 'asc' && 'rotate-180',
         )}
       />
       {children}
