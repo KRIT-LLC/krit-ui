@@ -21,9 +21,9 @@ export const buttonVariants = cva(
         'warning-filled':
           'bg-background-error text-foreground-on-contrast hover:bg-background-error-hover disabled:bg-background-contrast-fade-disabled disabled:text-foreground-primary-disabled [&_svg]:text-icon-on-contrast disabled:[&_svg]:text-icon-contrast-disabled',
         'nav-item':
-          'hover:bg-background-contrast-fade-selected/30 text-foreground-tertiary hover:text-foreground-white',
+          'font-normal hover:bg-background-contrast-fade-selected/30 text-foreground-tertiary hover:text-foreground-white',
         'nav-item-selected':
-          'bg-background-contrast-fade-selected/30 text-foreground-sidebar-active',
+          'font-normal bg-background-contrast-fade-selected/30 text-foreground-sidebar-active',
       },
       size: {
         default: 'h-9 px-4 py-2',
