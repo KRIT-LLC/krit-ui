@@ -81,8 +81,8 @@ export type DatePickerProps =
  * @param {Object} props - Свойства компонента
  * @param {'single' | 'multiple' | 'range'} [props.mode] - Режим выбора даты
  * @param {Date | Date[] | DateRange} [props.value] - Выбранные даты в зависимости от режима
- * @param {string} [props.placeholder] - Плейсхолдер для инпута. Если задан innerLabel, placeholder игнорируется в неактивном состоянии (резервируется место под маску).
- * @param {string} [props.innerLabel] - Метка, отображаемая перед значением с двоеточием. Если задана, резервирует место под маску, но скрывает её до фокуса.
+ * @param {string} [props.placeholder] - Плейсхолдер для инпута. Если задан innerLabel, placeholder будет игнорироваться (вместо него выводится маска).
+ * @param {string} [props.innerLabel] - Метка, отображаемая перед значением с двоеточием. Если задана, резервирует место под маску и отображает её в качестве плейсхолдера.
  * @param {Function} [props.onChange] - Обработчик изменения даты
  * @param {string | boolean} [props.error] - Ошибка валидации
  * @param {boolean} [props.readOnly] - Режим только для чтения
@@ -376,7 +376,8 @@ export function DatePicker({ className, locale, iconClassName, ...props }: DateP
   const maskPlaceholder = getMaskPlaceholder();
   const defaultPlaceholder = placeholder || t('selectDate');
 
-  const placeholderText = !hasValue() && !isInputMode ? (innerLabel ? '' : defaultPlaceholder) : '';
+  const placeholderText =
+    !hasValue() && !isInputMode ? (innerLabel ? '' : defaultPlaceholder) : '';
 
   return (
     <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
@@ -416,12 +417,14 @@ export function DatePicker({ className, locale, iconClassName, ...props }: DateP
             <div className="inline-grid [grid-template-areas:'stack'] items-center min-w-[20px] w-fit">
               {/* Скрытые элементы для вычисления ширины (берется максимальная) */}
               {/* 1. Маска задает базовую ширину */}
-              <span
-                aria-hidden='true'
-                className='[grid-area:stack] invisible whitespace-pre px-0 py-0 text-sm font-normal tracking-[0.1px] leading-5 pointer-events-none'
-              >
-                {maskPlaceholder}
-              </span>
+              {(isInputMode || hasValue()) && (
+                <span
+                  aria-hidden='true'
+                  className='[grid-area:stack] invisible whitespace-pre px-0 py-0 text-sm font-normal tracking-[0.1px] leading-5 pointer-events-none'
+                >
+                  {maskPlaceholder}
+                </span>
+              )}
               {/* 2. Плейсхолдер (если нет innerLabel) */}
               {!innerLabel && defaultPlaceholder && (
                 <span
@@ -447,7 +450,7 @@ export function DatePicker({ className, locale, iconClassName, ...props }: DateP
                 onFocus={handleInputFocus}
                 onBlur={handleInputBlur}
                 placeholder={placeholderText}
-                className='[grid-area:stack] w-[0px] min-w-full h-auto border-none px-0 py-0 !bg-transparent'
+                className='[grid-area:stack] w-[0px] min-w-full h-auto border-none !p-0 !bg-transparent'
                 readOnly={props.readOnly}
               />
             </div>

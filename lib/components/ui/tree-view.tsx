@@ -26,7 +26,10 @@ export interface TreeViewConfig<T extends TreeNode> {
   getNodeHeadingClassName?: (node: T) => string | undefined;
   getNodeHeadingMaxLength?: (node: T) => number | undefined;
   /** Возвращает готовый ReactNode для footer (например ссылку). Если undefined — рендерится getNodeFooterText в span. */
-  getNodeFooterNode?: (node: T, options: { text: string; className: string }) => ReactNode | undefined;
+  getNodeFooterNode?: (
+    node: T,
+    options: { text: string; className: string },
+  ) => ReactNode | undefined;
   /** Дополнительные CSS-классы для стандартного футера (когда getNodeFooterNode не используется). */
   getNodeFooterClassName?: (node: T) => string | undefined;
   renderTooltip?: (node: T) => ReactNode;
@@ -247,14 +250,18 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
     return (
       <tr
         key={nodeId}
+        className='group'
         onClick={() => node.onClick?.()}
         onDoubleClick={() => node.onDoubleClick?.()}
       >
         <td
-          className={cn('p-0 border-r border-line-primary', {
-            'bg-background-primary-selected': isSelected,
-            'border-r-0': cellValues.length === 0,
-          })}
+          className={cn(
+            'p-0 border-r border-line-primary group-hover:bg-background-primary-selected transition-colors',
+            {
+              'bg-background-primary-selected': isSelected,
+              'border-r-0': cellValues.length === 0,
+            },
+          )}
           style={getColumnWidth(0)}
         >
           <div className='flex items-stretch'>
@@ -339,13 +346,16 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
         {cellValues.map((value, index) => (
           <td
             key={index}
-            className={cn('py-[3px] align-middle border-r border-line-primary', {
-              'text-left': getColumnAlignment(index + 1) === 'left',
-              'text-center': getColumnAlignment(index + 1) === 'center',
-              'text-right': getColumnAlignment(index + 1) === 'right',
-              'bg-background-primary-selected': isSelected,
-              'border-r-0': index === cellValues.length - 1,
-            })}
+            className={cn(
+              'py-[3px] align-middle border-r border-line-primary group-hover:bg-background-primary-selected transition-colors',
+              {
+                'text-left': getColumnAlignment(index + 1) === 'left',
+                'text-center': getColumnAlignment(index + 1) === 'center',
+                'text-right': getColumnAlignment(index + 1) === 'right',
+                'bg-background-primary-selected': isSelected,
+                'border-r-0': index === cellValues.length - 1,
+              },
+            )}
             style={getColumnWidth(index + 1)}
           >
             {value}
@@ -380,12 +390,19 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
 
       return (
         <Fragment key={nodeId}>
-          <tr onClick={() => node.onClick?.()} onDoubleClick={() => node.onDoubleClick?.()}>
+          <tr
+            className='group'
+            onClick={() => node.onClick?.()}
+            onDoubleClick={() => node.onDoubleClick?.()}
+          >
             <td
-              className={cn('p-0 border-r border-line-primary', {
-                'bg-background-primary-selected': isSelected,
-                'border-r-0': cellValues.length === 0,
-              })}
+              className={cn(
+                'p-0 border-r border-line-primary group-hover:bg-background-primary-selected transition-colors',
+                {
+                  'bg-background-primary-selected': isSelected,
+                  'border-r-0': cellValues.length === 0,
+                },
+              )}
               style={getColumnWidth(0)}
             >
               <div className='flex items-stretch'>
@@ -470,13 +487,16 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
             {cellValues.map((value, index) => (
               <td
                 key={index}
-                className={cn('py-[3px] align-middle border-r border-line-primary', {
-                  'text-left': getColumnAlignment(index + 1) === 'left',
-                  'text-center': getColumnAlignment(index + 1) === 'center',
-                  'text-right': getColumnAlignment(index + 1) === 'right',
-                  'bg-background-primary-selected': isSelected,
-                  'border-r-0': index === cellValues.length - 1,
-                })}
+                className={cn(
+                  'py-[3px] align-middle border-r border-line-primary group-hover:bg-background-primary-selected transition-colors',
+                  {
+                    'text-left': getColumnAlignment(index + 1) === 'left',
+                    'text-center': getColumnAlignment(index + 1) === 'center',
+                    'text-right': getColumnAlignment(index + 1) === 'right',
+                    'bg-background-primary-selected': isSelected,
+                    'border-r-0': index === cellValues.length - 1,
+                  },
+                )}
                 style={getColumnWidth(index + 1)}
               >
                 {value}

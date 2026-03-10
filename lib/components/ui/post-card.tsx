@@ -88,7 +88,7 @@ const PostCardHeader = ({
           </div>
         )}
         {titlePrefix && (
-          <span className='text-foreground-tertiary whitespace-nowrap'>{titlePrefix}</span>
+          <span className='text-foreground-secondary whitespace-nowrap'>{titlePrefix}</span>
         )}
         {titleText && (
           <span className='text-foreground-primary truncate' title={titleText}>
