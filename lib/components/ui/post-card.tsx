@@ -88,7 +88,7 @@ const PostCardHeader = ({
           </div>
         )}
         {titlePrefix && (
-          <span className='text-foreground-tertiary whitespace-nowrap'>{titlePrefix}</span>
+          <span className='text-foreground-secondary whitespace-nowrap'>{titlePrefix}</span>
         )}
         {titleText && (
           <span className='text-foreground-primary truncate' title={titleText}>
@@ -457,17 +457,13 @@ const PostCard = ({
       className={cn(
         'flex flex-col flex-1 min-w-0',
         fixedHeight && 'min-h-0 overflow-hidden',
-      )}
-    >
+      )}>
       {headerSlot && <div className='flex-shrink-0'>{headerSlot}</div>}
-      <div
-        className={cn(
-          'flex flex-col',
-          fixedHeight && 'flex-1 min-h-0 overflow-y-auto',
-        )}
-      >
-        {bodyAndContent}
-      </div>
+      {fixedHeight ? (
+        <div className='flex-1 min-h-0 overflow-y-auto flex flex-col'>{bodyAndContent}</div>
+      ) : (
+        bodyAndContent
+      )}
     </div>
   );
 
@@ -499,7 +495,7 @@ const PostCard = ({
             </div>
           </ResizablePanel>
           <ResizableHandle withHandle />
-          <ResizablePanel minSize={50} className='overflow-hidden'>
+          <ResizablePanel minSize={50} className='flex flex-col min-h-0 overflow-hidden'>
             {mainContent}
           </ResizablePanel>
         </ResizablePanelGroup>
