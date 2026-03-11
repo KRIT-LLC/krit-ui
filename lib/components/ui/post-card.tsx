@@ -438,15 +438,17 @@ const PostCard = ({
   }
 
   const mainContent = (
-    <div className='flex flex-col flex-1 min-w-0'>
-      {headerSlot}
-      {(bodySlot || sidebarSlot) && (
-        <div className='flex gap-6 px-6 py-6'>
-          {bodySlot && <div className='flex-1 min-w-0'>{bodySlot}</div>}
-          {sidebarSlot && <div className='w-[340px] flex-shrink-0'>{sidebarSlot}</div>}
-        </div>
-      )}
-      {contentSlot && <div className='px-6 pb-6'>{contentSlot}</div>}
+    <div className='flex flex-col flex-1 min-w-0 min-h-0'>
+      {headerSlot && <div className='flex-shrink-0'>{headerSlot}</div>}
+      <div className='flex-1 min-h-0 overflow-y-auto'>
+        {(bodySlot || sidebarSlot) && (
+          <div className='flex gap-6 px-6 py-6'>
+            {bodySlot && <div className='flex-1 min-w-0'>{bodySlot}</div>}
+            {sidebarSlot && <div className='w-[340px] flex-shrink-0'>{sidebarSlot}</div>}
+          </div>
+        )}
+        {contentSlot && <div className='px-6 pb-6'>{contentSlot}</div>}
+      </div>
     </div>
   );
 
@@ -478,7 +480,7 @@ const PostCard = ({
             </div>
           </ResizablePanel>
           <ResizableHandle withHandle />
-          <ResizablePanel minSize={50} className='overflow-hidden'>
+          <ResizablePanel minSize={50} className='flex flex-col min-h-0 overflow-hidden'>
             {mainContent}
           </ResizablePanel>
         </ResizablePanelGroup>
