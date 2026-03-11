@@ -386,6 +386,8 @@ interface PostCardProps {
   className?: string;
   /** Отображать ли верхнюю границу */
   withTopBorder?: boolean;
+  /** Фиксированная высота с внутренней прокруткой панелей (для list/detail layout) */
+  fixedHeight?: boolean;
 }
 
 /**
@@ -430,6 +432,7 @@ const PostCard = ({
   contentSlot,
   className,
   withTopBorder = false,
+  fixedHeight = false,
 }: PostCardProps) => {
   const hasContent = leftPanelSlot || headerSlot || bodySlot || sidebarSlot || contentSlot;
 
@@ -437,18 +440,30 @@ const PostCard = ({
     return null;
   }
 
+  const bodyAndContent = (
+    <>
+      {(bodySlot || sidebarSlot) && (
+        <div className='flex gap-6 px-6 py-6'>
+          {bodySlot && <div className='flex-1 min-w-0'>{bodySlot}</div>}
+          {sidebarSlot && <div className='w-[340px] flex-shrink-0'>{sidebarSlot}</div>}
+        </div>
+      )}
+      {contentSlot && <div className='px-6 pb-6'>{contentSlot}</div>}
+    </>
+  );
+
   const mainContent = (
-    <div className='flex flex-col flex-1 min-w-0 min-h-0'>
+    <div
+      className={cn(
+        'flex flex-col flex-1 min-w-0',
+        fixedHeight && 'min-h-0 overflow-hidden',
+      )}>
       {headerSlot && <div className='flex-shrink-0'>{headerSlot}</div>}
-      <div className='flex-1 min-h-0 overflow-y-auto'>
-        {(bodySlot || sidebarSlot) && (
-          <div className='flex gap-6 px-6 py-6'>
-            {bodySlot && <div className='flex-1 min-w-0'>{bodySlot}</div>}
-            {sidebarSlot && <div className='w-[340px] flex-shrink-0'>{sidebarSlot}</div>}
-          </div>
-        )}
-        {contentSlot && <div className='px-6 pb-6'>{contentSlot}</div>}
-      </div>
+      {fixedHeight ? (
+        <div className='flex-1 min-h-0 overflow-y-auto flex flex-col'>{bodyAndContent}</div>
+      ) : (
+        bodyAndContent
+      )}
     </div>
   );
 
@@ -493,12 +508,19 @@ const PostCard = ({
     <div
       className={cn(
         'bg-background-primary flex w-full flex-1',
+        fixedHeight && 'h-full min-h-0 overflow-hidden',
         { 'border-t border-line-primary': withTopBorder },
         className,
       )}
     >
       {leftPanelSlot && (
-        <div className='w-[346px] flex-shrink-0 border-r border-line-primary'>{leftPanelSlot}</div>
+        <div
+          className={cn(
+            'w-[346px] flex-shrink-0 border-r border-line-primary',
+            fixedHeight && 'h-full min-h-0 overflow-hidden flex flex-col',
+          )}>
+          {leftPanelSlot}
+        </div>
       )}
       {mainContent}
     </div>

@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { cn } from '@/utils';
 
 interface PageLayoutProps {
   /** Слот для заголовка страницы */
@@ -7,6 +8,8 @@ interface PageLayoutProps {
   filterSlot?: ReactNode;
   /** Слот для основного контента */
   contentSlot?: ReactNode;
+  /** Ограничить contentSlot по высоте (overflow-hidden) для внутренней прокрутки контента */
+  contentSlotOverflowHidden?: boolean;
 }
 
 /**
@@ -24,9 +27,18 @@ interface PageLayoutProps {
  *   contentSlot={<Table />}
  * />
  */
-export const PageLayout = ({ headerSlot, filterSlot, contentSlot }: PageLayoutProps) => {
+export const PageLayout = ({
+  headerSlot,
+  filterSlot,
+  contentSlot,
+  contentSlotOverflowHidden = false,
+}: PageLayoutProps) => {
   return (
-    <div className='relative flex min-h-0 flex-1 flex-col overflow-y-auto pt-4 gap-4'>
+    <div
+      className={cn(
+        'relative flex min-h-0 flex-1 flex-col pt-4 gap-4',
+        contentSlotOverflowHidden ? 'overflow-hidden' : 'overflow-y-auto',
+      )}>
       {(headerSlot || filterSlot) && (
         <div className='flex-shrink-0 px-6 flex flex-col gap-4'>
           {headerSlot && <div>{headerSlot}</div>}
