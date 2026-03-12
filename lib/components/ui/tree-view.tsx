@@ -51,6 +51,8 @@ export interface TreeViewProps<T extends TreeNode> {
   estimateRowSize?: number;
   overscan?: number;
   scrollElementRef?: React.RefObject<HTMLDivElement>;
+  /** ID для scroll-контейнера (для синхронизации скролла с другими элементами) */
+  scrollContainerId?: string;
 }
 
 /**
@@ -111,6 +113,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
     estimateRowSize = 40,
     overscan = 20,
     scrollElementRef: externalScrollRef,
+    scrollContainerId,
   } = props;
 
   const internalScrollRef = useRef<HTMLDivElement>(null);
@@ -528,14 +531,17 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
   const hasHeaders = headersArray.length > 0 && headersArray.some(header => header.trim() !== '');
 
   return (
-    <div ref={scrollRef} className={cn('h-full overflow-auto', className)}>
+    <div
+      ref={scrollRef}
+      id={scrollContainerId}
+      className={cn('h-full overflow-auto', className)}>
       <table className='w-full border-collapse'>
         {hasHeaders && (
           <thead className='sticky top-0 z-10 bg-background-secondary'>
             <tr>
               <th
                 className={cn(
-                  'px-2 py-[8px] text-left text-foreground-primary text-sm font-medium leading-5 tracking-[0.25px] border-r border-line-primary',
+                  'box-border px-2 h-[40px] text-left text-foreground-primary text-sm font-medium border-b border-r border-line-primary border-b-line-primary-disabled',
                   {
                     'border-r-0': headersArray.length === 1,
                   },
@@ -548,7 +554,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
                 <th
                   key={index}
                   className={cn(
-                    'px-2 py-[8px] text-foreground-primary text-sm font-medium leading-5 tracking-[0.25px] border-r border-line-primary min-w-0 overflow-hidden',
+                    'box-border px-2 h-[40px] text-foreground-primary text-sm font-medium border-b border-r border-line-primary border-b-line-primary-disabled min-w-0 overflow-hidden',
                     {
                       'text-left': getColumnAlignment(index + 1) === 'left',
                       'text-center': getColumnAlignment(index + 1) === 'center',
@@ -563,11 +569,6 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
                   </span>
                 </th>
               ))}
-            </tr>
-            <tr>
-              <td colSpan={headersArray.length} className='h-[1px] p-0'>
-                <div className='bg-line-primary-disabled w-full h-[1px]'></div>
-              </td>
             </tr>
           </thead>
         )}
