@@ -208,12 +208,13 @@ export function DatePicker({ className, locale, iconClassName, ...props }: DateP
     setInputValue(formattedValue);
   };
 
-  const handleInputBlur = () => {
-    setIsInputMode(false);
-
-    // Если значение пустое или равно маске, очищаем
-    if (!props.onChange || inputValue.trim() === '' || inputValue === getMaskPlaceholder()) {
-      setInputValue('');
+  const runBlurLogic = () => {
+    if (
+      !props.onChange ||
+      inputValue.trim() === '' ||
+      inputValue === getMaskPlaceholder()
+    ) {
+      setInputValue(getDisplayValue());
       return;
     }
 
@@ -257,9 +258,21 @@ export function DatePicker({ className, locale, iconClassName, ...props }: DateP
     }
   };
 
+  const handleInputBlur = () => {
+    // Если попавер открыт — не делаем ничего: пользователь мог кликнуть по дате
+    // в Calendar. Финализация произойдёт при закрытии попавера.
+    if (isPopoverOpen) return;
+
+    setIsInputMode(false);
+    runBlurLogic();
+  };
+
   const handleReset = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (props.readOnly) return;
+
+    setInputValue('');
+    setIsInputMode(false);
 
     if (props.onRemoveClick) {
       props.onRemoveClick();
@@ -365,12 +378,23 @@ export function DatePicker({ className, locale, iconClassName, ...props }: DateP
           : props.onChange),
   } as DatePickerProps;
 
-  // useEffect
-  React.useEffect(() => {
-    if (!isInputMode) {
-      setInputValue(getDisplayValue());
+  const handlePopoverOpenChange = (open: boolean) => {
+    setIsPopoverOpen(open);
+    if (!open && isInputMode) {
+      setIsInputMode(false);
+      runBlurLogic();
     }
-  }, [props.value, props.selected, props.mode, isInputMode, getDisplayValue]);
+  };
+
+  React.useEffect(() => {
+    const displayValue = getDisplayValue();
+    if (!isInputMode) {
+      setInputValue(displayValue);
+    } else if (isPopoverOpen && displayValue) {
+      // Дата выбрана через Calendar при открытом попавере — синхронизируем инпут
+      setInputValue(displayValue);
+    }
+  }, [props.value, props.selected, props.mode, isInputMode, isPopoverOpen, getDisplayValue]);
 
   const valueText = isInputMode ? inputValue : hasValue() ? getDisplayValue() : '';
   const maskPlaceholder = getMaskPlaceholder();
@@ -380,7 +404,7 @@ export function DatePicker({ className, locale, iconClassName, ...props }: DateP
     !hasValue() && !isInputMode ? (innerLabel ? '' : defaultPlaceholder) : '';
 
   return (
-    <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+    <Popover open={isPopoverOpen} onOpenChange={handlePopoverOpenChange}>
       <PopoverTrigger asChild>
         <Button
           variant={'fade-contrast-outlined'}

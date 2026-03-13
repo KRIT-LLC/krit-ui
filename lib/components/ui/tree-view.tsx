@@ -236,8 +236,11 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
     guides: boolean[],
     isLastChild: boolean,
     skipGuides: boolean[] = [],
+    rowKey?: number | string,
+    measureRef?: (el: Element | null) => void,
   ): ReactNode => {
     const nodeId = config.getNodeId(node);
+    const trKey = rowKey !== undefined ? rowKey : nodeId;
     const level = config.getNodeLevel(node);
     const children = config.getNodeChildren(node);
     const hasNested = config.hasNestedNodes(node);
@@ -252,7 +255,9 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
 
     return (
       <tr
-        key={nodeId}
+        key={trKey}
+        ref={measureRef}
+        data-index={rowKey}
         className='group'
         onClick={() => node.onClick?.()}
         onDoubleClick={() => node.onDoubleClick?.()}
@@ -583,7 +588,14 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
               {virtualItems.map(virtualRow => {
                 const { node, guides, isLastChild, skipGuides } =
                   flattenedNodesWithGuides[virtualRow.index];
-                return renderSingleRow(node, guides, isLastChild, skipGuides);
+                return renderSingleRow(
+                  node,
+                  guides,
+                  isLastChild,
+                  skipGuides,
+                  virtualRow.index,
+                  virtualizer.measureElement,
+                );
               })}
               {paddingBottom > 0 && (
                 <tr style={{ height: `${paddingBottom}px` }}>
