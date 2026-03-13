@@ -455,15 +455,11 @@ const PostCard = ({
   const mainContent = (
     <div
       className={cn(
-        'flex flex-col flex-1 min-w-0',
-        fixedHeight && 'min-h-0 overflow-hidden',
+        'flex flex-col flex-1 min-w-0 min-h-0',
+        fixedHeight && 'overflow-hidden',
       )}>
       {headerSlot && <div className='flex-shrink-0'>{headerSlot}</div>}
-      {fixedHeight ? (
-        <div className='flex-1 min-h-0 overflow-y-auto flex flex-col'>{bodyAndContent}</div>
-      ) : (
-        bodyAndContent
-      )}
+      <div className='flex-1 min-h-0 overflow-y-auto flex flex-col'>{bodyAndContent}</div>
     </div>
   );
 
@@ -507,8 +503,8 @@ const PostCard = ({
   return (
     <div
       className={cn(
-        'bg-background-primary flex w-full flex-1',
-        fixedHeight && 'h-full min-h-0 overflow-hidden',
+        'bg-background-primary flex w-full flex-1 min-h-0',
+        fixedHeight && 'h-full overflow-hidden',
         { 'border-t border-line-primary': withTopBorder },
         className,
       )}
