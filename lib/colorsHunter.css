@@ -1,7 +1,7 @@
 @layer base {
   /* Цветовая схема NordGold из общего макета цветов krit-ui */
   .lightHunter {
-    --krit-background-contrast: 140 100% 34%;
+    --krit-background-contrast: 134 100% 34%;
     --krit-background-contrast-fade: 213 32% 89%;
     --krit-background-error: 354 93% 65%;
     --krit-background-error-fade: 356 89% 96%;
@@ -27,8 +27,8 @@
     --krit-background-states-success-fade-hover: 132 83% 34%;
     --krit-background-states-success-hover: 132 83% 34%;
     --krit-background-states-theme-disabled: 133 45% 68%;
-    --krit-background-states-theme-hover: 140 55% 38%;
-    --krit-background-states-theme-selected: 140 55% 38%;
+    --krit-background-states-theme-hover: 133 60% 38%;
+    --krit-background-states-theme-selected: 133 60% 38%;
     --krit-background-states-theme-fade-disabled: 220 15% 90%;
     --krit-background-states-theme-fade-hover: 216 28% 79%;
     --krit-background-states-theme-fade-selected: 215 26% 75%;
@@ -38,7 +38,7 @@
     --krit-background-success-fade: 136 45% 94%;
     --krit-background-success-tertiary: 133 50% 75%;
     --krit-background-tertiary: 200 27% 98%;
-    --krit-background-theme: 140 100% 34%;
+    --krit-background-theme: 134 100% 34%;
     --krit-background-theme-fade: 133 39% 90%;
     --krit-background-transparent: 0 0% 100%;
     --krit-background-warning: 38 98% 48%;
@@ -90,13 +90,13 @@
     --krit-foreground-on-contrast: 0 0% 100%;
     --krit-foreground-primary: 230 17% 14%;
     --krit-foreground-quaternary: 224 10% 44%;
-    --krit-foreground-secondary: 214 20% 50%;
+    --krit-foreground-secondary: 216 21% 53%;
     --krit-foreground-states-on-contrast-disabled: 0 0% 100%;
     --krit-foreground-states-primary-disabled: 222 8% 42%;
-    --krit-foreground-states-sidebar-active: 140 65% 48%;
+    --krit-foreground-states-sidebar-active: 133 60% 48%;
     --krit-foreground-success: 133 87% 34%;
     --krit-foreground-tertiary: 210 12% 70%;
-    --krit-foreground-theme: 140 65% 48%;
+    --krit-foreground-theme: 133 60% 48%;
     --krit-foreground-warning: 38 89% 47%;
     --krit-foreground-white: 0 0% 100%;
     --krit-gradient-primary: 0 0% 90%;
@@ -104,24 +104,24 @@
     --krit-gradient-primary-3: 200 100% 75%;
     --krit-gradient-primary-4: 216 98% 52%;
     --krit-gradient-primary-5: 216 100% 33%;
-    --krit-icon-contrast: 214 20% 50%;
+    --krit-icon-contrast: 216 21% 53%;
     --krit-icon-error: 355 88% 51%;
-    --krit-icon-fade-contrast: 214 20% 50%;
+    --krit-icon-fade-contrast: 216 21% 53%;
     --krit-icon-on-contrast: 0 0% 100%;
     --krit-icon-sidebar: 211 30% 79%;
     --krit-icon-states-contrast-disabled: 0 0% 51%;
     --krit-icon-states-on-contrast-disabled: 0 0% 100%;
     --krit-icon-states-on-contrast-selected: 0 0% 100%;
-    --krit-icon-states-sidebar-active: 140 65% 48%;
+    --krit-icon-states-sidebar-active: 133 60% 48%;
     --krit-icon-states-sidebar-hover: 0 0% 100%;
     --krit-icon-success: 133 87% 34%;
-    --krit-icon-theme: 140 65% 48%;
+    --krit-icon-theme: 133 60% 48%;
     --krit-icon-warning: 38 89% 47%;
     --krit-line-contrast: 214 30% 70%;
     --krit-line-error: 355 88% 51%;
-    --krit-line-primary: 220 30% 92%;
+    --krit-line-primary: 229 47% 91%;
     --krit-line-reopen: 260 81% 76%;
-    --krit-line-secondary: 214 15% 45%;
+    --krit-line-secondary: 219 16% 40%;
     --krit-line-states-primary-disabled: 229 19% 88%;
     --krit-line-states-primary-focused: 216 100% 53%;
     --krit-line-states-primary-hover: 210 50% 88%;
@@ -131,8 +131,8 @@
   }
 
   .darkHunter {
-    --krit-background-contrast: 140 60% 38%;
-    --krit-background-contrast-fade: 223 15% 43%;
+    --krit-background-contrast: 133 60% 38%;
+    --krit-background-contrast-fade: 216 18% 40%;
     --krit-background-error: 355 66% 50%;
     --krit-background-error-fade: 0 36% 21%;
     --krit-background-error-tertiary: 8 36% 53%;
@@ -157,8 +157,8 @@
     --krit-background-states-success-fade-hover: 133 83% 23%;
     --krit-background-states-success-hover: 132 83% 34%;
     --krit-background-states-theme-disabled: 140 30% 40%;
-    --krit-background-states-theme-hover: 140 50% 30%;
-    --krit-background-states-theme-selected: 140 50% 30%;
+    --krit-background-states-theme-hover: 133 68% 29%;
+    --krit-background-states-theme-selected: 133 68% 29%;
     --krit-background-states-theme-fade-disabled: 222 15% 23%;
     --krit-background-states-theme-fade-hover: 223 15% 34%;
     --krit-background-states-theme-fade-selected: 223 15% 37%;
@@ -167,9 +167,9 @@
     --krit-background-success: 133 51% 51%;
     --krit-background-success-fade: 133 82% 28%;
     --krit-background-success-tertiary: 126 26% 49%;
-    --krit-background-tertiary: 224 27% 11%;
-    --krit-background-theme: 140 55% 38%;
-    --krit-background-theme-fade: 140 20% 28%;
+    --krit-background-tertiary: 223 18% 23%;
+    --krit-background-theme: 133 60% 38%;
+    --krit-background-theme-fade: 162 13% 25%;
     --krit-background-transparent: 224 19% 15%;
     --krit-background-warning: 58 87% 52%;
     --krit-background-warning-fade: 57 48% 24%;
@@ -216,17 +216,17 @@
     --krit-badge-priority-middle: 37 100% 53%;
     --krit-badge-priority-no-priority: 227 17% 84%;
     --krit-foreground-error: 354 93% 65%;
-    --krit-foreground-link: 216 97% 76%;
+    --krit-foreground-link: 216 100% 65%;
     --krit-foreground-on-contrast: 0 0% 100%;
     --krit-foreground-primary: 0 0% 96%;
     --krit-foreground-quaternary: 227 7% 75%;
     --krit-foreground-secondary: 214 20% 70%;
     --krit-foreground-states-on-contrast-disabled: 140 35% 55%;
     --krit-foreground-states-primary-disabled: 0 0% 51%;
-    --krit-foreground-states-sidebar-active: 140 65% 48%;
+    --krit-foreground-states-sidebar-active: 133 60% 48%;
     --krit-foreground-success: 133 95% 49%;
     --krit-foreground-tertiary: 210 20% 90%;
-    --krit-foreground-theme: 140 65% 48%;
+    --krit-foreground-theme: 133 60% 48%;
     --krit-foreground-warning: 54 93% 52%;
     --krit-foreground-white: 0 0% 100%;
     --krit-gradient-primary: 224 26% 11%;
@@ -242,16 +242,16 @@
     --krit-icon-states-contrast-disabled: 0 0% 51%;
     --krit-icon-states-on-contrast-disabled: 140 35% 55%;
     --krit-icon-states-on-contrast-selected: 0 0% 100%;
-    --krit-icon-states-sidebar-active: 140 65% 48%;
+    --krit-icon-states-sidebar-active: 133 60% 48%;
     --krit-icon-states-sidebar-hover: 0 0% 100%;
     --krit-icon-success: 133 95% 49%;
-    --krit-icon-theme: 140 65% 48%;
+    --krit-icon-theme: 133 60% 48%;
     --krit-icon-warning: 54 93% 52%;
     --krit-line-contrast: 214 30% 70%;
     --krit-line-error: 355 98% 52%;
-    --krit-line-primary: 223 15% 43%;
+    --krit-line-primary: 224 18% 36%;
     --krit-line-reopen: 260 75% 48%;
-    --krit-line-secondary: 223 15% 43%;
+    --krit-line-secondary: 229 18% 37%;
     --krit-line-states-primary-disabled: 224 18% 21%;
     --krit-line-states-primary-focused: 216 100% 53%;
     --krit-line-states-primary-hover: 214 30% 45%;
