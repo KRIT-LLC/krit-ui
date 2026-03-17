@@ -119,6 +119,19 @@ export function DatePicker({ className, locale, iconClassName, ...props }: DateP
     return browserLanguage.includes('ru') ? ru : enUS;
   };
 
+  const isSameDay = (left: Date, right: Date): boolean => {
+    return (
+      left.getFullYear() === right.getFullYear() &&
+      left.getMonth() === right.getMonth() &&
+      left.getDate() === right.getDate()
+    );
+  };
+
+  const getCurrentSingleValue = (): Date | undefined => {
+    const currentValue = props.selected || props.value;
+    return currentValue instanceof Date ? currentValue : undefined;
+  };
+
   const getDisplayValue = React.useCallback((): string => {
     switch (props.mode) {
       case 'single':
@@ -224,6 +237,11 @@ export function DatePicker({ className, locale, iconClassName, ...props }: DateP
       case 'single': {
         const parsed = parseDateString(inputValue);
         if (parsed) {
+          const currentValue = getCurrentSingleValue();
+          if (currentValue && isSameDay(currentValue, parsed)) {
+            setInputValue(getDisplayValue());
+            break;
+          }
           const handler = props.onChange as SelectSingleEventHandler;
           handler(parsed, parsed, {}, syntheticEvent);
         } else {
@@ -326,8 +344,7 @@ export function DatePicker({ className, locale, iconClassName, ...props }: DateP
           );
 
           if (currentDateOnly.getTime() === selectedDateOnly.getTime()) {
-            // Повторный клик на ту же дату - оставляем текущую дату
-            onChange(currentValue, selectedDay, activeModifiers, e);
+            // Повторный клик на ту же дату не должен эмитить изменение
             return;
           }
         }
