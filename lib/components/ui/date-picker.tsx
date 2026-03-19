@@ -129,7 +129,9 @@ export function DatePicker({ className, locale, iconClassName, ...props }: DateP
 
   const getCurrentSingleValue = (): Date | undefined => {
     const currentValue = props.selected || props.value;
-    return currentValue instanceof Date ? currentValue : undefined;
+    if (currentValue instanceof Date) return currentValue;
+    if (typeof currentValue === 'string' && currentValue) return new Date(currentValue);
+    return;
   };
 
   const getDisplayValue = React.useCallback((): string => {
@@ -228,6 +230,11 @@ export function DatePicker({ className, locale, iconClassName, ...props }: DateP
       inputValue === getMaskPlaceholder()
     ) {
       setInputValue(getDisplayValue());
+      return;
+    }
+
+    const displayValue = getDisplayValue();
+    if (inputValue === displayValue) {
       return;
     }
 
