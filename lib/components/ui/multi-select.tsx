@@ -312,8 +312,8 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
       (option: InternalMultiSelectOptionType | MultiSelectOptionType) => {
         if (!onChange) return;
 
-        // Блокируем выбор disabled опций
-        if (option.disabled) return;
+        // Блокируем выбор disabled опций, но разрешаем отменять их выбор
+        if (option.disabled && !value.includes(option.value as string)) return;
 
         if (option.value === ALL_VALUE) {
           if (isAllSelected) {
