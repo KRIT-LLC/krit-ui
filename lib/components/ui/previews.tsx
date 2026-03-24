@@ -1,11 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  acceptMap,
   AttachmentItem,
   ContentType,
   defaultAccepts,
-  MAX_AUDIO_SIZE_MB,
   MAX_ARCHIVE_SIZE_MB,
+  MAX_AUDIO_SIZE_MB,
   MAX_EXCEL_SIZE_MB,
   MAX_IMAGE_SIZE_MB,
   MAX_PDF_SIZE_MB,
@@ -13,20 +12,21 @@ import {
   MAX_VIDEO_SIZE_MB,
   MAX_WORD_SIZE_MB,
 } from '@/lib/attachments';
-import { compressFile } from '@/lib/file';
 import { Loader2 } from 'lucide-react';
-import { useNotify } from '@/hooks/useNotify';
+import { useConfirm } from '@/hooks/useConfirm';
+import { usePreviewsFilePicker } from '@/hooks/usePreviewsFilePicker';
 import { useTranslation } from '@/hooks/useTranslation';
 import { cn } from '@/utils';
 import { AudioFileIcon, CloseIcon, DeleteOutlineIcon, FileIcon, VideoFileIcon } from '@/assets';
 import AttachFile from '@/assets/attach_file.svg?react';
-import { useConfirm } from '../../hooks/useConfirm';
 import { Input } from './input';
 import { PreviewFull } from './previewFull';
+import {
+  filterValidAttachmentItems,
+  getAttachmentContentType,
+  PREVIEW_TYPES,
+} from './previewsShared';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip';
-
-// Типы файлов, которые открываются в модальном окне (не скачиваются)
-const PREVIEW_TYPES: ContentType[] = ['image', 'video', 'audio'];
 
 export interface PreviewsProps {
   className?: string;
@@ -91,6 +91,8 @@ export interface PreviewsProps {
  *   max={5}
  *   orientation="vertical"
  * />
+ *
+ * Для компактного списка и кнопки в другом месте экрана см. `PreviewsCompactList` и `usePreviewsFilePicker`.
  */
 export const Previews = (props: PreviewsProps) => {
   const {
@@ -117,42 +119,41 @@ export const Previews = (props: PreviewsProps) => {
     withCompress = true,
     onAdd,
     onRemove,
+    handleFileLimit,
+    handleAllFilesLimit,
   } = props;
   const { confirm } = useConfirm();
-  const { notifyError } = useNotify();
-  const inputRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation();
 
-  // Определение типа файла по MIME типу
-  const getContentTypeFromMime = (mimeType: string): ContentType | null => {
-    const mime = mimeType.toLowerCase();
-    
-    if (mime.includes('pdf')) return 'pdf';
-    if (mime.includes('wordprocessingml') || mime === 'application/msword') return 'word';
-    if (mime.includes('spreadsheetml') || mime.includes('ms-excel')) return 'excel';
-    if (mime === 'application/zip' || mime.includes('rar') || mime.includes('7z')) return 'archive';
-    if (mime.includes('image')) return 'image';
-    if (mime.includes('video')) return 'video';
-    if (mime.includes('audio')) return 'audio';
-    
-    return null;
-  };
+  const {
+    inputRef,
+    processing,
+    pickerDisabled,
+    acceptAttr,
+    multiple: multiplePicker,
+    onFileInputChange,
+  } = usePreviewsFilePicker({
+    accepts,
+    multiple,
+    max,
+    maxSizes,
+    withCompress,
+    onAdd,
+    handleFileLimit,
+    handleAllFilesLimit,
+    attachmentData: data,
+  });
 
-  const getType = (attachment?: AttachmentItem): ContentType => {
-    if (!attachment?.contentType) return 'image';
-    return getContentTypeFromMime(attachment.contentType) || 'image';
-  };
+  const getType = (attachment?: AttachmentItem): ContentType =>
+    getAttachmentContentType(attachment);
 
-  // Фильтруем битые файлы (без url или contentType)
-  const validData = data.filter(item => item?.url && item?.contentType);
+  const validData = filterValidAttachmentItems(data);
 
-  // Фильтруем файлы для навигации слайдера (только те, что открываются в модальном окне)
   const previewableItems = validData.filter(item => PREVIEW_TYPES.includes(getType(item)));
   const [currentPreview, setCurrentPreview] = useState<AttachmentItem>(previewableItems[0]);
 
-  // Обновляем currentPreview при изменении данных
   useEffect(() => {
-    const valid = data.filter(item => item?.url && item?.contentType);
+    const valid = filterValidAttachmentItems(data);
     const previewable = valid.filter(item => PREVIEW_TYPES.includes(getType(item)));
     setCurrentPreview(prev => (previewable.includes(prev) ? prev : previewable[0]));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -168,95 +169,7 @@ export const Previews = (props: PreviewsProps) => {
     return nextItem ? () => setCurrentPreview(nextItem) : undefined;
   };
 
-  const mbToBytes = (mb: number = 0) => mb * 1024 * 1024;
   const bytesToMb = (bytes: number = 0) => (bytes / (1024 * 1024)).toFixed(2);
-  
-  // Используем единую функцию для определения типа файла
-  const isImage = (file: File) => getContentTypeFromMime(file.type) === 'image';
-  const isAudio = (file: File) => getContentTypeFromMime(file.type) === 'audio';
-  const isPdf = (file: File) => getContentTypeFromMime(file.type) === 'pdf';
-  const isWord = (file: File) => getContentTypeFromMime(file.type) === 'word';
-  const isExcel = (file: File) => getContentTypeFromMime(file.type) === 'excel';
-  const isArchive = (file: File) => getContentTypeFromMime(file.type) === 'archive';
-
-  const [processing, setProcessing] = useState(false);
-
-  const handleInputChange = async (files: FileList) => {
-    const isSizeOk = (file: File) => {
-      if (isImage(file)) return file.size < mbToBytes(maxSizes.image);
-      else if (isAudio(file)) return file.size < mbToBytes(maxSizes.audio);
-      else if (isPdf(file)) return file.size < mbToBytes(maxSizes.pdf);
-      else if (isWord(file)) return file.size < mbToBytes(maxSizes.word);
-      else if (isExcel(file)) return file.size < mbToBytes(maxSizes.excel);
-      else if (isArchive(file)) return file.size < mbToBytes(maxSizes.archive);
-      else return file.size < mbToBytes(maxSizes.video);
-    };
-
-    const getMaxSizeForFileType = (
-      file: File,
-      maxSizes: {
-        image?: number;
-        audio?: number;
-        pdf?: number;
-        video?: number;
-        word?: number;
-        excel?: number;
-        archive?: number;
-      },
-    ) => {
-      if (isImage(file)) return maxSizes.image;
-      if (isAudio(file)) return maxSizes.audio;
-      if (isPdf(file)) return maxSizes.pdf;
-      if (isWord(file)) return maxSizes.word;
-      if (isExcel(file)) return maxSizes.excel;
-      if (isArchive(file)) return maxSizes.archive;
-      return maxSizes.video;
-    };
-
-    const calculateCompressQuality = (file: File) => {
-      const maxSizeBytes = mbToBytes(getMaxSizeForFileType(file, maxSizes));
-      const quality = Number((maxSizeBytes / file.size).toFixed(2));
-      if (quality >= 1) return 1;
-      return quality;
-    };
-
-    const filesArray = Array.from(files);
-    if (filesArray.length) setProcessing(true);
-    for (const file of filesArray) {
-      const processedFile =
-        !isSizeOk(file) && withCompress
-          ? await compressFile(file, { quality: calculateCompressQuality(file) })
-          : file;
-      filesArray[filesArray.indexOf(file)] = processedFile;
-      if (!isSizeOk(processedFile)) {
-        if (isImage(file))
-          notifyError(`${t('imageSizeLimitMB')} ${maxSizes.image}(MB) (${file.name})`);
-        else if (isAudio(file))
-          notifyError(`${t('audioSizeLimitMB')} ${maxSizes.audio}(MB) (${file.name})`);
-        else if (isPdf(file))
-          notifyError(`${t('pdfSizeLimitMB')} ${maxSizes.pdf}(MB) (${file.name})`);
-        else if (isWord(file))
-          notifyError(`${t('videoSizeLimitMB')} ${maxSizes.word}(MB) (${file.name})`);
-        else if (isExcel(file))
-          notifyError(`${t('videoSizeLimitMB')} ${maxSizes.excel}(MB) (${file.name})`);
-        else if (isArchive(file))
-          notifyError(`${t('videoSizeLimitMB')} ${maxSizes.archive}(MB) (${file.name})`);
-        else notifyError(`${t('videoSizeLimitMB')} ${maxSizes.video}(MB) (${file.name})`);
-      }
-    }
-    const currentFiles = validData.filter(item => !!item.file).map(item => item.file);
-    const totalSizeMb =
-      [...currentFiles, ...filesArray].reduce((acc, file) => acc + file!.size, 0) / 1024 / 1024;
-    if (!maxSizes?.total || totalSizeMb > maxSizes.total) {
-      notifyError(`${t('maxSizeOfFilesMB')} ${maxSizes.total}(MB)`);
-      return setProcessing(false);
-    }
-    const filesWithOkSize = filesArray.filter(isSizeOk);
-    const results = max ? filesWithOkSize.slice(0, max) : filesWithOkSize;
-    if (results.length) onAdd?.(results);
-    if (inputRef.current) inputRef.current.value = '';
-    setProcessing(false);
-  };
 
   const onRemoveAttachment = async (item: AttachmentItem, index: number) => {
     const confirmed = await confirm({
@@ -271,6 +184,8 @@ export const Previews = (props: PreviewsProps) => {
     `${prefix}h-[${previewSize}px] ${prefix}w-[${previewSize}px]`;
   const getMinSizeClass = () => getSizeClass('min-');
 
+  const canShowAddTile = onAdd && (!max || validData.length < max);
+
   return (
     <div
       className={cn(
@@ -282,7 +197,7 @@ export const Previews = (props: PreviewsProps) => {
         className,
       )}
     >
-      {onAdd && (!max || validData.length < max) && (
+      {canShowAddTile && (
         <div
           className={cn(
             'w-[130px] h-[130px] relative flex justify-center items-center rounded-lg border-foreground/10 bg-[transparent] text-[transparent] cursor-pointer transition-colors',
@@ -297,10 +212,10 @@ export const Previews = (props: PreviewsProps) => {
             }
             id='attachment'
             type='file'
-            accept={accepts.map(type => acceptMap.get(type)).join(',')}
-            multiple={multiple}
-            disabled={!!max && validData.length >= max}
-            onChange={e => e.target.files?.length && handleInputChange(e.target.files)}
+            accept={acceptAttr}
+            multiple={multiplePicker}
+            disabled={pickerDisabled}
+            onChange={onFileInputChange}
           />
           {processing ? (
             <Loader2 className='absolute pointer-events-none h-7 w-7 animate-spin opacity-80' />
@@ -325,7 +240,6 @@ export const Previews = (props: PreviewsProps) => {
           item.url?.split('/').pop() +
             `.${item.contentType?.split('/').pop() || (fileType === 'video' ? 'mp4' : fileType === 'audio' ? 'mp3' : fileType === 'word' ? 'docx' : fileType === 'excel' ? 'xlsx' : fileType === 'archive' ? 'zip' : 'pdf')}`;
 
-        // Рендеринг контента файла
         const fileContent = (
           <span className='relative'>
             {fileType === 'image' && (
