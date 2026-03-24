@@ -1,5 +1,14 @@
 import { AttachmentItem } from './attachments';
 
+/** Двоичный мегабайт (1024² байт) */
+export const MB_IN_BYTES = 1024 * 1024;
+
+/** Переводит мегабайты в байты */
+export const mbToBytes = (mb: number = 0): number => mb * MB_IN_BYTES;
+
+/** Размер в МБ для отображения, два знака после запятой */
+export const bytesToMb = (bytes: number = 0): string => (bytes / MB_IN_BYTES).toFixed(2);
+
 export const compressImage = async (file: File, { quality = 1, type = file.type } = {}) => {
   const imageBitmap = await createImageBitmap(file);
   const canvas = document.createElement('canvas');
@@ -24,7 +33,7 @@ export type ValidateFileResult =
   | { ok: false; fileTypeError?: string; fileSizeError?: string };
 
 export const validateFileSize = (file: File, maxFileSize: number): ValidateFileResult => {
-  const ok = file.size < maxFileSize * 1024 * 1024;
+  const ok = file.size < mbToBytes(maxFileSize);
   const error = `Размер файла должен быть не более ${maxFileSize} МБ`;
   if (ok) return { ok: true };
   return { ok: false, fileSizeError: error };

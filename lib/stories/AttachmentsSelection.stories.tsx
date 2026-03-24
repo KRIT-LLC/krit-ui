@@ -108,8 +108,8 @@ export const RestrictedTypes: Story = {
   args: {
     accepts: ['image', 'pdf'],
     maxSizes: {
-      image: 2 * 1024 * 1024,
-      pdf: 5 * 1024 * 1024,
+      image: 2,
+      pdf: 5,
     },
   },
 };

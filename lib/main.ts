@@ -38,6 +38,7 @@ export * from '@/components/ui/file-input';
 export * from '@/components/ui/text-area';
 export * from '@/components/ui/switch';
 export * from '@/components/ui/previews';
+export * from '@/components/ui/previewsCompactList';
 export * from '@/components/ui/multi-select';
 export * from '@/components/ui/resizable';
 export * from '@/components/ui/theme-provider';
@@ -68,6 +69,7 @@ export * from '@/hooks/useToast';
 export * from '@/hooks/useNotify';
 export * from '@/hooks/useTheme';
 export * from '@/hooks/useConfirm';
+export * from '@/hooks/usePreviewsFilePicker';
 export * from '@/hooks/useCombinedRefs';
 export * from '@/lib/file';
 export * from '@/lib/zod';
@@ -83,3 +85,5 @@ export * from '@/hooks/useColumnFilters';
 export * from '@/lib/selectUtils';
 
 export * from '@/assets';
+
+export { Loader2 } from 'lucide-react';
