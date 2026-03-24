@@ -28,6 +28,12 @@
 ![add_circle_outline.svg](add_circle_outline.svg)
 #### AddOutlineIcon
 ![add_outline.svg](add_outline.svg)
+#### AiAssistantIcon
+![ai_assistant.svg](ai_assistant.svg)
+#### AiChatSendIcon
+![ai_chat_send.svg](ai_chat_send.svg)
+#### AiChatWelcomeIcon
+![ai_chat_welcome.svg](ai_chat_welcome.svg)
 #### AnalyticsIcon
 ![analytics.svg](analytics.svg)
 #### ArchiveIcon
