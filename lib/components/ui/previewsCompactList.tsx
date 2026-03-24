@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { AttachmentItem, ContentType } from '@/lib/attachments';
+import { bytesToMb } from '@/lib/file';
 import { AudioFileIcon, CloseIcon, FileIcon, VideoFileIcon } from '@/assets';
 import { useConfirm } from '@/hooks/useConfirm';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -24,8 +25,6 @@ export interface PreviewsCompactListProps {
    */
   cardSize?: 'S' | 'M';
 }
-
-const bytesToMb = (bytes: number = 0) => (bytes / (1024 * 1024)).toFixed(2);
 
 const getFileName = (item: AttachmentItem, fileType: ContentType): string =>
   item.fileName ||

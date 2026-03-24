@@ -14,7 +14,7 @@ import {
   MAX_VIDEO_SIZE_MB,
   MAX_WORD_SIZE_MB,
 } from '@/lib/attachments';
-import { compressFile } from '@/lib/file';
+import { compressFile, mbToBytes, MB_IN_BYTES } from '@/lib/file';
 import { useNotify } from '@/hooks/useNotify';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -54,8 +54,6 @@ const defaultMaxSizes: Required<PreviewsFilePickerMaxSizes> = {
   excel: MAX_EXCEL_SIZE_MB,
   archive: MAX_ARCHIVE_SIZE_MB,
 };
-
-const mbToBytes = (mb: number = 0) => mb * 1024 * 1024;
 
 export interface UsePreviewsFilePickerResult {
   inputRef: React.RefObject<HTMLInputElement>;
@@ -169,7 +167,7 @@ export const usePreviewsFilePicker = (
 
       const currentFiles = valid.filter((item) => !!item.file).map((item) => item.file!);
       const totalSizeMb =
-        [...currentFiles, ...filesArray].reduce((acc, file) => acc + file.size, 0) / 1024 / 1024;
+        [...currentFiles, ...filesArray].reduce((acc, file) => acc + file.size, 0) / MB_IN_BYTES;
 
       if (maxSizes.total != null && totalSizeMb > maxSizes.total) {
         notifyError(`${t('maxSizeOfFilesMB')} ${maxSizes.total}(MB)`);

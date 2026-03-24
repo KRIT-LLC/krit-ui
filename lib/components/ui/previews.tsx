@@ -12,6 +12,7 @@ import {
   MAX_VIDEO_SIZE_MB,
   MAX_WORD_SIZE_MB,
 } from '@/lib/attachments';
+import { bytesToMb } from '@/lib/file';
 import { Loader2 } from 'lucide-react';
 import { useConfirm } from '@/hooks/useConfirm';
 import { usePreviewsFilePicker } from '@/hooks/usePreviewsFilePicker';
@@ -168,8 +169,6 @@ export const Previews = (props: PreviewsProps) => {
     const nextItem = previewableItems[previewableItems.indexOf(currentPreview) + 1];
     return nextItem ? () => setCurrentPreview(nextItem) : undefined;
   };
-
-  const bytesToMb = (bytes: number = 0) => (bytes / (1024 * 1024)).toFixed(2);
 
   const onRemoveAttachment = async (item: AttachmentItem, index: number) => {
     const confirmed = await confirm({
