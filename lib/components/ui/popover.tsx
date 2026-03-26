@@ -20,6 +20,11 @@ const Popover = PopoverPrimitive.Root;
 const PopoverTrigger = PopoverPrimitive.Trigger;
 
 /**
+ * Кнопка закрытия Popover (должна находиться внутри контекста Popover)
+ */
+const PopoverClose = PopoverPrimitive.Close;
+
+/**
  * Содержимое Popover
  * @component
  * @param {Object} props - Свойства компонента
@@ -47,4 +52,4 @@ const PopoverContent = React.forwardRef<
 ));
 PopoverContent.displayName = PopoverPrimitive.Content.displayName;
 
-export { Popover, PopoverTrigger, PopoverContent };
+export { Popover, PopoverClose, PopoverTrigger, PopoverContent };
