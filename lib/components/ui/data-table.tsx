@@ -165,6 +165,11 @@ export function DataTable<TData, TValue>({
     getSubRows: row => row.subRows,
   });
 
+  /** Скрываем футер при одной странице по серверному total (выбор строк не показывает пагинацию — счётчик в своих панелях страниц). */
+  const showPaginationFooter =
+    !!pagination &&
+    (rowCount === undefined || rowCount > pagination.pageSize);
+
   const getCellPadding = () => {
     if (variant === 'list') {
       return 'first:pl-0 last:pr-0';
@@ -208,10 +213,21 @@ export function DataTable<TData, TValue>({
       onMouseLeave={handleRowMouseLeave}
       className={cn('relative flex flex-1 flex-col h-full', className)}
     >
-      <Table striped={striped}>
+      <Table
+        striped={striped}
+        className={cn(
+          'border-t border-line-primary',
+          // Нижняя граница только без пагинации: у Pagination уже есть border-t
+          !showPaginationFooter && 'border-b border-line-primary',
+        )}
+      >
         {!hideHeader && (
           <TableHeader
-            className={cn(isStickyHeader && 'sticky top-0 bg-background z-20', headerClassName)}
+            className={cn(
+              'bg-background-secondary',
+              isStickyHeader && 'sticky top-0 z-20',
+              headerClassName,
+            )}
           >
             {table.getHeaderGroups().map(headerGroup => (
               <TableRow
@@ -372,7 +388,7 @@ export function DataTable<TData, TValue>({
         </div>
       )}
       {additionalSlot}
-      {pagination && (
+      {showPaginationFooter && (
         <DataTablePagination
           paginationProps={paginationProps}
           table={table}

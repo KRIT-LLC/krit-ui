@@ -50,25 +50,18 @@ export const BottomMenu = React.forwardRef<HTMLDivElement, BottomMenuProps>(
     return (
       <div
         ref={ref}
-        style={{ left: 'var(--sidebar-width, 0px)' }}
+        style={{ left: 'calc(var(--sidebar-width, 0px) + 1rem)' }}
         className={cn(
-          'fixed bottom-0 right-0 flex items-center justify-center p-4',
-          'shadow-bottom-menu',
+          'fixed bottom-[8px] right-4 flex h-[52px] items-center justify-between gap-4',
+          'rounded-[12px] border-0 bg-background-sidebar px-4 py-2 shadow-none',
           className,
         )}
         {...props}
       >
-        <div
-          className={cn(
-            'flex w-full items-center justify-between gap-4 rounded-xl bg-background-sidebar p-4',
-            'max-w-full',
-          )}
-        >
-          <p className='text-sm font-normal leading-5 tracking-[0.25px] text-foreground-white'>
-            {label}
-          </p>
-          {actions && <div className='flex items-center gap-2'>{actions}</div>}
-        </div>
+        <p className='text-sm font-normal leading-5 tracking-[0.25px] text-foreground-white'>
+          {label}
+        </p>
+        {actions && <div className='flex items-center gap-2'>{actions}</div>}
       </div>
     );
   },

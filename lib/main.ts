@@ -62,6 +62,7 @@ export * from '@/components/ui/sheet';
 export * from '@/components/ui/scroll-area';
 export * from '@/components/ui/widget-plan-fact';
 export * from '@/components/ui/sort-component';
+export * from '@/components/ui/page-view-mode-toggle';
 
 export * from '@/utils';
 

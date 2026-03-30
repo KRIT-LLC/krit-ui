@@ -71,6 +71,8 @@ const translations = {
   showAll: 'Show all',
   chooseAll: 'Choose all',
   withoutSort: 'Without sort',
+  listView: 'List view',
+  tableView: 'Table view',
 };
 
 export type Translations = keyof typeof translations;
