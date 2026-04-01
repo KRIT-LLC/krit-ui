@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { cn } from '@/utils';
 
-export type TimeBadgeVariant = 'default' | 'warning' | 'error';
+export type TimeBadgeVariant = 'default' | 'warning' | 'error' | 'success';
 
 interface TimeBadgeProps {
   /** Дата и время в формате "DD.MM.YYYY HH:mm" */
@@ -16,7 +16,7 @@ interface TimeBadgeProps {
 
 /**
  * Компонент для отображения даты/времени и длительности в виде бейджа.
- * Поддерживает различные варианты стилей: default, warning (желтый), error (красный).
+ * Поддерживает различные варианты стилей: default, warning (жёлтый), error (красный), success (зелёный).
  *
  * @component
  * @param {TimeBadgeProps} props - Пропсы компонента
@@ -44,6 +44,7 @@ const TimeBadge = ({ dateTime, duration, variant = 'default', className }: TimeB
     default: 'text-foreground-primary',
     warning: 'bg-background-warning-fade text-foreground-warning',
     error: 'bg-background-error-fade text-foreground-error',
+    success: 'bg-background-success-fade text-foreground-success',
   };
 
   const badgeClassName = cn(
