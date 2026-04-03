@@ -25,6 +25,13 @@ const PopoverTrigger = PopoverPrimitive.Trigger;
 const PopoverClose = PopoverPrimitive.Close;
 
 /**
+ * Кастомная точка привязки для позиционирования содержимого (например, когда триггер шире видимой области).
+ * @see https://www.radix-ui.com/primitives/docs/components/popover#anchor
+ */
+const PopoverAnchor = PopoverPrimitive.Anchor;
+PopoverAnchor.displayName = PopoverPrimitive.Anchor.displayName;
+
+/**
  * Содержимое Popover
  * @component
  * @param {Object} props - Свойства компонента
@@ -52,4 +59,4 @@ const PopoverContent = React.forwardRef<
 ));
 PopoverContent.displayName = PopoverPrimitive.Content.displayName;
 
-export { Popover, PopoverClose, PopoverTrigger, PopoverContent };
+export { Popover, PopoverAnchor, PopoverClose, PopoverTrigger, PopoverContent };
