@@ -35,7 +35,7 @@ export interface DateRange {
 export interface DatePickerSingleProps extends DayPickerSingleProps {
   placeholder?: string;
   innerLabel?: string;
-  value?: Date;
+  value?: Date | null;
   onChange?: SelectSingleEventHandler;
   error?: string | boolean;
   readOnly?: boolean;
@@ -100,7 +100,8 @@ export type DatePickerProps =
  *   showReset
  * />
  */
-export function DatePicker({ className, locale, iconClassName, ...props }: DatePickerProps) {
+export function DatePicker({ className, locale, iconClassName, ...rawProps }: DatePickerProps) {
+  const props = { ...rawProps, value: rawProps.value ?? undefined } as typeof rawProps;
   // Константы
   const { t } = useTranslation();
   const inputRef = React.useRef<HTMLInputElement>(null);
