@@ -179,6 +179,7 @@ export function DatePicker({ className, locale, iconClassName, ...rawProps }: Da
   };
 
   const handleInputFocus = () => {
+    if (props.readOnly) return;
     setIsInputMode(true);
     setIsPopoverOpen(true);
     const currentValue = getDisplayValue();
