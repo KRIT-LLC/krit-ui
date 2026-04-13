@@ -160,7 +160,7 @@ const WidgetPlanFact = ({ rows, orientation = 'vertical', className }: WidgetPla
             <TimeBadge
               dateTime={row.factDateTime}
               duration={row.factDuration}
-              variant={row.factVariant || 'error'}
+              variant={row.factVariant ?? 'default'}
             />
           </div>
 
@@ -184,7 +184,7 @@ const WidgetPlanFact = ({ rows, orientation = 'vertical', className }: WidgetPla
           <TimeBadge
             dateTime={row.factDateTime}
             duration={row.factDuration}
-            variant={row.factVariant || 'error'}
+            variant={row.factVariant ?? 'default'}
           />
         </div>
 
