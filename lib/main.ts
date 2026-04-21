@@ -60,6 +60,7 @@ export * from '@/components/ui/filters-column-header';
 export * from '@/components/ui/number-input';
 export * from '@/components/ui/sheet';
 export * from '@/components/ui/scroll-area';
+export * from '@/components/ui/secondary-panel-section';
 export * from '@/components/ui/widget-plan-fact';
 export * from '@/components/ui/sort-component';
 export * from '@/components/ui/page-view-mode-toggle';
