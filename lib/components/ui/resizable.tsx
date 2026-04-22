@@ -1,3 +1,11 @@
+import {
+  forwardRef,
+  type ComponentPropsWithoutRef,
+  type ForwardRefExoticComponent,
+  type RefAttributes,
+} from 'react';
+
+import type { ImperativePanelGroupHandle } from 'react-resizable-panels';
 import * as ResizablePrimitive from 'react-resizable-panels';
 import { GripVertical } from 'lucide-react';
 import { cn } from '@/utils';
@@ -24,15 +32,20 @@ import { cn } from '@/utils';
  *   </ResizablePanel>
  * </ResizablePanelGroup>
  */
-const ResizablePanelGroup = ({
-  className,
-  ...props
-}: React.ComponentProps<typeof ResizablePrimitive.PanelGroup>) => (
+const ResizablePanelGroup: ForwardRefExoticComponent<
+  ComponentPropsWithoutRef<typeof ResizablePrimitive.PanelGroup> &
+    RefAttributes<ImperativePanelGroupHandle>
+> = forwardRef<
+  ImperativePanelGroupHandle,
+  ComponentPropsWithoutRef<typeof ResizablePrimitive.PanelGroup>
+>(({ className, ...props }, ref) => (
   <ResizablePrimitive.PanelGroup
+    ref={ref}
     className={cn('flex h-full w-full data-[panel-group-direction=vertical]:flex-col', className)}
     {...props}
   />
-);
+));
+ResizablePanelGroup.displayName = 'ResizablePanelGroup';
 
 /**
  * Изменяемая панель, которая может быть перетаскиваема для изменения размера.
