@@ -1,4 +1,4 @@
-import { Fragment, ReactNode, useMemo, useRef } from 'react';
+import { forwardRef, Fragment, ReactNode, useMemo, useRef } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { cn } from '@/utils';
 import { ArrowDropDownIcon } from '@/assets';
@@ -36,6 +36,37 @@ export interface TreeViewConfig<T extends TreeNode> {
   renderExpandIcon?: (node: T, isExpanded: boolean, onClick: () => void) => ReactNode;
 }
 
+/**
+ * Содержимое строки таблицы + узел. Позволяет подмешивать, например, `useDraggable` на &lt;tr ref&gt;.
+ */
+export interface TreeViewTableRowProps<T extends TreeNode> {
+  node: T;
+  'data-index'?: number | string;
+  onClick: () => void;
+  onDoubleClick: () => void;
+  className: string;
+  children: React.ReactNode;
+}
+
+export type TreeViewTableRowComponent<T extends TreeNode> = React.ForwardRefExoticComponent<
+  TreeViewTableRowProps<T> & React.RefAttributes<HTMLTableRowElement>
+>;
+
+const DefaultTableRow = forwardRef<HTMLTableRowElement, TreeViewTableRowProps<TreeNode>>(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- node нужен в API кастомной строки
+  ({ node: _n, children, onClick, onDoubleClick, className, 'data-index': dataIndex }, ref) => (
+    <tr
+      ref={ref}
+      data-index={dataIndex}
+      onClick={onClick}
+      onDoubleClick={onDoubleClick}
+      className={className}>
+      {children}
+    </tr>
+  ),
+);
+DefaultTableRow.displayName = 'DefaultTableRow';
+
 export interface TreeViewProps<T extends TreeNode> {
   nodes: T[];
   selected?: unknown;
@@ -45,6 +76,11 @@ export interface TreeViewProps<T extends TreeNode> {
   columnWidths?: (number | string)[];
   columnAlignments?: ('left' | 'center' | 'right')[];
   onExpand: (node: T) => void;
+  /**
+   * Кастомный &lt;tr&gt; (например, с ref для dnd-kit). По умолчанию — стандартная строка.
+   * Должен рендерить &lt;tr ref&gt; в корне и вложить `children` (колонки &lt;td&gt;).
+   */
+  tableRowComponent?: TreeViewTableRowComponent<T>;
 
   // Virtualization props
   virtualized?: boolean;
@@ -53,6 +89,11 @@ export interface TreeViewProps<T extends TreeNode> {
   scrollElementRef?: React.RefObject<HTMLDivElement>;
   /** ID для scroll-контейнера (для синхронизации скролла с другими элементами) */
   scrollContainerId?: string;
+  /**
+   * Если задан, подменяет содержимое первой ячейки заголовка (например, заголовок + кнопка).
+   * Остальные колонки по-прежнему из `headers`.
+   */
+  renderFirstColumnHeader?: ReactNode;
 }
 
 /**
@@ -109,12 +150,16 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
     columnWidths,
     columnAlignments,
     onExpand,
+    tableRowComponent: TableRowFromProps,
     virtualized = false,
     estimateRowSize = 40,
     overscan = 20,
     scrollElementRef: externalScrollRef,
     scrollContainerId,
+    renderFirstColumnHeader,
   } = props;
+
+  const Tr = (TableRowFromProps ?? DefaultTableRow) as TreeViewTableRowComponent<T>;
 
   const internalScrollRef = useRef<HTMLDivElement>(null);
   const scrollRef = externalScrollRef || internalScrollRef;
@@ -254,10 +299,11 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
     const shouldShowCursor = !!(node.onClick || node.onDoubleClick);
 
     return (
-      <tr
+      <Tr
         key={trKey}
         ref={measureRef}
         data-index={rowKey}
+        node={node}
         className='group'
         onClick={() => node.onClick?.()}
         onDoubleClick={() => node.onDoubleClick?.()}
@@ -369,7 +415,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
             {value}
           </td>
         ))}
-      </tr>
+      </Tr>
     );
   };
 
@@ -398,7 +444,8 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
 
       return (
         <Fragment key={nodeId}>
-          <tr
+          <Tr
+            node={node}
             className='group'
             onClick={() => node.onClick?.()}
             onDoubleClick={() => node.onDoubleClick?.()}
@@ -510,7 +557,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
                 {value}
               </td>
             ))}
-          </tr>
+          </Tr>
           {!!children?.length &&
             isExpanded &&
             (() => {
@@ -546,14 +593,14 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
             <tr>
               <th
                 className={cn(
-                  'box-border px-2 h-[40px] text-left text-foreground-primary text-sm font-medium border-b border-r border-line-primary border-b-line-primary-disabled',
+                  'box-border px-2 h-[40px] min-w-0 text-left text-foreground-primary text-sm font-medium border-b border-r border-line-primary border-b-line-primary-disabled',
                   {
                     'border-r-0': headersArray.length === 1,
                   },
                 )}
                 style={getColumnWidth(0)}
               >
-                {headersArray[0] || ''}
+                {renderFirstColumnHeader ?? (headersArray[0] || '')}
               </th>
               {headersArray.slice(1).map((header, index) => (
                 <th
