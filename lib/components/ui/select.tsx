@@ -10,6 +10,7 @@ import { NetworkErrorMessage } from './network-error-message';
 export interface OptionType {
   label: string;
   value: string;
+  disabled?: boolean;
 }
 
 export interface SelectProps extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Root> {
@@ -184,14 +185,17 @@ const Select = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Trigger>
               width={'100%'}
             >
               {({ index, style }) => (
-                <SelectItem value={props.options[index].value} style={style}>
+                <SelectItem
+                  value={props.options[index].value}
+                  disabled={props.options[index].disabled}
+                  style={style}>
                   {renderOption(props.options[index])}
                 </SelectItem>
               )}
             </FixedSizeList>
           ) : (
             props.options.map(option => (
-              <SelectItem key={option.value} value={option.value}>
+              <SelectItem key={option.value} value={option.value} disabled={option.disabled}>
                 {renderOption(option)}
               </SelectItem>
             ))
