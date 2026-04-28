@@ -33,6 +33,9 @@ module.exports = {
         'theme-selected': 'hsl(var(--krit-background-states-theme-selected))',
         'theme-disabled': 'hsl(var(--krit-background-states-theme-disabled))',
         'theme-fade': 'hsl(var(--krit-background-theme-fade))',
+        /** Background states / Theme-fade / disabled (fallback на contrast-fade-disabled, если токен не задан в теме). */
+        'theme-fade-disabled':
+          'hsl(var(--krit-background-states-theme-fade-disabled, var(--krit-background-states-contrast-fade-disabled)))',
         contrast: 'hsl(var(--krit-background-contrast))',
         'contrast-hover': 'hsl(var(--krit-background-states-contrast-hover))',
         'contrast-disabled': 'hsl(var(--krit-background-states-contrast-disabled))',

@@ -1,13 +1,9 @@
-import {
-  forwardRef,
-  type ComponentPropsWithoutRef,
-  type ForwardRefExoticComponent,
-  type RefAttributes,
-} from 'react';
-
+import * as React from 'react';
 import type { ImperativePanelGroupHandle } from 'react-resizable-panels';
+
 import * as ResizablePrimitive from 'react-resizable-panels';
 import { GripVertical } from 'lucide-react';
+
 import { cn } from '@/utils';
 
 /**
@@ -32,12 +28,9 @@ import { cn } from '@/utils';
  *   </ResizablePanel>
  * </ResizablePanelGroup>
  */
-const ResizablePanelGroup: ForwardRefExoticComponent<
-  ComponentPropsWithoutRef<typeof ResizablePrimitive.PanelGroup> &
-    RefAttributes<ImperativePanelGroupHandle>
-> = forwardRef<
+const ResizablePanelGroup = React.forwardRef<
   ImperativePanelGroupHandle,
-  ComponentPropsWithoutRef<typeof ResizablePrimitive.PanelGroup>
+  React.ComponentPropsWithoutRef<typeof ResizablePrimitive.PanelGroup>
 >(({ className, ...props }, ref) => (
   <ResizablePrimitive.PanelGroup
     ref={ref}
