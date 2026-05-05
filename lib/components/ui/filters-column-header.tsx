@@ -28,6 +28,8 @@ interface BaseFilterProps {
   sortable?: boolean;
   /** Текущее направление сортировки (если не передано — берётся из column.getIsSorted()) */
   sorted?: ColumnSortDirection;
+  /** Включить сброс сортировки третьим кликом */
+  allowSortingReset?: boolean;
   /** Контент заголовка (подпись колонки) */
   children?: React.ReactNode;
 }
@@ -49,11 +51,17 @@ const FilterContent = ({
   excludeFilterValues,
   sortable = false,
   sorted: sortedProp,
+  allowSortingReset = false,
   children,
 }: BaseFilterProps) => {
   const sorted = sortedProp ?? column?.getIsSorted();
   const handleSortClick = () => {
     if (column?.getCanSort?.()) {
+      if (allowSortingReset && sorted === 'desc') {
+        column.clearSorting();
+        return;
+      }
+
       column.toggleSorting(sorted === 'asc');
     }
   };
@@ -325,6 +333,7 @@ export const FiltersColumnHeader = ({
   className,
   sortable = false,
   sorted,
+  allowSortingReset,
 }: FiltersColumnHeaderProps) => {
   return (
     <div className={cn('flex flex-row gap-2 items-center justify-between', className)}>
@@ -338,6 +347,7 @@ export const FiltersColumnHeader = ({
         excludeFilterValues={excludeFilterValues}
         sortable={sortable}
         sorted={sorted}
+        allowSortingReset={allowSortingReset}
       >
         {children}
       </FilterContent>
