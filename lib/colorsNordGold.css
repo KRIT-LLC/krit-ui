@@ -125,6 +125,7 @@
     --krit-line-success: 132 87% 33%;
     --krit-line-theme: 65 100% 34%;
     --krit-line-warning: 38 89% 47%;
+    --krit-line-sidebar: 220 16% 40%;
   }
 
   .darkNordGold {
@@ -252,6 +253,7 @@
     --krit-line-success: 133 95% 48%;
     --krit-line-theme: 64 100% 31%;
     --krit-line-warning: 53 93% 51%;
+    --krit-line-sidebar: 227 15% 42%;
   }
 
   /* Badge - элементы с bg-background-contrast-fade (класс применяется напрямую) */

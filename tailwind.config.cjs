@@ -90,6 +90,7 @@ module.exports = {
         theme: 'hsl(var(--krit-line-theme))',
         contrast: 'hsl(var(--krit-line-contrast))',
         focused: 'hsl(var(--krit-line-states-primary-focused))',
+        sidebar: 'hsl(var(--krit-line-sidebar))',
       },
       icon: {
         contrast: 'hsl(var(--krit-icon-contrast))',
