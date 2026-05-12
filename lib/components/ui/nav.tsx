@@ -295,5 +295,5 @@ export function Nav(props: NavProps) {
  * @returns {JSX.Element} Элемент разделителя
  */
 export function NavSeparator() {
-  return <Separator className='w-[calc(100%_-_24px)] ml-3 bg-line-secondary' />;
+  return <Separator intent='sidebar' className='w-[calc(100%_-_24px)] ml-3' />;
 }
