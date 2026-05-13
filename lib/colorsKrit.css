@@ -125,6 +125,7 @@
     --krit-line-success: 133 87% 34%;
     --krit-line-theme: 210 100% 61%;
     --krit-line-warning: 38 89% 47%;
+    --krit-line-sidebar: 220 16% 40%;
   }
 
   .darkKrit {
@@ -252,5 +253,6 @@
     --krit-line-success: 133 95% 49%;
     --krit-line-theme: 210 100% 61%;
     --krit-line-warning: 54 93% 52%;
+    --krit-line-sidebar: 229 15% 42%;
   }
 }

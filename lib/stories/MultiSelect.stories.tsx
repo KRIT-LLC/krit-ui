@@ -282,6 +282,50 @@ export const WithSelectAll: Story = {
   },
 };
 
+// С подгрузкой при прокрутке
+export const WithInfiniteScroll: Story = {
+  render: () => {
+    const pageSize = 20;
+    const totalItems = 80;
+    const allOptions: MultiSelectOptionType[] = Array.from({ length: totalItems }, (_, index) => ({
+      label: `Technology ${index + 1}`,
+      value: `tech-${index + 1}`,
+    }));
+
+    const [selected, setSelected] = React.useState<string[]>([]);
+    const [visibleCount, setVisibleCount] = React.useState(pageSize);
+    const [isLoadingMore, setIsLoadingMore] = React.useState(false);
+
+    const visibleOptions = React.useMemo(
+      () => allOptions.slice(0, visibleCount),
+      [allOptions, visibleCount],
+    );
+
+    const hasMore = visibleCount < totalItems;
+
+    const handleLoadMore = async () => {
+      if (!hasMore || isLoadingMore) return;
+
+      setIsLoadingMore(true);
+      await new Promise(resolve => setTimeout(resolve, 500));
+      setVisibleCount(prev => Math.min(prev + pageSize, totalItems));
+      setIsLoadingMore(false);
+    };
+
+    return (
+      <MultiSelect
+        options={visibleOptions}
+        value={selected}
+        onChange={setSelected}
+        placeholder='Select technologies'
+        onLoadMore={handleLoadMore}
+        hasMore={hasMore}
+        isLoadingMore={isLoadingMore}
+      />
+    );
+  },
+};
+
 // Комплексный пример
 export const Complex: Story = {
   render: () => {

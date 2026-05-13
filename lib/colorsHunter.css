@@ -128,6 +128,7 @@
     --krit-line-success: 133 87% 34%;
     --krit-line-theme: 216 100% 61%;
     --krit-line-warning: 38 89% 47%;
+    --krit-line-sidebar: 220 16% 40%;
   }
 
   .darkHunter {
@@ -258,5 +259,6 @@
     --krit-line-success: 133 95% 49%;
     --krit-line-theme: 216 100% 61%;
     --krit-line-warning: 54 93% 52%;
+    --krit-line-sidebar: 227 15% 42%;
   }
 }

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { FixedSizeList } from 'react-window';
+import { FixedSizeList, ListOnItemsRenderedProps } from 'react-window';
+import { InfiniteScroll } from '@/lib/infinite-scroll';
 import { useTranslation } from '@/hooks/useTranslation';
 import { cn } from '@/utils';
 import ArrowDropDown from '@/assets/arrow_drop_down.svg?react';
@@ -11,6 +12,7 @@ import { Checkbox } from './checkbox';
 import { Command, CommandInput, CommandItem, CommandList } from './command';
 import { NetworkErrorMessage } from './network-error-message';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
+import { Preloader } from './preloader';
 
 const ALL_VALUE = Symbol('all');
 
@@ -63,6 +65,9 @@ export interface MultiSelectProps {
   onRefetch?: () => void;
   onOpenChange?: (open: boolean) => void;
   onSearch?: (value: string) => void;
+  isLoadingMore?: boolean;
+  hasMore?: boolean;
+  onLoadMore?: () => Promise<unknown>;
   onChange?: (value: string[], labels?: string[]) => void;
   onClick?: () => void;
   onRemoveClick?: () => void;
@@ -181,6 +186,9 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
       onRefetch,
       onOpenChange,
       onSearch,
+      isLoadingMore,
+      hasMore,
+      onLoadMore,
       onChange,
       onClick,
       onRemoveClick,
@@ -365,10 +373,44 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
       return displayOptions;
     }, [displayOptions, search, shouldFilter]);
 
-    const getListHeight = React.useCallback(() => {
-      const totalHeight = filteredOptions.length * ITEM_SIZE;
+    const loadingMoreRef = React.useRef(false);
+    const hasInfiniteLoading = !!onLoadMore;
+
+    const triggerLoadMore = React.useCallback(() => {
+      if (!onLoadMore || !hasMore || isLoadingMore || loadingMoreRef.current) return;
+
+      loadingMoreRef.current = true;
+      Promise.resolve(onLoadMore()).finally(() => {
+        loadingMoreRef.current = false;
+      });
+    }, [onLoadMore, hasMore, isLoadingMore]);
+
+    React.useEffect(() => {
+      if (!isLoadingMore) {
+        loadingMoreRef.current = false;
+      }
+    }, [isLoadingMore]);
+
+    const listItemCount = React.useMemo(
+      () => filteredOptions.length + (hasInfiniteLoading && (hasMore || isLoadingMore) ? 1 : 0),
+      [filteredOptions.length, hasInfiniteLoading, hasMore, isLoadingMore],
+    );
+
+    const listHeight = React.useMemo(() => {
+      const totalHeight = listItemCount * ITEM_SIZE;
       return Math.min(totalHeight, MAX_HEIGHT);
-    }, [filteredOptions]);
+    }, [listItemCount]);
+
+    const handleVirtualItemsRendered = React.useCallback(
+      ({ visibleStopIndex }: ListOnItemsRenderedProps) => {
+        if (!hasInfiniteLoading || !hasMore || filteredOptions.length === 0) return;
+
+        if (visibleStopIndex >= filteredOptions.length - 1) {
+          triggerLoadMore();
+        }
+      },
+      [hasInfiniteLoading, hasMore, filteredOptions.length, triggerLoadMore],
+    );
 
     const valueText = React.useMemo(() => {
       if (isAllSelected && showAllOption && value.length > 1) {
@@ -588,15 +630,12 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
         }
 
         const expanded = !!expandedGroups[groupKey];
-        const groupHasMatch = shouldFilter
-          ? hasMatchingLeaf(group, search)
-          : true;
+        const groupHasMatch = shouldFilter ? hasMatchingLeaf(group, search) : true;
 
         const visibleChildren = shouldFilter
           ? children.filter(child => {
               const childChildren = (child as InternalMultiSelectOptionType).children || [];
-              const isChildGroup =
-                Array.isArray(childChildren) && childChildren.length > 0;
+              const isChildGroup = Array.isArray(childChildren) && childChildren.length > 0;
               if (isChildGroup) {
                 return hasMatchingLeaf(child as InternalMultiSelectOptionType, search);
               }
@@ -640,7 +679,15 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
           </div>
         );
       },
-      [expandedGroups, shouldFilter, search, toggleGroup, value, renderCommandItem, hasMatchingLeaf],
+      [
+        expandedGroups,
+        shouldFilter,
+        search,
+        toggleGroup,
+        value,
+        renderCommandItem,
+        hasMatchingLeaf,
+      ],
     );
 
     return (
@@ -744,12 +791,24 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
               )}
               {!hasGroups ? (
                 <FixedSizeList
-                  height={getListHeight()}
-                  itemCount={filteredOptions.length}
+                  height={listHeight}
+                  itemCount={listItemCount}
                   itemSize={ITEM_SIZE}
                   width='100%'
+                  onItemsRendered={handleVirtualItemsRendered}
                 >
                   {({ index, style }) => {
+                    const isLoadingItem = index >= filteredOptions.length;
+                    if (isLoadingItem) {
+                      return (
+                        <div style={style} className='flex items-center justify-center px-3'>
+                          {(isLoadingMore || hasMore) && (
+                            <Preloader className='h-fit py-2 [&>svg]:h-5 [&>svg]:w-5' />
+                          )}
+                        </div>
+                      );
+                    }
+
                     const option = filteredOptions[index];
                     const isChecked =
                       option.value === ALL_VALUE
@@ -769,6 +828,18 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
 
                   {internalOptions.map(opt =>
                     renderGroupRecursive(opt as InternalMultiSelectOptionType),
+                  )}
+                  {hasInfiniteLoading && (
+                    <InfiniteScroll
+                      hasMore={hasMore}
+                      loading={isLoadingMore}
+                      next={triggerLoadMore}
+                      threshold={1}
+                    >
+                      <div>
+                        {(isLoadingMore || hasMore) && <Preloader className='h-fit py-2' />}
+                      </div>
+                    </InfiniteScroll>
                   )}
                 </div>
               )}

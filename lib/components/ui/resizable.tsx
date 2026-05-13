@@ -1,13 +1,9 @@
-import {
-  forwardRef,
-  type ComponentPropsWithoutRef,
-  type ForwardRefExoticComponent,
-  type RefAttributes,
-} from 'react';
+import * as React from 'react';
+import type { ImperativePanelGroupHandle, PanelGroupProps } from 'react-resizable-panels';
 
-import type { ImperativePanelGroupHandle } from 'react-resizable-panels';
 import * as ResizablePrimitive from 'react-resizable-panels';
 import { GripVertical } from 'lucide-react';
+
 import { cn } from '@/utils';
 
 /**
@@ -18,7 +14,7 @@ import { cn } from '@/utils';
  * @param {object} props - Параметры компонента
  * @param {string} [props.className] - Дополнительные CSS-классы
  * @param {'horizontal' | 'vertical'} [props.direction] - Направление размещения панелей
- * @param {React.ComponentProps<typeof ResizablePrimitive.PanelGroup>} props - Стандартные свойства PanelGroup из react-resizable-panels
+ * @param {object} props - Стандартные свойства PanelGroup (PanelGroupProps) из react-resizable-panels
  * @returns {React.ReactElement} Контейнер для группы изменяемых панелей
  *
  * @example
@@ -32,13 +28,9 @@ import { cn } from '@/utils';
  *   </ResizablePanel>
  * </ResizablePanelGroup>
  */
-const ResizablePanelGroup: ForwardRefExoticComponent<
-  ComponentPropsWithoutRef<typeof ResizablePrimitive.PanelGroup> &
-    RefAttributes<ImperativePanelGroupHandle>
-> = forwardRef<
-  ImperativePanelGroupHandle,
-  ComponentPropsWithoutRef<typeof ResizablePrimitive.PanelGroup>
->(({ className, ...props }, ref) => (
+const ResizablePanelGroup: React.ForwardRefExoticComponent<
+  PanelGroupProps & React.RefAttributes<ImperativePanelGroupHandle>
+> = React.forwardRef<ImperativePanelGroupHandle, PanelGroupProps>(({ className, ...props }, ref) => (
   <ResizablePrimitive.PanelGroup
     ref={ref}
     className={cn('flex h-full w-full data-[panel-group-direction=vertical]:flex-col', className)}

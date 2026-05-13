@@ -1,5 +1,16 @@
-import { forwardRef, Fragment, ReactNode, useMemo, useRef } from 'react';
+import {
+  forwardRef,
+  Fragment,
+  type CSSProperties,
+  type ForwardRefExoticComponent,
+  type ReactNode,
+  type RefAttributes,
+  type RefObject,
+  useMemo,
+  useRef,
+} from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
+
 import { cn } from '@/utils';
 import { ArrowDropDownIcon } from '@/assets';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip';
@@ -11,6 +22,18 @@ export interface TreeNode<T = unknown> {
   [key: string]: unknown;
   onClick?: () => void;
   onDoubleClick?: () => void;
+}
+
+/**
+ * Пропсы строки таблицы при использовании `tableRowComponent` или строки по умолчанию в `TreeView`.
+ */
+export interface TreeViewTableRowProps<T extends TreeNode> {
+  node: T;
+  children: ReactNode;
+  onClick: () => void;
+  onDoubleClick: () => void;
+  className: string;
+  'data-index'?: number | string;
 }
 
 export interface TreeViewConfig<T extends TreeNode> {
@@ -37,19 +60,10 @@ export interface TreeViewConfig<T extends TreeNode> {
 }
 
 /**
- * Содержимое строки таблицы + узел. Позволяет подмешивать, например, `useDraggable` на &lt;tr ref&gt;.
+ * Строка таблицы с ref (виртуализатор dnd-kit и др.).
  */
-export interface TreeViewTableRowProps<T extends TreeNode> {
-  node: T;
-  'data-index'?: number | string;
-  onClick: () => void;
-  onDoubleClick: () => void;
-  className: string;
-  children: React.ReactNode;
-}
-
-export type TreeViewTableRowComponent<T extends TreeNode> = React.ForwardRefExoticComponent<
-  TreeViewTableRowProps<T> & React.RefAttributes<HTMLTableRowElement>
+export type TreeViewTableRowComponent<T extends TreeNode> = ForwardRefExoticComponent<
+  TreeViewTableRowProps<T> & RefAttributes<HTMLTableRowElement>
 >;
 
 const DefaultTableRow = forwardRef<HTMLTableRowElement, TreeViewTableRowProps<TreeNode>>(
@@ -77,8 +91,8 @@ export interface TreeViewProps<T extends TreeNode> {
   columnAlignments?: ('left' | 'center' | 'right')[];
   onExpand: (node: T) => void;
   /**
-   * Кастомный &lt;tr&gt; (например, с ref для dnd-kit). По умолчанию — стандартная строка.
-   * Должен рендерить &lt;tr ref&gt; в корне и вложить `children` (колонки &lt;td&gt;).
+   * Кастомная строка таблицы (например, с ref для dnd-kit). По умолчанию — стандартная строка.
+   * Должна рендерить &lt;tr ref&gt; в корне и вложить `children` (ячейки &lt;td&gt;).
    */
   tableRowComponent?: TreeViewTableRowComponent<T>;
 
@@ -86,7 +100,7 @@ export interface TreeViewProps<T extends TreeNode> {
   virtualized?: boolean;
   estimateRowSize?: number;
   overscan?: number;
-  scrollElementRef?: React.RefObject<HTMLDivElement>;
+  scrollElementRef?: RefObject<HTMLDivElement>;
   /** ID для scroll-контейнера (для синхронизации скролла с другими элементами) */
   scrollContainerId?: string;
   /**
@@ -161,8 +175,8 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
 
   const Tr = (TableRowFromProps ?? DefaultTableRow) as TreeViewTableRowComponent<T>;
 
-  const internalScrollRef = useRef<HTMLDivElement>(null);
-  const scrollRef = externalScrollRef || internalScrollRef;
+  const internalScrollRef = useRef<HTMLDivElement | null>(null);
+  const scrollRef = (externalScrollRef ?? internalScrollRef) as RefObject<HTMLDivElement>;
 
   // Flatten visible nodes for virtualization
   const flattenedNodesWithGuides = useMemo(() => {
@@ -181,17 +195,13 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
         const isExpanded = config.isNodeExpanded(node);
 
         if (children?.length && isExpanded) {
-          // If this is the last child, don't show parent's guide line through its DIRECT children only
           const newSkipGuides = new Array(level + 1).fill(false);
-          // Copy only the skipGuides that are still relevant (ancestors)
           for (let i = 0; i < level - 1; i++) {
             newSkipGuides[i] = skipGuides[i] || false;
           }
-          // Add skip for parent level if this is the last child
           if (isLastChild && level > 0) {
             newSkipGuides[level - 1] = true;
           }
-          // Show guide line through direct children even if this node is last child
           traverse(children, [...guides, true], newSkipGuides);
         }
       });
@@ -201,7 +211,6 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
     return result;
   }, [nodes, virtualized, config]);
 
-  // Setup virtualizer (must be called unconditionally per React Hooks rules)
   const virtualizer = useVirtualizer({
     count: virtualized ? flattenedNodesWithGuides.length : 0,
     getScrollElement: () => scrollRef.current,
@@ -211,13 +220,12 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
 
   const virtualItems = virtualized ? virtualizer.getVirtualItems() : [];
 
-  // Calculate padding for virtualization
-  const paddingTop = virtualized ? virtualItems[0]?.start || 0 : 0;
+  const paddingTop = virtualized ? virtualItems[0]?.start ?? 0 : 0;
   const paddingBottom = virtualized
-    ? virtualizer.getTotalSize() - (virtualItems[virtualItems.length - 1]?.end || 0)
+    ? virtualizer.getTotalSize() - (virtualItems[virtualItems.length - 1]?.end ?? 0)
     : 0;
 
-  const getColumnWidth = (index: number): React.CSSProperties | undefined => {
+  const getColumnWidth = (index: number): CSSProperties | undefined => {
     if (!columnWidths || !columnWidths[index]) return undefined;
     const width = columnWidths[index];
     return {
@@ -319,21 +327,15 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
           style={getColumnWidth(0)}
         >
           <div className='flex items-stretch'>
-            {/* Spacers for indentation and guide lines */}
             {Array.from({ length: level }).map((_, i) => (
               <div key={i} className='relative w-6 flex-shrink-0'>
-                {/* Vertical line for ancestors */}
                 {guides[i] && !(i === level - 1 && isLastChild) && !skipGuides[i] && (
                   <div className='absolute left-1/2 top-0 bottom-0 w-[1px] -translate-x-1/2 bg-line-contrast' />
                 )}
-                {/* Connection lines for current level */}
                 {i === level - 1 && (
                   <>
-                    {/* Vertical line from top to center */}
                     <div className='absolute left-1/2 top-0 h-1/2 w-[1px] -translate-x-1/2 bg-line-contrast' />
-                    {/* Horizontal line from center to right */}
                     <div className='absolute left-1/2 top-1/2 h-[1px] w-1/2 bg-line-contrast' />
-                    {/* Vertical line from center to bottom if not last child */}
                     {!isLastChild && (
                       <div className='absolute left-1/2 top-1/2 bottom-0 w-[1px] -translate-x-1/2 bg-line-contrast' />
                     )}
@@ -343,7 +345,6 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
             ))}
 
             <div className='flex items-center py-[3px] flex-1 min-w-0 relative'>
-              {/* Vertical line from parent icon to children */}
               {!!children?.length && isExpanded && (
                 <div className='absolute left-3 top-1/2 bottom-0 w-[1px] -translate-x-1/2 bg-line-contrast' />
               )}
@@ -372,9 +373,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
                           {headingText}
                         </span>
                       </TooltipTrigger>
-                      <TooltipContent className='max-w-[300px]'>
-                        {config.renderTooltip(node)}
-                      </TooltipContent>
+                      <TooltipContent className='max-w-[300px]'>{config.renderTooltip(node)}</TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
                 ) : (
@@ -438,8 +437,6 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
 
       const isLastChild = index === nodesToRender.length - 1;
 
-      // Определяем, должен ли узел показывать cursor-pointer
-      // Показываем cursor-pointer если у ноды есть onClick или onDoubleClick
       const shouldShowCursor = !!(node.onClick || node.onDoubleClick);
 
       return (
@@ -461,21 +458,15 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
               style={getColumnWidth(0)}
             >
               <div className='flex items-stretch'>
-                {/* Spacers for indentation and guide lines */}
                 {Array.from({ length: level }).map((_, i) => (
                   <div key={i} className='relative w-6 flex-shrink-0'>
-                    {/* Vertical line for ancestors */}
                     {guides[i] && !(i === level - 1 && isLastChild) && !skipGuides[i] && (
                       <div className='absolute left-1/2 top-0 bottom-0 w-[1px] -translate-x-1/2 bg-line-contrast' />
                     )}
-                    {/* Connection lines for current level */}
                     {i === level - 1 && (
                       <>
-                        {/* Vertical line from top to center */}
                         <div className='absolute left-1/2 top-0 h-1/2 w-[1px] -translate-x-1/2 bg-line-contrast' />
-                        {/* Horizontal line from center to right */}
                         <div className='absolute left-1/2 top-1/2 h-[1px] w-1/2 bg-line-contrast' />
-                        {/* Vertical line from center to bottom if not last child */}
                         {!isLastChild && (
                           <div className='absolute left-1/2 top-1/2 bottom-0 w-[1px] -translate-x-1/2 bg-line-contrast' />
                         )}
@@ -485,7 +476,6 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
                 ))}
 
                 <div className='flex items-center py-[3px] flex-1 min-w-0 relative'>
-                  {/* Vertical line from parent icon to children */}
                   {!!children?.length && isExpanded && (
                     <div className='absolute left-3 top-1/2 bottom-0 w-[1px] -translate-x-1/2 bg-line-contrast' />
                   )}
@@ -528,7 +518,9 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
                           },
                           config.getNodeHeadingClassName?.(node),
                         )}
-                        style={headingMaxLength ? { maxWidth: `${headingMaxLength}ch` } : undefined}
+                        style={
+                          headingMaxLength ? { maxWidth: `${headingMaxLength}ch` } : undefined
+                        }
                         title={String(headingText ?? '')}
                       >
                         {headingText}
@@ -539,20 +531,20 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
                 </div>
               </div>
             </td>
-            {cellValues.map((value, index) => (
+            {cellValues.map((value, cellIndex) => (
               <td
-                key={index}
+                key={cellIndex}
                 className={cn(
                   'py-[3px] align-middle border-r border-line-primary group-hover:bg-background-primary-selected transition-colors',
                   {
-                    'text-left': getColumnAlignment(index + 1) === 'left',
-                    'text-center': getColumnAlignment(index + 1) === 'center',
-                    'text-right': getColumnAlignment(index + 1) === 'right',
+                    'text-left': getColumnAlignment(cellIndex + 1) === 'left',
+                    'text-center': getColumnAlignment(cellIndex + 1) === 'center',
+                    'text-right': getColumnAlignment(cellIndex + 1) === 'right',
                     'bg-background-primary-selected': isSelected,
-                    'border-r-0': index === cellValues.length - 1,
+                    'border-r-0': cellIndex === cellValues.length - 1,
                   },
                 )}
-                style={getColumnWidth(index + 1)}
+                style={getColumnWidth(cellIndex + 1)}
               >
                 {value}
               </td>
@@ -561,17 +553,13 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
           {!!children?.length &&
             isExpanded &&
             (() => {
-              // Don't show parent's guide line through its DIRECT children only
               const newSkipGuides = new Array(level + 1).fill(false);
-              // Copy only the skipGuides that are still relevant (ancestors)
               for (let i = 0; i < level - 1; i++) {
                 newSkipGuides[i] = skipGuides[i] || false;
               }
-              // Add skip for parent level if this is the last child
               if (isLastChild && level > 0) {
                 newSkipGuides[level - 1] = true;
               }
-              // Show guide line through direct children even if this node is last child
               return renderNodes(children, [...guides, true], newSkipGuides);
             })()}
         </Fragment>
@@ -581,14 +569,16 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
 
   const headersArray = headers || [];
   const hasHeaders = headersArray.length > 0 && headersArray.some(header => header.trim() !== '');
+  const showThead = hasHeaders || renderFirstColumnHeader !== undefined;
 
   return (
     <div
       ref={scrollRef}
       id={scrollContainerId}
-      className={cn('h-full overflow-auto', className)}>
+      className={cn('h-full overflow-auto', className)}
+    >
       <table className='w-full border-collapse'>
-        {hasHeaders && (
+        {showThead && (
           <thead className='sticky top-0 z-10 bg-background-secondary'>
             <tr>
               <th
