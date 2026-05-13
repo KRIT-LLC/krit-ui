@@ -280,6 +280,8 @@
 ![priority.svg](priority.svg)
 #### PublishIcon
 ![publish.svg](publish.svg)
+#### PushPinIcon
+![push_pin.svg](push_pin.svg)
 #### RectangleSplit4UnevenOutlineIcon
 ![rectangle_split_4_uneven_outline.svg](rectangle_split_4_uneven_outline.svg)
 #### RectanglesOutlineIcon

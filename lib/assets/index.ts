@@ -139,6 +139,7 @@ export { default as PortraitIcon } from '@/assets/portrait.svg?react';
 export { default as PrecisionManufacturingOutlineIcon } from '@/assets/precision_manufacturing_outline.svg?react';
 export { default as PriorityIcon } from '@/assets/priority.svg?react';
 export { default as PublishIcon } from '@/assets/publish.svg?react';
+export { default as PushPinIcon } from '@/assets/push_pin.svg?react';
 export { default as RectangleSplit4UnevenOutlineIcon } from '@/assets/rectangle_split_4_uneven_outline.svg?react';
 export { default as RectanglesOutlineIcon } from '@/assets/rectangles_outline.svg?react';
 export { default as RefreshIcon } from '@/assets/refresh.svg?react';
