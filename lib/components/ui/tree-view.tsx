@@ -1,4 +1,4 @@
-import { Fragment, ReactNode, useMemo, useRef } from 'react';
+import { Fragment, ReactNode, useMemo, useRef, type CSSProperties } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { cn } from '@/utils';
 import { ArrowDropDownIcon } from '@/assets';
@@ -21,6 +21,8 @@ export interface TreeViewConfig<T extends TreeNode> {
   isNodeExpanded: (node: T) => boolean;
   isNodeSelected: (node: T, selected: unknown) => boolean;
   getNodeHeadingText: (node: T) => string | number | undefined;
+  /** Контент перед иконкой раскрытия в колонке названия (например чекбокс). */
+  getNodeHeadingPrefix?: (node: T) => ReactNode;
   getNodeFooterText: (node: T) => string | undefined;
   getNodeCellValues: (node: T) => ReactNode[];
   getNodeHeadingClassName?: (node: T) => string | undefined;
@@ -34,6 +36,12 @@ export interface TreeViewConfig<T extends TreeNode> {
   getNodeFooterClassName?: (node: T) => string | undefined;
   renderTooltip?: (node: T) => ReactNode;
   renderExpandIcon?: (node: T, isExpanded: boolean, onClick: () => void) => ReactNode;
+  /** Ширина колонки направляющих дерева, px (по умолчанию 24). */
+  treeGuideColumnWidth?: number;
+  /** Смещение якоря линии от начала контентной области, px (по умолчанию половина treeGuideColumnWidth). */
+  treeLineAnchorOffset?: number;
+  /** Вертикальная позиция соединительной линии в строке (по умолчанию середина строки). */
+  treeLineAnchorTop?: number | string;
 }
 
 export interface TreeViewProps<T extends TreeNode> {
@@ -41,6 +49,8 @@ export interface TreeViewProps<T extends TreeNode> {
   selected?: unknown;
   config: TreeViewConfig<T>;
   headers?: string[];
+  /** Кастомные ячейки заголовка (например FiltersColumnHeader). Приоритетнее headers. */
+  headerCells?: ReactNode[];
   className?: string;
   columnWidths?: (number | string)[];
   columnAlignments?: ('left' | 'center' | 'right')[];
@@ -53,6 +63,10 @@ export interface TreeViewProps<T extends TreeNode> {
   scrollElementRef?: React.RefObject<HTMLDivElement>;
   /** ID для scroll-контейнера (для синхронизации скролла с другими элементами) */
   scrollContainerId?: string;
+  /** Чередование фона строк, как в DataTable */
+  striped?: boolean;
+  /** Горизонтальные отступы ячеек, как в DataTable */
+  horizontalPadding?: 'small' | 'medium' | 'large';
 }
 
 /**
@@ -105,6 +119,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
     selected,
     config,
     headers,
+    headerCells,
     className,
     columnWidths,
     columnAlignments,
@@ -114,7 +129,190 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
     overscan = 20,
     scrollElementRef: externalScrollRef,
     scrollContainerId,
+    striped = true,
+    horizontalPadding = 'medium',
   } = props;
+
+  const getFirstColumnPadding = () => {
+    switch (horizontalPadding) {
+      case 'small':
+        return 'pl-4';
+      case 'large':
+        return 'pl-8';
+      case 'medium':
+      default:
+        return 'pl-6';
+    }
+  };
+
+  const getLastColumnPadding = () => {
+    switch (horizontalPadding) {
+      case 'small':
+        return 'pr-4';
+      case 'large':
+        return 'pr-8';
+      case 'medium':
+      default:
+        return 'pr-6';
+    }
+  };
+
+  const getRowClassName = (rowIndex: number, isSelected: boolean) =>
+    cn(
+      'group transition-colors hover:bg-background-primary-hover',
+      striped && rowIndex % 2 === 1 && 'bg-background-secondary',
+      isSelected && 'bg-background-primary-selected',
+    );
+
+  const getTreeGuideWidth = () => config.treeGuideColumnWidth ?? 24;
+  const getTreeLineAnchorOffset = () =>
+    config.treeLineAnchorOffset ?? getTreeGuideWidth() / 2;
+  const getTreeLineAnchorTop = () => {
+    const anchorTop = config.treeLineAnchorTop ?? '50%';
+    return typeof anchorTop === 'number' ? `${anchorTop}px` : anchorTop;
+  };
+  const getTreeGuideColumnStyle = (): CSSProperties => {
+    const width = getTreeGuideWidth();
+    return { width, minWidth: width, maxWidth: width };
+  };
+
+  const renderTreeGuideColumns = (
+    level: number,
+    guides: boolean[],
+    isLastChild: boolean,
+    skipGuides: boolean[],
+  ) =>
+    Array.from({ length: level }).map((_, i) => (
+      <div key={i} className='relative flex-shrink-0' style={getTreeGuideColumnStyle()}>
+        {guides[i] && i !== level - 1 && !skipGuides[i] && (
+          <div className='absolute left-1/2 top-0 bottom-0 w-[1px] -translate-x-1/2 bg-line-contrast' />
+        )}
+        {i === level - 1 && (
+          <>
+            <div
+              className='absolute left-1/2 top-0 w-[1px] -translate-x-1/2 bg-line-contrast'
+              style={{ height: getTreeLineAnchorTop() }}
+            />
+            <div
+              className='absolute h-[1px] bg-line-contrast'
+              style={{
+                top: getTreeLineAnchorTop(),
+                left: '50%',
+                width: `calc(50% + ${getTreeLineAnchorOffset()}px)`,
+              }}
+            />
+            {!isLastChild && (
+              <div
+                className='absolute left-1/2 bottom-0 w-[1px] -translate-x-1/2 bg-line-contrast'
+                style={{ top: getTreeLineAnchorTop() }}
+              />
+            )}
+          </>
+        )}
+      </div>
+    ));
+
+  const renderTreeHeadingControls = (
+    node: T,
+    hasNested: boolean,
+    isExpanded: boolean,
+    shouldShowCursor: boolean,
+    headingText: string | number | undefined,
+    headingMaxLength: number | undefined,
+    footerText: string | undefined,
+    children: T[] | undefined,
+  ) => (
+    <div className='flex min-w-0 flex-1 items-center'>
+      {config.getNodeHeadingPrefix?.(node) ? (
+        <div
+          className='relative z-10 mr-1 flex shrink-0 self-stretch'
+          style={getTreeGuideColumnStyle()}
+        >
+          <div
+            className='flex items-center justify-center'
+            style={getTreeGuideColumnStyle()}
+          >
+            {config.getNodeHeadingPrefix(node)}
+          </div>
+          {hasNested && isExpanded && (
+            <div
+              className='absolute left-1/2 w-[1px] -translate-x-1/2 bg-line-contrast'
+              style={{ top: '17px', bottom: '-8px' }}
+            />
+          )}
+        </div>
+      ) : null}
+      {!config.getNodeHeadingPrefix && !!children?.length && isExpanded && (
+        <div
+          className='absolute bottom-0 w-[1px] -translate-x-1/2 bg-line-contrast'
+          style={{ top: getTreeLineAnchorTop(), left: getTreeLineAnchorOffset() }}
+        />
+      )}
+      <div className='relative z-10 flex shrink-0'>
+        {config.renderExpandIcon
+          ? config.renderExpandIcon(node, isExpanded, () => onExpand(node))
+          : renderDefaultExpandIcon(hasNested, isExpanded, () => onExpand(node))}
+      </div>
+      <div className='ml-2 flex min-w-0 flex-col gap-[2px]'>
+        {config.renderTooltip ? (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span
+                  className={cn(
+                    'truncate text-sm font-normal leading-5 text-foreground-primary',
+                    {
+                      'cursor-pointer': shouldShowCursor,
+                    },
+                    config.getNodeHeadingClassName?.(node),
+                  )}
+                  style={headingMaxLength ? { maxWidth: `${headingMaxLength}ch` } : undefined}
+                >
+                  {headingText}
+                </span>
+              </TooltipTrigger>
+              <TooltipContent className='max-w-[300px]'>{config.renderTooltip(node)}</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        ) : (
+          <span
+            className={cn(
+              'truncate text-sm font-normal leading-5 text-foreground-primary',
+              {
+                'cursor-pointer': shouldShowCursor,
+              },
+              config.getNodeHeadingClassName?.(node),
+            )}
+            style={headingMaxLength ? { maxWidth: `${headingMaxLength}ch` } : undefined}
+            title={String(headingText ?? '')}
+          >
+            {headingText}
+          </span>
+        )}
+        {renderFooter(node, footerText)}
+      </div>
+    </div>
+  );
+
+  const visibleRowIndexByNodeId = useMemo(() => {
+    const map = new Map<number | string, number>();
+    let index = 0;
+
+    const traverse = (nodeList: T[]) => {
+      nodeList.forEach(node => {
+        map.set(config.getNodeId(node), index);
+        index += 1;
+
+        const children = config.getNodeChildren(node);
+        if (children?.length && config.isNodeExpanded(node)) {
+          traverse(children);
+        }
+      });
+    };
+
+    traverse(nodes);
+    return map;
+  }, [nodes, config]);
 
   const internalScrollRef = useRef<HTMLDivElement>(null);
   const scrollRef = externalScrollRef || internalScrollRef;
@@ -252,102 +450,37 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
     const cellValues = config.getNodeCellValues(node);
 
     const shouldShowCursor = !!(node.onClick || node.onDoubleClick);
+    const rowIndex = rowKey !== undefined ? Number(rowKey) : visibleRowIndexByNodeId.get(nodeId) ?? 0;
 
     return (
       <tr
         key={trKey}
         ref={measureRef}
         data-index={rowKey}
-        className='group'
+        className={getRowClassName(rowIndex, isSelected)}
         onClick={() => node.onClick?.()}
         onDoubleClick={() => node.onDoubleClick?.()}
       >
         <td
-          className={cn(
-            'p-0 border-r border-line-primary group-hover:bg-background-primary-selected transition-colors',
-            {
-              'bg-background-primary-selected': isSelected,
-              'border-r-0': cellValues.length === 0,
-            },
-          )}
+          className={cn('border-r border-line-primary p-0', {
+            'border-r-0': cellValues.length === 0,
+          })}
           style={getColumnWidth(0)}
         >
-          <div className='flex items-stretch'>
-            {/* Spacers for indentation and guide lines */}
-            {Array.from({ length: level }).map((_, i) => (
-              <div key={i} className='relative w-6 flex-shrink-0'>
-                {/* Vertical line for ancestors */}
-                {guides[i] && !(i === level - 1 && isLastChild) && !skipGuides[i] && (
-                  <div className='absolute left-1/2 top-0 bottom-0 w-[1px] -translate-x-1/2 bg-line-contrast' />
-                )}
-                {/* Connection lines for current level */}
-                {i === level - 1 && (
-                  <>
-                    {/* Vertical line from top to center */}
-                    <div className='absolute left-1/2 top-0 h-1/2 w-[1px] -translate-x-1/2 bg-line-contrast' />
-                    {/* Horizontal line from center to right */}
-                    <div className='absolute left-1/2 top-1/2 h-[1px] w-1/2 bg-line-contrast' />
-                    {/* Vertical line from center to bottom if not last child */}
-                    {!isLastChild && (
-                      <div className='absolute left-1/2 top-1/2 bottom-0 w-[1px] -translate-x-1/2 bg-line-contrast' />
-                    )}
-                  </>
-                )}
-              </div>
-            ))}
+          <div className={cn('flex items-stretch', getFirstColumnPadding())}>
+            {renderTreeGuideColumns(level, guides, isLastChild, skipGuides)}
 
-            <div className='flex items-center py-[3px] flex-1 min-w-0 relative'>
-              {/* Vertical line from parent icon to children */}
-              {!!children?.length && isExpanded && (
-                <div className='absolute left-3 top-1/2 bottom-0 w-[1px] -translate-x-1/2 bg-line-contrast' />
+            <div className='relative flex min-w-0 flex-1 items-stretch py-2'>
+              {renderTreeHeadingControls(
+                node,
+                hasNested,
+                isExpanded,
+                shouldShowCursor,
+                headingText,
+                headingMaxLength,
+                footerText,
+                children,
               )}
-              <div className='relative z-10 flex'>
-                {config.renderExpandIcon
-                  ? config.renderExpandIcon(node, isExpanded, () => onExpand(node))
-                  : renderDefaultExpandIcon(hasNested, isExpanded, () => onExpand(node))}
-              </div>
-              <div className='flex flex-col gap-[2px] min-w-0 ml-2'>
-                {config.renderTooltip ? (
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <span
-                          className={cn(
-                            'text-foreground-primary text-xs font-normal leading-4 truncate',
-                            {
-                              'cursor-pointer': shouldShowCursor,
-                            },
-                            config.getNodeHeadingClassName?.(node),
-                          )}
-                          style={
-                            headingMaxLength ? { maxWidth: `${headingMaxLength}ch` } : undefined
-                          }
-                        >
-                          {headingText}
-                        </span>
-                      </TooltipTrigger>
-                      <TooltipContent className='max-w-[300px]'>
-                        {config.renderTooltip(node)}
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                ) : (
-                  <span
-                    className={cn(
-                      'text-foreground-primary text-xs font-normal leading-4 truncate',
-                      {
-                        'cursor-pointer': shouldShowCursor,
-                      },
-                      config.getNodeHeadingClassName?.(node),
-                    )}
-                    style={headingMaxLength ? { maxWidth: `${headingMaxLength}ch` } : undefined}
-                    title={String(headingText ?? '')}
-                  >
-                    {headingText}
-                  </span>
-                )}
-                {renderFooter(node, footerText)}
-              </div>
             </div>
           </div>
         </td>
@@ -355,14 +488,14 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
           <td
             key={index}
             className={cn(
-              'py-[3px] align-middle border-r border-line-primary group-hover:bg-background-primary-selected transition-colors',
+              'border-r border-line-primary p-2 align-middle text-foreground-primary',
               {
                 'text-left': getColumnAlignment(index + 1) === 'left',
                 'text-center': getColumnAlignment(index + 1) === 'center',
                 'text-right': getColumnAlignment(index + 1) === 'right',
-                'bg-background-primary-selected': isSelected,
                 'border-r-0': index === cellValues.length - 1,
               },
+              index === cellValues.length - 1 && getLastColumnPadding(),
             )}
             style={getColumnWidth(index + 1)}
           >
@@ -395,100 +528,35 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
       // Определяем, должен ли узел показывать cursor-pointer
       // Показываем cursor-pointer если у ноды есть onClick или onDoubleClick
       const shouldShowCursor = !!(node.onClick || node.onDoubleClick);
+      const rowIndex = visibleRowIndexByNodeId.get(nodeId) ?? 0;
 
       return (
         <Fragment key={nodeId}>
           <tr
-            className='group'
+            className={getRowClassName(rowIndex, isSelected)}
             onClick={() => node.onClick?.()}
             onDoubleClick={() => node.onDoubleClick?.()}
           >
             <td
-              className={cn(
-                'p-0 border-r border-line-primary group-hover:bg-background-primary-selected transition-colors',
-                {
-                  'bg-background-primary-selected': isSelected,
-                  'border-r-0': cellValues.length === 0,
-                },
-              )}
+              className={cn('border-r border-line-primary p-0', {
+                'border-r-0': cellValues.length === 0,
+              })}
               style={getColumnWidth(0)}
             >
-              <div className='flex items-stretch'>
-                {/* Spacers for indentation and guide lines */}
-                {Array.from({ length: level }).map((_, i) => (
-                  <div key={i} className='relative w-6 flex-shrink-0'>
-                    {/* Vertical line for ancestors */}
-                    {guides[i] && !(i === level - 1 && isLastChild) && !skipGuides[i] && (
-                      <div className='absolute left-1/2 top-0 bottom-0 w-[1px] -translate-x-1/2 bg-line-contrast' />
-                    )}
-                    {/* Connection lines for current level */}
-                    {i === level - 1 && (
-                      <>
-                        {/* Vertical line from top to center */}
-                        <div className='absolute left-1/2 top-0 h-1/2 w-[1px] -translate-x-1/2 bg-line-contrast' />
-                        {/* Horizontal line from center to right */}
-                        <div className='absolute left-1/2 top-1/2 h-[1px] w-1/2 bg-line-contrast' />
-                        {/* Vertical line from center to bottom if not last child */}
-                        {!isLastChild && (
-                          <div className='absolute left-1/2 top-1/2 bottom-0 w-[1px] -translate-x-1/2 bg-line-contrast' />
-                        )}
-                      </>
-                    )}
-                  </div>
-                ))}
+              <div className={cn('flex items-stretch', getFirstColumnPadding())}>
+                {renderTreeGuideColumns(level, guides, isLastChild, skipGuides)}
 
-                <div className='flex items-center py-[3px] flex-1 min-w-0 relative'>
-                  {/* Vertical line from parent icon to children */}
-                  {!!children?.length && isExpanded && (
-                    <div className='absolute left-3 top-1/2 bottom-0 w-[1px] -translate-x-1/2 bg-line-contrast' />
+                <div className='relative flex min-w-0 flex-1 items-stretch py-2'>
+                  {renderTreeHeadingControls(
+                    node,
+                    hasNested,
+                    isExpanded,
+                    shouldShowCursor,
+                    headingText,
+                    headingMaxLength,
+                    footerText,
+                    children,
                   )}
-                  <div className='relative z-10 flex'>
-                    {config.renderExpandIcon
-                      ? config.renderExpandIcon(node, isExpanded, () => onExpand(node))
-                      : renderDefaultExpandIcon(hasNested, isExpanded, () => onExpand(node))}
-                  </div>
-                  <div className='flex flex-col gap-[2px] min-w-0 ml-2'>
-                    {config.renderTooltip ? (
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <span
-                              className={cn(
-                                'text-foreground-primary text-xs font-normal leading-4 truncate',
-                                {
-                                  'cursor-pointer': shouldShowCursor,
-                                },
-                                config.getNodeHeadingClassName?.(node),
-                              )}
-                              style={
-                                headingMaxLength ? { maxWidth: `${headingMaxLength}ch` } : undefined
-                              }
-                            >
-                              {headingText}
-                            </span>
-                          </TooltipTrigger>
-                          <TooltipContent className='max-w-[300px]'>
-                            {config.renderTooltip(node)}
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    ) : (
-                      <span
-                        className={cn(
-                          'text-foreground-primary text-xs font-normal leading-4 truncate',
-                          {
-                            'cursor-pointer': shouldShowCursor,
-                          },
-                          config.getNodeHeadingClassName?.(node),
-                        )}
-                        style={headingMaxLength ? { maxWidth: `${headingMaxLength}ch` } : undefined}
-                        title={String(headingText ?? '')}
-                      >
-                        {headingText}
-                      </span>
-                    )}
-                    {renderFooter(node, footerText)}
-                  </div>
                 </div>
               </div>
             </td>
@@ -496,14 +564,14 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
               <td
                 key={index}
                 className={cn(
-                  'py-[3px] align-middle border-r border-line-primary group-hover:bg-background-primary-selected transition-colors',
+                  'border-r border-line-primary p-2 align-middle text-foreground-primary',
                   {
                     'text-left': getColumnAlignment(index + 1) === 'left',
                     'text-center': getColumnAlignment(index + 1) === 'center',
                     'text-right': getColumnAlignment(index + 1) === 'right',
-                    'bg-background-primary-selected': isSelected,
                     'border-r-0': index === cellValues.length - 1,
                   },
+                  index === cellValues.length - 1 && getLastColumnPadding(),
                 )}
                 style={getColumnWidth(index + 1)}
               >
@@ -533,45 +601,44 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
   };
 
   const headersArray = headers || [];
-  const hasHeaders = headersArray.length > 0 && headersArray.some(header => header.trim() !== '');
+  const headerItems = headerCells ?? headersArray;
+  const hasHeaders =
+    headerItems.length > 0 &&
+    headerItems.some((header) =>
+      headerCells ? header !== null && header !== undefined : String(header).trim() !== '',
+    );
 
   return (
     <div
       ref={scrollRef}
       id={scrollContainerId}
       className={cn('h-full overflow-auto', className)}>
-      <table className='w-full border-collapse'>
+      <table className='w-full border-collapse text-sm'>
         {hasHeaders && (
           <thead className='sticky top-0 z-10 bg-background-secondary'>
             <tr>
-              <th
-                className={cn(
-                  'box-border px-2 h-[40px] text-left text-foreground-primary text-sm font-medium border-b border-r border-line-primary border-b-line-primary-disabled',
-                  {
-                    'border-r-0': headersArray.length === 1,
-                  },
-                )}
-                style={getColumnWidth(0)}
-              >
-                {headersArray[0] || ''}
-              </th>
-              {headersArray.slice(1).map((header, index) => (
+              {headerItems.map((header, index) => (
                 <th
                   key={index}
                   className={cn(
-                    'box-border px-2 h-[40px] text-foreground-primary text-sm font-medium border-b border-r border-line-primary border-b-line-primary-disabled min-w-0 overflow-hidden',
+                    'box-border min-h-9 overflow-hidden border-b border-r border-line-primary border-b-line-primary-disabled p-2 text-left font-medium text-foreground-primary align-middle min-w-0',
+                    index === 0 && getFirstColumnPadding(),
+                    index === headerItems.length - 1 && cn(getLastColumnPadding(), 'border-r-0'),
                     {
-                      'text-left': getColumnAlignment(index + 1) === 'left',
-                      'text-center': getColumnAlignment(index + 1) === 'center',
-                      'text-right': getColumnAlignment(index + 1) === 'right',
-                      'border-r-0': index === headersArray.slice(1).length - 1,
+                      'text-left': index === 0 || getColumnAlignment(index) === 'left',
+                      'text-center': index !== 0 && getColumnAlignment(index) === 'center',
+                      'text-right': index !== 0 && getColumnAlignment(index) === 'right',
                     },
                   )}
-                  style={getColumnWidth(index + 1)}
+                  style={getColumnWidth(index)}
                 >
-                  <span className='block truncate' title={String(header)}>
-                    {header}
-                  </span>
+                  {headerCells ? (
+                    header
+                  ) : (
+                    <span className='block truncate' title={String(header)}>
+                      {header}
+                    </span>
+                  )}
                 </th>
               ))}
             </tr>
@@ -582,7 +649,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
             <>
               {paddingTop > 0 && (
                 <tr style={{ height: `${paddingTop}px` }}>
-                  <td colSpan={headersArray.length || 1} />
+                  <td colSpan={headerItems.length || 1} />
                 </tr>
               )}
               {virtualItems.map(virtualRow => {
@@ -599,7 +666,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
               })}
               {paddingBottom > 0 && (
                 <tr style={{ height: `${paddingBottom}px` }}>
-                  <td colSpan={headersArray.length || 1} />
+                  <td colSpan={headerItems.length || 1} />
                 </tr>
               )}
             </>
