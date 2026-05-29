@@ -16,7 +16,7 @@ import { Options, SelectHeaderFilter } from './select-header-filter';
 
 type FilterType = 'search' | 'date-range' | 'select' | 'reset' | 'sort';
 
-interface BaseFilterProps {
+export interface BaseFilterProps {
   type: FilterType;
   column?: Column<any, unknown>;
   table?: Table<any>;
