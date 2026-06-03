@@ -65,8 +65,10 @@ export interface TreeViewProps<T extends TreeNode> {
   scrollContainerId?: string;
   /** Чередование фона строк, как в DataTable */
   striped?: boolean;
-  /** Горизонтальные отступы ячеек, как в DataTable */
-  horizontalPadding?: 'small' | 'medium' | 'large';
+  /** Горизонтальные отступы ячеек, как в DataTable; `none` — без доп. отступов (узкие деревья навигации) */
+  horizontalPadding?: 'none' | 'small' | 'medium' | 'large';
+  /** `compact` — плотные строки без отступов DataTable (дерево настроек Toro) */
+  density?: 'default' | 'compact';
 }
 
 /**
@@ -129,12 +131,17 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
     overscan = 20,
     scrollElementRef: externalScrollRef,
     scrollContainerId,
-    striped = true,
+    striped = false,
     horizontalPadding = 'medium',
+    density = 'default',
   } = props;
+
+  const isCompact = density === 'compact';
 
   const getFirstColumnPadding = () => {
     switch (horizontalPadding) {
+      case 'none':
+        return '';
       case 'small':
         return 'pl-4';
       case 'large':
@@ -147,6 +154,8 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
 
   const getLastColumnPadding = () => {
     switch (horizontalPadding) {
+      case 'none':
+        return '';
       case 'small':
         return 'pr-4';
       case 'large':
@@ -156,6 +165,22 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
         return 'pr-6';
     }
   };
+
+  const getRowContentClassName = () =>
+    cn(
+      'relative flex min-w-0 flex-1',
+      isCompact ? 'items-center py-[3px]' : 'items-stretch py-2',
+    );
+
+  const getHeadingTextClassName = (node: T, shouldShowCursor: boolean) =>
+    cn(
+      'truncate font-normal text-foreground-primary',
+      isCompact ? 'text-xs leading-4' : 'text-sm leading-5',
+      {
+        'cursor-pointer': shouldShowCursor,
+      },
+      config.getNodeHeadingClassName?.(node),
+    );
 
   const getRowClassName = (rowIndex: number, isSelected: boolean) =>
     cn(
@@ -259,13 +284,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
             <Tooltip>
               <TooltipTrigger asChild>
                 <span
-                  className={cn(
-                    'truncate text-sm font-normal leading-5 text-foreground-primary',
-                    {
-                      'cursor-pointer': shouldShowCursor,
-                    },
-                    config.getNodeHeadingClassName?.(node),
-                  )}
+                  className={getHeadingTextClassName(node, shouldShowCursor)}
                   style={headingMaxLength ? { maxWidth: `${headingMaxLength}ch` } : undefined}
                 >
                   {headingText}
@@ -276,13 +295,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
           </TooltipProvider>
         ) : (
           <span
-            className={cn(
-              'truncate text-sm font-normal leading-5 text-foreground-primary',
-              {
-                'cursor-pointer': shouldShowCursor,
-              },
-              config.getNodeHeadingClassName?.(node),
-            )}
+            className={getHeadingTextClassName(node, shouldShowCursor)}
             style={headingMaxLength ? { maxWidth: `${headingMaxLength}ch` } : undefined}
             title={String(headingText ?? '')}
           >
@@ -470,7 +483,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
           <div className={cn('flex items-stretch', getFirstColumnPadding())}>
             {renderTreeGuideColumns(level, guides, isLastChild, skipGuides)}
 
-            <div className='relative flex min-w-0 flex-1 items-stretch py-2'>
+            <div className={getRowContentClassName()}>
               {renderTreeHeadingControls(
                 node,
                 hasNested,
@@ -488,7 +501,8 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
           <td
             key={index}
             className={cn(
-              'border-r border-line-primary p-2 align-middle text-foreground-primary',
+              'border-r border-line-primary align-middle text-foreground-primary',
+              isCompact ? 'py-[3px]' : 'p-2',
               {
                 'text-left': getColumnAlignment(index + 1) === 'left',
                 'text-center': getColumnAlignment(index + 1) === 'center',
@@ -546,7 +560,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
               <div className={cn('flex items-stretch', getFirstColumnPadding())}>
                 {renderTreeGuideColumns(level, guides, isLastChild, skipGuides)}
 
-                <div className='relative flex min-w-0 flex-1 items-stretch py-2'>
+                <div className={getRowContentClassName()}>
                   {renderTreeHeadingControls(
                     node,
                     hasNested,
@@ -564,7 +578,8 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
               <td
                 key={index}
                 className={cn(
-                  'border-r border-line-primary p-2 align-middle text-foreground-primary',
+                  'border-r border-line-primary align-middle text-foreground-primary',
+                  isCompact ? 'py-[3px]' : 'p-2',
                   {
                     'text-left': getColumnAlignment(index + 1) === 'left',
                     'text-center': getColumnAlignment(index + 1) === 'center',
