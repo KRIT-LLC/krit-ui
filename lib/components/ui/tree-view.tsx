@@ -1,5 +1,16 @@
-import { Fragment, ReactNode, useMemo, useRef, type CSSProperties } from 'react';
+import {
+  forwardRef,
+  Fragment,
+  type CSSProperties,
+  type ForwardRefExoticComponent,
+  type ReactNode,
+  type RefAttributes,
+  type RefObject,
+  useMemo,
+  useRef,
+} from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
+
 import { cn } from '@/utils';
 import { ArrowDropDownIcon } from '@/assets';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip';
@@ -11,6 +22,18 @@ export interface TreeNode<T = unknown> {
   [key: string]: unknown;
   onClick?: () => void;
   onDoubleClick?: () => void;
+}
+
+/**
+ * Пропсы строки таблицы при использовании `tableRowComponent` или строки по умолчанию в `TreeView`.
+ */
+export interface TreeViewTableRowProps<T extends TreeNode> {
+  node: T;
+  children: ReactNode;
+  onClick: () => void;
+  onDoubleClick: () => void;
+  className: string;
+  'data-index'?: number | string;
 }
 
 export interface TreeViewConfig<T extends TreeNode> {
@@ -44,6 +67,28 @@ export interface TreeViewConfig<T extends TreeNode> {
   treeLineAnchorTop?: number | string;
 }
 
+/**
+ * Строка таблицы с ref (виртуализатор dnd-kit и др.).
+ */
+export type TreeViewTableRowComponent<T extends TreeNode> = ForwardRefExoticComponent<
+  TreeViewTableRowProps<T> & RefAttributes<HTMLTableRowElement>
+>;
+
+const DefaultTableRow = forwardRef<HTMLTableRowElement, TreeViewTableRowProps<TreeNode>>(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- node нужен в API кастомной строки
+  ({ node: _n, children, onClick, onDoubleClick, className, 'data-index': dataIndex }, ref) => (
+    <tr
+      ref={ref}
+      data-index={dataIndex}
+      onClick={onClick}
+      onDoubleClick={onDoubleClick}
+      className={className}>
+      {children}
+    </tr>
+  ),
+);
+DefaultTableRow.displayName = 'DefaultTableRow';
+
 export interface TreeViewProps<T extends TreeNode> {
   nodes: T[];
   selected?: unknown;
@@ -55,12 +100,17 @@ export interface TreeViewProps<T extends TreeNode> {
   columnWidths?: (number | string)[];
   columnAlignments?: ('left' | 'center' | 'right')[];
   onExpand: (node: T) => void;
+  /**
+   * Кастомная строка таблицы (например, с ref для dnd-kit). По умолчанию — стандартная строка.
+   * Должна рендерить &lt;tr ref&gt; в корне и вложить `children` (ячейки &lt;td&gt;).
+   */
+  tableRowComponent?: TreeViewTableRowComponent<T>;
 
   // Virtualization props
   virtualized?: boolean;
   estimateRowSize?: number;
   overscan?: number;
-  scrollElementRef?: React.RefObject<HTMLDivElement>;
+  scrollElementRef?: RefObject<HTMLDivElement>;
   /** ID для scroll-контейнера (для синхронизации скролла с другими элементами) */
   scrollContainerId?: string;
   /** Чередование фона строк, как в DataTable */
@@ -69,51 +119,15 @@ export interface TreeViewProps<T extends TreeNode> {
   horizontalPadding?: 'none' | 'small' | 'medium' | 'large';
   /** `compact` — плотные строки без отступов DataTable (дерево настроек Toro) */
   density?: 'default' | 'compact';
+  /**
+   * Если задан, подменяет содержимое первой ячейки заголовка (например, заголовок + кнопка).
+   * Остальные колонки по-прежнему из `headers`. Не используется вместе с `headerCells`.
+   */
+  renderFirstColumnHeader?: ReactNode;
 }
 
 /**
  * TreeView - компонент для отображения иерархических данных в табличном формате.
- *
- * @component
- * @template T - Тип узла дерева, должен расширять TreeNode
- * @param {TreeViewProps<T>} props - Параметры компонента
- * @param {T[]} props.nodes - Массив узлов дерева для отображения. Каждый узел может содержать onClick и onDoubleClick
- * @param {unknown} [props.selected] - Текущий выбранный узел
- * @param {function} props.onExpand - Обработчик разворачивания/сворачивания узла
- * @param {TreeViewConfig<T>} props.config - Конфигурация для работы с узлами дерева
- * @param {string[]} [props.headers] - Заголовки колонок таблицы
- * @param {string} [props.className] - Дополнительные CSS-классы для контейнера
- * @param {(number|string)[]} [props.columnWidths] - Ширины колонок (px или строка с единицами)
- * @param {('left'|'center'|'right')[]} [props.columnAlignments] - Выравнивание содержимого колонок
- * @returns {React.ReactElement} Компонент TreeView
- *
- * @example
- * ```tsx
- * const config: TreeViewConfig<MyNode> = {
- *   getNodeId: (node) => node.id,
- *   getNodeLevel: (node) => node.level ?? 0,
- *   getNodeChildren: (node) => node.children,
- *   hasNestedNodes: (node) => !!node.children?.length,
- *   isNodeExpanded: (node) => node.expanded,
- *   isNodeSelected: (node, selected) => node.id === selected,
- *   getNodeHeadingText: (node) => node.name,
- *   getNodeFooterText: (node) => node.description,
- *   getNodeCellValues: (node) => [node.value1, node.value2],
- * };
- *
- * const nodes = myNodes.map(node => ({
- *   ...node,
- *   onClick: node.hasAction ? () => handleClick(node) : undefined,
- * }));
- *
- * <TreeView
- *   nodes={nodes}
- *   selected={selectedId}
- *   onExpand={handleExpand}
- *   config={config}
- *   headers={['Название', 'Значение 1', 'Значение 2']}
- * />
- * ```
  */
 export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
   const {
@@ -126,6 +140,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
     columnWidths,
     columnAlignments,
     onExpand,
+    tableRowComponent: TableRowFromProps,
     virtualized = false,
     estimateRowSize = 40,
     overscan = 20,
@@ -134,7 +149,10 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
     striped = false,
     horizontalPadding = 'medium',
     density = 'default',
+    renderFirstColumnHeader,
   } = props;
+
+  const Tr = (TableRowFromProps ?? DefaultTableRow) as TreeViewTableRowComponent<T>;
 
   const isCompact = density === 'compact';
 
@@ -184,7 +202,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
 
   const getRowClassName = (rowIndex: number, isSelected: boolean) =>
     cn(
-      'group transition-colors hover:bg-background-primary-hover',
+      'transition-colors hover:bg-background-primary-hover',
       striped && rowIndex % 2 === 1 && 'bg-background-secondary',
       isSelected && 'bg-background-primary-selected',
     );
@@ -199,6 +217,48 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
   const getTreeGuideColumnStyle = (): CSSProperties => {
     const width = getTreeGuideWidth();
     return { width, minWidth: width, maxWidth: width };
+  };
+
+  const renderDefaultExpandIcon = (
+    hasNested: boolean,
+    isExpanded: boolean,
+    onClick: () => void,
+  ) => {
+    if (!hasNested) {
+      return <div className='w-6 flex-shrink-0' />;
+    }
+    return (
+      <ArrowDropDownIcon
+        className={cn(
+          'w-6 h-6 cursor-pointer text-icon-contrast transition-transform duration-200 -rotate-90 flex-shrink-0',
+          {
+            'rotate-0': isExpanded,
+          },
+        )}
+        onClick={e => {
+          e.stopPropagation();
+          onClick();
+        }}
+      />
+    );
+  };
+
+  const baseFooterClassName =
+    'text-foreground-secondary text-xs font-normal leading-4 tracking-[0.4px] truncate';
+
+  const renderFooter = (node: T, footerText: string | undefined): ReactNode => {
+    if (!footerText) return null;
+    const footerClassName = cn(baseFooterClassName, config.getNodeFooterClassName?.(node));
+    const customNode = config.getNodeFooterNode?.(node, {
+      text: footerText,
+      className: footerClassName,
+    });
+    if (customNode) return customNode;
+    return (
+      <span className={footerClassName} title={String(footerText)}>
+        {footerText}
+      </span>
+    );
   };
 
   const renderTreeGuideColumns = (
@@ -251,12 +311,8 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
       {config.getNodeHeadingPrefix?.(node) ? (
         <div
           className='relative z-10 mr-1 flex shrink-0 self-stretch'
-          style={getTreeGuideColumnStyle()}
-        >
-          <div
-            className='flex items-center justify-center'
-            style={getTreeGuideColumnStyle()}
-          >
+          style={getTreeGuideColumnStyle()}>
+          <div className='flex items-center justify-center' style={getTreeGuideColumnStyle()}>
             {config.getNodeHeadingPrefix(node)}
           </div>
           {hasNested && isExpanded && (
@@ -285,8 +341,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
               <TooltipTrigger asChild>
                 <span
                   className={getHeadingTextClassName(node, shouldShowCursor)}
-                  style={headingMaxLength ? { maxWidth: `${headingMaxLength}ch` } : undefined}
-                >
+                  style={headingMaxLength ? { maxWidth: `${headingMaxLength}ch` } : undefined}>
                   {headingText}
                 </span>
               </TooltipTrigger>
@@ -297,8 +352,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
           <span
             className={getHeadingTextClassName(node, shouldShowCursor)}
             style={headingMaxLength ? { maxWidth: `${headingMaxLength}ch` } : undefined}
-            title={String(headingText ?? '')}
-          >
+            title={String(headingText ?? '')}>
             {headingText}
           </span>
         )}
@@ -327,10 +381,9 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
     return map;
   }, [nodes, config]);
 
-  const internalScrollRef = useRef<HTMLDivElement>(null);
-  const scrollRef = externalScrollRef || internalScrollRef;
+  const internalScrollRef = useRef<HTMLDivElement | null>(null);
+  const scrollRef = (externalScrollRef ?? internalScrollRef) as RefObject<HTMLDivElement>;
 
-  // Flatten visible nodes for virtualization
   const flattenedNodesWithGuides = useMemo(() => {
     if (!virtualized) return [];
 
@@ -347,17 +400,13 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
         const isExpanded = config.isNodeExpanded(node);
 
         if (children?.length && isExpanded) {
-          // If this is the last child, don't show parent's guide line through its DIRECT children only
           const newSkipGuides = new Array(level + 1).fill(false);
-          // Copy only the skipGuides that are still relevant (ancestors)
           for (let i = 0; i < level - 1; i++) {
             newSkipGuides[i] = skipGuides[i] || false;
           }
-          // Add skip for parent level if this is the last child
           if (isLastChild && level > 0) {
             newSkipGuides[level - 1] = true;
           }
-          // Show guide line through direct children even if this node is last child
           traverse(children, [...guides, true], newSkipGuides);
         }
       });
@@ -367,7 +416,6 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
     return result;
   }, [nodes, virtualized, config]);
 
-  // Setup virtualizer (must be called unconditionally per React Hooks rules)
   const virtualizer = useVirtualizer({
     count: virtualized ? flattenedNodesWithGuides.length : 0,
     getScrollElement: () => scrollRef.current,
@@ -377,13 +425,12 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
 
   const virtualItems = virtualized ? virtualizer.getVirtualItems() : [];
 
-  // Calculate padding for virtualization
-  const paddingTop = virtualized ? virtualItems[0]?.start || 0 : 0;
+  const paddingTop = virtualized ? (virtualItems[0]?.start ?? 0) : 0;
   const paddingBottom = virtualized
-    ? virtualizer.getTotalSize() - (virtualItems[virtualItems.length - 1]?.end || 0)
+    ? virtualizer.getTotalSize() - (virtualItems[virtualItems.length - 1]?.end ?? 0)
     : 0;
 
-  const getColumnWidth = (index: number): React.CSSProperties | undefined => {
+  const getColumnWidth = (index: number): CSSProperties | undefined => {
     if (!columnWidths || !columnWidths[index]) return undefined;
     const width = columnWidths[index];
     return {
@@ -400,47 +447,63 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
     return columnAlignments[index];
   };
 
-  const renderDefaultExpandIcon = (
+  const renderFirstColumnCell = (
+    node: T,
+    level: number,
+    guides: boolean[],
+    isLastChild: boolean,
+    skipGuides: boolean[],
     hasNested: boolean,
     isExpanded: boolean,
-    onClick: () => void,
-  ) => {
-    if (!hasNested) {
-      return <div className='w-6 flex-shrink-0' />;
-    }
-    return (
-      <ArrowDropDownIcon
+    shouldShowCursor: boolean,
+    headingText: string | number | undefined,
+    headingMaxLength: number | undefined,
+    footerText: string | undefined,
+    children: T[] | undefined,
+    cellValues: ReactNode[],
+  ) => (
+    <td
+      className={cn('border-r border-line-primary p-0', {
+        'border-r-0': cellValues.length === 0,
+      })}
+      style={getColumnWidth(0)}>
+      <div className={cn('flex items-stretch', getFirstColumnPadding())}>
+        {renderTreeGuideColumns(level, guides, isLastChild, skipGuides)}
+        <div className={getRowContentClassName()}>
+          {renderTreeHeadingControls(
+            node,
+            hasNested,
+            isExpanded,
+            shouldShowCursor,
+            headingText,
+            headingMaxLength,
+            footerText,
+            children,
+          )}
+        </div>
+      </div>
+    </td>
+  );
+
+  const renderDataCells = (cellValues: ReactNode[]) =>
+    cellValues.map((value, cellIndex) => (
+      <td
+        key={cellIndex}
         className={cn(
-          'w-6 h-6 cursor-pointer text-icon-contrast transition-transform duration-200 -rotate-90 flex-shrink-0',
+          'border-r border-line-primary align-middle text-foreground-primary',
+          isCompact ? 'py-[3px]' : 'p-2',
           {
-            'rotate-0': isExpanded,
+            'text-left': getColumnAlignment(cellIndex + 1) === 'left',
+            'text-center': getColumnAlignment(cellIndex + 1) === 'center',
+            'text-right': getColumnAlignment(cellIndex + 1) === 'right',
+            'border-r-0': cellIndex === cellValues.length - 1,
           },
+          cellIndex === cellValues.length - 1 && getLastColumnPadding(),
         )}
-        onClick={e => {
-          e.stopPropagation();
-          onClick();
-        }}
-      />
-    );
-  };
-
-  const baseFooterClassName =
-    'text-foreground-secondary text-xs font-normal leading-4 tracking-[0.4px] truncate';
-
-  const renderFooter = (node: T, footerText: string | undefined): ReactNode => {
-    if (!footerText) return null;
-    const footerClassName = cn(baseFooterClassName, config.getNodeFooterClassName?.(node));
-    const customNode = config.getNodeFooterNode?.(node, {
-      text: footerText,
-      className: footerClassName,
-    });
-    if (customNode) return customNode;
-    return (
-      <span className={footerClassName} title={String(footerText)}>
-        {footerText}
-      </span>
-    );
-  };
+        style={getColumnWidth(cellIndex + 1)}>
+        {value}
+      </td>
+    ));
 
   const renderSingleRow = (
     node: T,
@@ -463,60 +526,34 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
     const cellValues = config.getNodeCellValues(node);
 
     const shouldShowCursor = !!(node.onClick || node.onDoubleClick);
-    const rowIndex = rowKey !== undefined ? Number(rowKey) : visibleRowIndexByNodeId.get(nodeId) ?? 0;
+    const rowIndex = rowKey !== undefined ? Number(rowKey) : (visibleRowIndexByNodeId.get(nodeId) ?? 0);
 
     return (
-      <tr
+      <Tr
         key={trKey}
         ref={measureRef}
         data-index={rowKey}
-        className={getRowClassName(rowIndex, isSelected)}
+        node={node}
+        className={cn('group', getRowClassName(rowIndex, isSelected))}
         onClick={() => node.onClick?.()}
-        onDoubleClick={() => node.onDoubleClick?.()}
-      >
-        <td
-          className={cn('border-r border-line-primary p-0', {
-            'border-r-0': cellValues.length === 0,
-          })}
-          style={getColumnWidth(0)}
-        >
-          <div className={cn('flex items-stretch', getFirstColumnPadding())}>
-            {renderTreeGuideColumns(level, guides, isLastChild, skipGuides)}
-
-            <div className={getRowContentClassName()}>
-              {renderTreeHeadingControls(
-                node,
-                hasNested,
-                isExpanded,
-                shouldShowCursor,
-                headingText,
-                headingMaxLength,
-                footerText,
-                children,
-              )}
-            </div>
-          </div>
-        </td>
-        {cellValues.map((value, index) => (
-          <td
-            key={index}
-            className={cn(
-              'border-r border-line-primary align-middle text-foreground-primary',
-              isCompact ? 'py-[3px]' : 'p-2',
-              {
-                'text-left': getColumnAlignment(index + 1) === 'left',
-                'text-center': getColumnAlignment(index + 1) === 'center',
-                'text-right': getColumnAlignment(index + 1) === 'right',
-                'border-r-0': index === cellValues.length - 1,
-              },
-              index === cellValues.length - 1 && getLastColumnPadding(),
-            )}
-            style={getColumnWidth(index + 1)}
-          >
-            {value}
-          </td>
-        ))}
-      </tr>
+        onDoubleClick={() => node.onDoubleClick?.()}>
+        {renderFirstColumnCell(
+          node,
+          level,
+          guides,
+          isLastChild,
+          skipGuides,
+          hasNested,
+          isExpanded,
+          shouldShowCursor,
+          headingText,
+          headingMaxLength,
+          footerText,
+          children,
+          cellValues,
+        )}
+        {renderDataCells(cellValues)}
+      </Tr>
     );
   };
 
@@ -538,76 +575,43 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
       const cellValues = config.getNodeCellValues(node);
 
       const isLastChild = index === nodesToRender.length - 1;
-
-      // Определяем, должен ли узел показывать cursor-pointer
-      // Показываем cursor-pointer если у ноды есть onClick или onDoubleClick
       const shouldShowCursor = !!(node.onClick || node.onDoubleClick);
       const rowIndex = visibleRowIndexByNodeId.get(nodeId) ?? 0;
 
       return (
         <Fragment key={nodeId}>
-          <tr
-            className={getRowClassName(rowIndex, isSelected)}
+          <Tr
+            node={node}
+            className={cn('group', getRowClassName(rowIndex, isSelected))}
             onClick={() => node.onClick?.()}
-            onDoubleClick={() => node.onDoubleClick?.()}
-          >
-            <td
-              className={cn('border-r border-line-primary p-0', {
-                'border-r-0': cellValues.length === 0,
-              })}
-              style={getColumnWidth(0)}
-            >
-              <div className={cn('flex items-stretch', getFirstColumnPadding())}>
-                {renderTreeGuideColumns(level, guides, isLastChild, skipGuides)}
-
-                <div className={getRowContentClassName()}>
-                  {renderTreeHeadingControls(
-                    node,
-                    hasNested,
-                    isExpanded,
-                    shouldShowCursor,
-                    headingText,
-                    headingMaxLength,
-                    footerText,
-                    children,
-                  )}
-                </div>
-              </div>
-            </td>
-            {cellValues.map((value, index) => (
-              <td
-                key={index}
-                className={cn(
-                  'border-r border-line-primary align-middle text-foreground-primary',
-                  isCompact ? 'py-[3px]' : 'p-2',
-                  {
-                    'text-left': getColumnAlignment(index + 1) === 'left',
-                    'text-center': getColumnAlignment(index + 1) === 'center',
-                    'text-right': getColumnAlignment(index + 1) === 'right',
-                    'border-r-0': index === cellValues.length - 1,
-                  },
-                  index === cellValues.length - 1 && getLastColumnPadding(),
-                )}
-                style={getColumnWidth(index + 1)}
-              >
-                {value}
-              </td>
-            ))}
-          </tr>
+            onDoubleClick={() => node.onDoubleClick?.()}>
+            {renderFirstColumnCell(
+              node,
+              level,
+              guides,
+              isLastChild,
+              skipGuides,
+              hasNested,
+              isExpanded,
+              shouldShowCursor,
+              headingText,
+              headingMaxLength,
+              footerText,
+              children,
+              cellValues,
+            )}
+            {renderDataCells(cellValues)}
+          </Tr>
           {!!children?.length &&
             isExpanded &&
             (() => {
-              // Don't show parent's guide line through its DIRECT children only
               const newSkipGuides = new Array(level + 1).fill(false);
-              // Copy only the skipGuides that are still relevant (ancestors)
               for (let i = 0; i < level - 1; i++) {
                 newSkipGuides[i] = skipGuides[i] || false;
               }
-              // Add skip for parent level if this is the last child
               if (isLastChild && level > 0) {
                 newSkipGuides[level - 1] = true;
               }
-              // Show guide line through direct children even if this node is last child
               return renderNodes(children, [...guides, true], newSkipGuides);
             })()}
         </Fragment>
@@ -617,10 +621,24 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
 
   const headersArray = headers || [];
   const headerItems = headerCells ?? headersArray;
-  const hasHeaders =
+  const hasHeaderLabels =
     headerItems.length > 0 &&
-    headerItems.some((header) =>
+    headerItems.some(header =>
       headerCells ? header !== null && header !== undefined : String(header).trim() !== '',
+    );
+  const showThead = hasHeaderLabels || renderFirstColumnHeader !== undefined;
+  const columnCount = headerCells ? headerItems.length || 1 : Math.max(headersArray.length, 1);
+
+  const thClassName = (index: number, isLast: boolean) =>
+    cn(
+      'box-border min-h-9 overflow-hidden border-b border-r border-line-primary border-b-line-primary-disabled p-2 text-left font-medium text-foreground-primary align-middle min-w-0',
+      index === 0 && getFirstColumnPadding(),
+      isLast && cn(getLastColumnPadding(), 'border-r-0'),
+      {
+        'text-left': index === 0 || getColumnAlignment(index) === 'left',
+        'text-center': index !== 0 && getColumnAlignment(index) === 'center',
+        'text-right': index !== 0 && getColumnAlignment(index) === 'right',
+      },
     );
 
   return (
@@ -629,33 +647,43 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
       id={scrollContainerId}
       className={cn('h-full overflow-auto', className)}>
       <table className='w-full border-collapse text-sm'>
-        {hasHeaders && (
+        {showThead && (
           <thead className='sticky top-0 z-10 bg-background-secondary'>
             <tr>
-              {headerItems.map((header, index) => (
-                <th
-                  key={index}
-                  className={cn(
-                    'box-border min-h-9 overflow-hidden border-b border-r border-line-primary border-b-line-primary-disabled p-2 text-left font-medium text-foreground-primary align-middle min-w-0',
-                    index === 0 && getFirstColumnPadding(),
-                    index === headerItems.length - 1 && cn(getLastColumnPadding(), 'border-r-0'),
-                    {
-                      'text-left': index === 0 || getColumnAlignment(index) === 'left',
-                      'text-center': index !== 0 && getColumnAlignment(index) === 'center',
-                      'text-right': index !== 0 && getColumnAlignment(index) === 'right',
-                    },
-                  )}
-                  style={getColumnWidth(index)}
-                >
-                  {headerCells ? (
-                    header
-                  ) : (
-                    <span className='block truncate' title={String(header)}>
-                      {header}
-                    </span>
-                  )}
-                </th>
-              ))}
+              {headerCells ? (
+                headerItems.map((header, index) => (
+                  <th
+                    key={index}
+                    className={thClassName(index, index === headerItems.length - 1)}
+                    style={getColumnWidth(index)}>
+                    {header}
+                  </th>
+                ))
+              ) : (
+                <>
+                  <th className={thClassName(0, headersArray.length <= 1)} style={getColumnWidth(0)}>
+                    {renderFirstColumnHeader ??
+                      (headersArray[0] != null && String(headersArray[0]).trim() !== '' ? (
+                        <span className='block truncate' title={String(headersArray[0])}>
+                          {headersArray[0]}
+                        </span>
+                      ) : null)}
+                  </th>
+                  {headersArray.slice(1).map((header, index) => (
+                    <th
+                      key={index + 1}
+                      className={thClassName(
+                        index + 1,
+                        index + 1 === headersArray.length - 1,
+                      )}
+                      style={getColumnWidth(index + 1)}>
+                      <span className='block truncate' title={String(header)}>
+                        {header}
+                      </span>
+                    </th>
+                  ))}
+                </>
+              )}
             </tr>
           </thead>
         )}
@@ -664,7 +692,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
             <>
               {paddingTop > 0 && (
                 <tr style={{ height: `${paddingTop}px` }}>
-                  <td colSpan={headerItems.length || 1} />
+                  <td colSpan={columnCount} />
                 </tr>
               )}
               {virtualItems.map(virtualRow => {
@@ -681,7 +709,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
               })}
               {paddingBottom > 0 && (
                 <tr style={{ height: `${paddingBottom}px` }}>
-                  <td colSpan={headerItems.length || 1} />
+                  <td colSpan={columnCount} />
                 </tr>
               )}
             </>
