@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 
 export type ExpandState = Record<string | number, boolean>;
 
@@ -50,22 +50,27 @@ export const useStoredExpand = (
     readFromStorage(storageKey, storage),
   );
 
-  const setExpanded: Dispatch<SetStateAction<ExpandState>> = (updaterOrValue) => {
+  const setExpanded: Dispatch<SetStateAction<ExpandState>> = useCallback((updaterOrValue) => {
     setExpandedState((prev) => {
       const next =
-        typeof updaterOrValue === 'function' ? (updaterOrValue as (prev: ExpandState) => ExpandState)(prev) : updaterOrValue;
+        typeof updaterOrValue === 'function'
+          ? (updaterOrValue as (prev: ExpandState) => ExpandState)(prev)
+          : updaterOrValue;
       writeToStorage(storageKey, next, storage);
       return next;
     });
-  };
+  }, [storageKey, storage]);
 
-  const toggleNode = (id: string | number) => {
-    setExpanded((prev) => {
-      const key = String(id);
-      const currentState = key in prev ? prev[key] : defaultWhenMissing;
-      return { ...prev, [key]: !currentState };
-    });
-  };
+  const toggleNode = useCallback(
+    (id: string | number) => {
+      setExpanded((prev) => {
+        const key = String(id);
+        const currentState = key in prev ? prev[key] : defaultWhenMissing;
+        return { ...prev, [key]: !currentState };
+      });
+    },
+    [defaultWhenMissing, setExpanded],
+  );
 
   const isNodeExpanded = (id: string | number): boolean => {
     const key = String(id);
