@@ -56,6 +56,10 @@ const meta: Meta<typeof Pagination> = {
       control: 'boolean',
       description: 'Скрыть селектор размера страницы',
     },
+    pageSizeOptions: {
+      control: 'object',
+      description: 'Варианты количества элементов на странице для селектора «Показывать по»',
+    },
     setPageSize: {
       action: 'setPageSize',
       description: 'Обработчик изменения размера страницы',
@@ -158,6 +162,26 @@ export const Compact: Story = {
   },
 };
 
+// Кастомные варианты размера страницы
+export const CustomPageSizeOptions: Story = {
+  args: {
+    pageSize: 15,
+    pageSizeOptions: [1, 5, 15, 25, 100],
+    pageCount: 10,
+    pageIndex: 0,
+    canPreviousPage: false,
+    canNextPage: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Кастомный набор значений для селектора «Показывать по». По умолчанию используется [10, 20, 30, 40, 50].',
+      },
+    },
+  },
+};
+
 // Без селектора размера страницы
 export const WithoutDisplayBy: Story = {
   args: {
@@ -243,9 +267,7 @@ export const Interactive: Story = {
           <p className='text-sm text-foreground-secondary mb-2'>
             Текущая страница: {pageIndex + 1} из {pageCount}
           </p>
-          <p className='text-sm text-foreground-secondary'>
-            Размер страницы: {pageSize}
-          </p>
+          <p className='text-sm text-foreground-secondary'>Размер страницы: {pageSize}</p>
         </div>
         <Pagination
           pageSize={pageSize}
@@ -300,12 +322,10 @@ export const FullFeatured: Story = {
       <div className='space-y-4'>
         <div className='p-4 bg-background-secondary rounded-lg'>
           <p className='text-sm text-foreground-secondary mb-2'>
-            Страница: {pageIndex + 1} из {pageCount} | Размер: {pageSize} | Всего элементов: {totalCount}
+            Страница: {pageIndex + 1} из {pageCount} | Размер: {pageSize} | Всего элементов:{' '}
+            {totalCount}
           </p>
-          <button
-            onClick={toggleSelection}
-            className='text-sm text-foreground-secondary underline'
-          >
+          <button onClick={toggleSelection} className='text-sm text-foreground-secondary underline'>
             {selectedCount > 0 ? 'Снять выделение' : 'Выделить элементы'}
           </button>
         </div>
@@ -370,7 +390,9 @@ export const EdgeCases: Story = {
         />
       </div>
       <div>
-        <h3 className='text-sm font-medium mb-2'>Четыре страницы (граница отображения многоточия)</h3>
+        <h3 className='text-sm font-medium mb-2'>
+          Четыре страницы (граница отображения многоточия)
+        </h3>
         <Pagination
           pageSize={20}
           pageCount={4}
