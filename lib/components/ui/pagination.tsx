@@ -7,6 +7,8 @@ import LastPage from '@/assets/last_page.svg?react';
 import { Button } from './button';
 import { Select } from './select';
 
+export const DEFAULT_PAGE_SIZE_OPTIONS: number[] = [10, 20, 30, 40, 50] as const;
+
 function PaginationButton({
   active,
   children,
@@ -54,6 +56,8 @@ export interface PaginationProps {
   compact?: boolean;
   /** Скрыть селектор размера страницы */
   hideDisplayBy?: boolean;
+  /** Варианты количества элементов на странице для селектора «Показывать по» */
+  pageSizeOptions?: number[];
   /** Обработчик перехода на предыдущую страницу */
   previousPage?: () => void;
   /** Обработчик перехода на следующую страницу */
@@ -81,6 +85,7 @@ export interface PaginationProps {
  * @param {number} [props.totalCount] - Общее количество элементов
  * @param {boolean} [props.compact=false] - Компактный режим без кнопок первой/последней страницы
  * @param {boolean} [props.hideDisplayBy=false] - Скрыть селектор размера страницы
+ * @param {number[]} [props.pageSizeOptions=DEFAULT_PAGE_SIZE_OPTIONS] - Варианты размера страницы
  * @param {function} [props.previousPage] - Обработчик перехода на предыдущую страницу
  * @param {function} [props.nextPage] - Обработчик перехода на следующую страницу
  * @param {function} [props.setPageSize] - Обработчик изменения размера страницы
@@ -131,6 +136,19 @@ export interface PaginationProps {
  *   previousPage={() => setPageIndex(pageIndex - 1)}
  *   nextPage={() => setPageIndex(pageIndex + 1)}
  * />
+ *
+ * @example
+ * // Кастомные варианты размера страницы
+ * <Pagination
+ *   pageSize={15}
+ *   pageSizeOptions={[5, 15, 25, 100]}
+ *   pageCount={10}
+ *   pageIndex={0}
+ *   canPreviousPage={false}
+ *   canNextPage={true}
+ *   setPageSize={(size) => setPageSize(size)}
+ *   setPageIndex={(index) => setPageIndex(index)}
+ * />
  */
 export function Pagination({
   horizontalPadding,
@@ -144,12 +162,26 @@ export function Pagination({
   totalCount,
   compact,
   hideDisplayBy,
+  pageSizeOptions,
   previousPage,
   nextPage,
   setPageSize,
   setPageIndex,
 }: PaginationProps) {
   const { t } = useTranslation();
+
+  const options = pageSizeOptions ?? DEFAULT_PAGE_SIZE_OPTIONS;
+
+  const resolvedPageSizeOptions =
+    pageSize != null && !options.includes(pageSize)
+      ? [...options, pageSize].sort((a, b) => a - b)
+      : options;
+
+  const selectOptions = resolvedPageSizeOptions.map(size => ({
+    value: String(size),
+    label: `${t('displayBy')} ${size}`,
+  }));
+
   const getCellPadding = () => {
     switch (horizontalPadding) {
       case 'small':
@@ -195,13 +227,7 @@ export function Pagination({
       {!hideDisplayBy && (
         <div className='flex items-center space-x-2'>
           <Select
-            options={[
-              { value: '10', label: `${t('displayBy')} 10` },
-              { value: '20', label: `${t('displayBy')} 20` },
-              { value: '30', label: `${t('displayBy')} 30` },
-              { value: '40', label: `${t('displayBy')} 40` },
-              { value: '50', label: `${t('displayBy')} 50` },
-            ]}
+            options={selectOptions}
             triggerClassName='h-8 text-sm text-foreground-secondary border-none hover:bg-[transparent] px-0'
             placeholder={`${t('displayBy')} ${pageSize}`}
             value={`${pageSize}`}
