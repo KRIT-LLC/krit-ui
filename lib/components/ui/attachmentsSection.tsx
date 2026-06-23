@@ -16,6 +16,8 @@ export interface AttachmentsSectionProps {
   orientation?: 'vertical' | 'horizontal';
   /** Ориентация превью файлов */
   previewsOrientation?: 'vertical' | 'horizontal';
+  /** Подсказка под кнопкой добавления файла */
+  hint?: string;
   /** Видимые секции по меткам или индексам */
   visibleSections?: (string | number)[];
   /** Доступные для загрузки MIME-типы */
@@ -63,6 +65,7 @@ export const AttachmentsSection = ({
   tabs = [],
   orientation,
   previewsOrientation,
+  hint,
   visibleSections,
   accepts,
   maxSizes,
@@ -83,12 +86,12 @@ export const AttachmentsSection = ({
 
   const [visibleTabs, setVisibleTabs] = useState(tabs);
 
-  const filterVisible = (subsection: Attachments[0], index: number) =>
-    !visibleSections?.length ||
-    visibleSections?.includes(subsection.label) ||
-    visibleSections?.includes(index);
-
   useEffect(() => {
+    const filterVisible = (subsection: Attachments[0], index: number) =>
+      !visibleSections?.length ||
+      visibleSections?.includes(subsection.label) ||
+      visibleSections?.includes(index);
+
     const newVisibleTabs = tabs
       .filter(filterVisible)
       .filter(
@@ -98,7 +101,7 @@ export const AttachmentsSection = ({
           (!!visibleSections?.length && filterVisible(subsection, i)),
       );
     setVisibleTabs(newVisibleTabs);
-  }, [tabs]);
+  }, [tabs, visibleSections]);
 
   const hasItems = visibleTabs?.filter(subsection => subsection.items.length > 0).length > 0;
 
@@ -125,6 +128,7 @@ export const AttachmentsSection = ({
               <Previews
                 data={item.items}
                 max={item?.maxFiles}
+                hint={hint}
                 accepts={accepts}
                 maxSizes={maxSizes}
                 withCompress={withCompress}
