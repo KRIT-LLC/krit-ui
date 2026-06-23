@@ -36,6 +36,7 @@ export interface PreviewsProps {
   accepts?: ContentType[];
   multiple?: boolean;
   max?: number;
+  hint?: string;
   previewSize?: number;
   gap?: number;
   title?: string;
@@ -69,6 +70,7 @@ export interface PreviewsProps {
  * @param {ContentType[]} [props.accepts=defaultAccepts] - Разрешенные типы файлов
  * @param {boolean} [props.multiple=true] - Разрешить множественный выбор файлов
  * @param {number} [props.max=10] - Максимальное количество файлов
+ * @param {string} [props.hint] - Подсказка под кнопкой добавления файла
  * @param {number} [props.previewSize=130] - Размер превью в пикселях
  * @param {number} [props.gap=2] - Отступ между элементами
  * @param {string} [props.title] - Заголовок для изображений
@@ -103,6 +105,7 @@ export const Previews = (props: PreviewsProps) => {
     accepts = defaultAccepts,
     multiple = true,
     max = 10,
+    hint,
     previewSize = 130,
     gap = 2,
     title,
@@ -157,7 +160,6 @@ export const Previews = (props: PreviewsProps) => {
     const valid = filterValidAttachmentItems(data);
     const previewable = valid.filter(item => PREVIEW_TYPES.includes(getType(item)));
     setCurrentPreview(prev => (previewable.includes(prev) ? prev : previewable[0]));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   const getPrevHandler = () => {
@@ -224,6 +226,11 @@ export const Previews = (props: PreviewsProps) => {
                 className={cn('text-icon-fade-contrast', { 'opacity-50': validData.length >= max })}
               />
               <span className='text-sm text-foreground-tertiary'>{t('attachFile')}</span>
+              {hint && (
+                <span className='px-2 text-center text-xs leading-tight text-foreground-quaternary'>
+                  {hint}
+                </span>
+              )}
             </div>
           )}
         </div>

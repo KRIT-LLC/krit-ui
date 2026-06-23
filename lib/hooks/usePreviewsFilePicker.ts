@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { filterValidAttachmentItems, getContentTypeFromMime } from '@/components/ui/previewsShared';
 import {
   acceptMap,
@@ -83,7 +83,7 @@ export const usePreviewsFilePicker = (
     attachmentData = [],
   } = params;
 
-  const maxSizes = { ...defaultMaxSizes, ...maxSizesProp };
+  const maxSizes = useMemo(() => ({ ...defaultMaxSizes, ...maxSizesProp }), [maxSizesProp]);
   const { notifyError } = useNotify();
   const { t } = useTranslation();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -165,9 +165,11 @@ export const usePreviewsFilePicker = (
         }
       }
 
+      const filesWithOkSize = filesArray.filter(isSizeOk);
       const currentFiles = valid.filter((item) => !!item.file).map((item) => item.file!);
       const totalSizeMb =
-        [...currentFiles, ...filesArray].reduce((acc, file) => acc + file.size, 0) / MB_IN_BYTES;
+        [...currentFiles, ...filesWithOkSize].reduce((acc, file) => acc + file.size, 0) /
+        MB_IN_BYTES;
 
       if (maxSizes.total != null && totalSizeMb > maxSizes.total) {
         notifyError(`${t('maxSizeOfFilesMB')} ${maxSizes.total}(MB)`);
@@ -175,7 +177,6 @@ export const usePreviewsFilePicker = (
         return;
       }
 
-      const filesWithOkSize = filesArray.filter(isSizeOk);
       const remainingSlots = max != null ? Math.max(0, max - count) : filesWithOkSize.length;
       const results = max != null ? filesWithOkSize.slice(0, remainingSlots) : filesWithOkSize;
 
@@ -188,7 +189,9 @@ export const usePreviewsFilePicker = (
 
   const onFileInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (e.target.files?.length) void handleInputChange(e.target.files);
+      if (e.target.files?.length) {
+        handleInputChange(e.target.files).catch(() => setProcessing(false));
+      }
     },
     [handleInputChange],
   );
