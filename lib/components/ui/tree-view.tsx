@@ -310,7 +310,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
     <div className='flex min-w-0 flex-1 items-center'>
       {config.getNodeHeadingPrefix?.(node) ? (
         <div
-          className='relative z-10 mr-1 flex shrink-0 self-stretch'
+          className='relative mr-1 flex shrink-0 self-stretch'
           style={getTreeGuideColumnStyle()}>
           <div className='flex items-center justify-center' style={getTreeGuideColumnStyle()}>
             {config.getNodeHeadingPrefix(node)}
@@ -329,7 +329,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
           style={{ top: getTreeLineAnchorTop(), left: getTreeLineAnchorOffset() }}
         />
       )}
-      <div className='relative z-10 flex shrink-0'>
+      <div className='relative flex shrink-0'>
         {config.renderExpandIcon
           ? config.renderExpandIcon(node, isExpanded, () => onExpand(node))
           : renderDefaultExpandIcon(hasNested, isExpanded, () => onExpand(node))}
@@ -631,7 +631,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
 
   const thClassName = (index: number, isLast: boolean) =>
     cn(
-      'box-border min-h-9 overflow-hidden border-b border-r border-line-primary border-b-line-primary-disabled p-2 text-left font-medium text-foreground-primary align-middle min-w-0',
+      'box-border min-h-9 overflow-hidden border-b border-r border-line-primary border-b-line-primary-disabled bg-background-secondary p-2 text-left font-medium text-foreground-primary align-middle min-w-0',
       index === 0 && getFirstColumnPadding(),
       isLast && cn(getLastColumnPadding(), 'border-r-0'),
       {
