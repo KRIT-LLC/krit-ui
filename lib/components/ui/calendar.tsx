@@ -58,11 +58,11 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         day_selected:
           'bg-background-theme text-foreground-on-contrast hover:bg-background-theme/80 hover:text-foreground-on-contrast focus:bg-background-theme focus:text-foreground-on-contrast',
         day_today:
-          'transition-none bg-background-tertiary text-foreground-theme hover:bg-none hover:text-primary hover:bg-clip-content aria-selected:!text-foreground-on-contrast',
+          'day-today transition-none bg-background-tertiary text-foreground-theme hover:bg-none hover:text-primary hover:bg-clip-content aria-selected:!text-foreground-on-contrast [&.day-range-middle]:!text-foreground-theme',
         day_outside: 'day-outside text-foreground-secondary opacity-50 hover:text-foreground/90',
         day_disabled: 'text-foreground-secondary opacity-50',
         day_range_middle:
-          'bg-none aria-selected:bg-background-tertiary aria-selected:hover:bg-none aria-selected:hover:bg-background-success-fade aria-selected:text-foreground',
+          'day-range-middle bg-none aria-selected:bg-background-tertiary aria-selected:hover:bg-none aria-selected:hover:bg-background-success-fade aria-selected:text-foreground',
         day_hidden: 'invisible',
         ...classNames,
       }}
