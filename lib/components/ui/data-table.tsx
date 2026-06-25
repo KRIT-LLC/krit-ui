@@ -165,10 +165,8 @@ export function DataTable<TData, TValue>({
     getSubRows: row => row.subRows,
   });
 
-  /** Скрываем футер при одной странице по серверному total (выбор строк не показывает пагинацию — счётчик в своих панелях страниц). */
-  const showPaginationFooter =
-    !!pagination &&
-    (rowCount === undefined || rowCount > pagination.pageSize);
+  /** Показываем футер всегда, когда таблица управляется через пагинацию. */
+  const showPaginationFooter = !!pagination;
 
   const getCellPadding = () => {
     if (variant === 'list') {
