@@ -21,6 +21,7 @@ export type MultiSelectOptionType = {
   value: string;
   hidden?: boolean;
   disabled?: boolean;
+  excludeFromAll?: boolean;
   children?: MultiSelectOptionType[];
   defaultExpanded?: boolean; // Новое свойство для контроля раскрытия по умолчанию
 };
@@ -30,6 +31,7 @@ type InternalMultiSelectOptionType = {
   value: string | typeof ALL_VALUE;
   hidden?: boolean;
   disabled?: boolean;
+  excludeFromAll?: boolean;
   children?: MultiSelectOptionType[];
   defaultExpanded?: boolean;
 };
@@ -241,9 +243,14 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
       [t],
     );
 
+    const allSelectableOptions = React.useMemo(
+      () => filteredActualOptions.filter(option => !option.excludeFromAll),
+      [filteredActualOptions],
+    );
+
     const isAllSelected =
-      filteredActualOptions.length > 0 &&
-      filteredActualOptions.every(option => value.includes(option.value));
+      allSelectableOptions.length > 0 &&
+      allSelectableOptions.every(option => value.includes(option.value));
 
     const internalOptions: InternalMultiSelectOptionType[] = React.useMemo(
       () => options.map(opt => ({ ...opt })),
@@ -327,7 +334,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
           if (isAllSelected) {
             onChange([], []);
           } else {
-            const [allValues, allLabels] = filteredActualOptions.reduce(
+            const [allValues, allLabels] = allSelectableOptions.reduce(
               (acc, opt) => {
                 acc[0].push(opt.value);
                 acc[1].push(opt.label);
@@ -355,7 +362,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
         onChange(newValues, newLabels);
         onOpenChange?.(maxSelected !== 1);
       },
-      [onChange, isAllSelected, filteredActualOptions, onOpenChange, maxSelected, value],
+      [onChange, isAllSelected, allSelectableOptions, filteredActualOptions, onOpenChange, maxSelected, value],
     );
 
     const displayOptions = React.useMemo(() => {
