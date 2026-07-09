@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Column as TanColumn,
   ColumnDef,
   ColumnFiltersState,
   ExpandedState,
@@ -15,11 +16,11 @@ import {
   useReactTable,
   VisibilityState,
 } from '@tanstack/react-table';
+import { useColumnSizing } from '@/hooks/useColumnSizing';
 import { cn } from '@/utils';
 import { Pagination, PaginationProps } from './pagination';
 import { Skeleton } from './skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './table';
-import { useColumnSizing } from '@/hooks/useColumnSizing';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -62,6 +63,16 @@ interface DataTableProps<TData, TValue> {
    * Если проп вообще не нужен — не передавайте его, поведение таблицы не изменится.
    */
   columnSizingStorageKey?: string;
+  /**
+   * Включить поддержку множественной сортировки.
+   * По умолчанию false (обычная одиночная сортировка).
+   */
+  enableMultiSort?: boolean;
+  /**
+   * Максимальное количество колонок для множественной сортировки.
+   * Игнорируется если enableMultiSort=false.
+   */
+  maxMultiSortColumns?: number;
 }
 
 /**
@@ -126,11 +137,19 @@ export function DataTable<TData, TValue>({
   variant = 'table',
   striped = true,
   columnSizingStorageKey,
+  enableMultiSort = false,
+  maxMultiSortColumns,
 }: DataTableProps<TData, TValue>) {
   const wrapperRef = React.useRef<HTMLDivElement>(null);
   const [hoveredRow, setHoveredRow] = React.useState<TData | null>(null);
 
   const { columnSizing, onColumnSizingChange } = useColumnSizing(columnSizingStorageKey);
+
+  const getSortedColumnClass = (column: TanColumn<TData, unknown>) => {
+    const isSorted = column.getIsSorted();
+    if (!isSorted) return '';
+    return 'bg-background-tertiary';
+  };
 
   const table = useReactTable({
     getRowId,
@@ -161,6 +180,7 @@ export function DataTable<TData, TValue>({
     onColumnVisibilityChange,
     onColumnFiltersChange,
     ...(columnSizingStorageKey !== undefined ? { onColumnSizingChange } : {}),
+    ...(enableMultiSort && maxMultiSortColumns ? { maxMultiSortColCount: maxMultiSortColumns } : {}),
     // @ts-expect-error – допускаем наличие подстрок для вложенных строк
     getSubRows: row => row.subRows,
   });
@@ -252,6 +272,7 @@ export function DataTable<TData, TValue>({
                         'relative',
                         variant === 'list' ? '' : getCellPadding(),
                         hideRightBorder && variant === 'table' && 'border-r-0',
+                        getSortedColumnClass(header.column),
                       )}
                       variant={variant}
                     >
@@ -297,6 +318,7 @@ export function DataTable<TData, TValue>({
                           className={cn(
                             variant === 'list' ? '' : getCellPadding(),
                             hideRightBorder && variant === 'table' && 'border-r-0',
+                            getSortedColumnClass(header.column),
                           )}
                           variant={variant}
                         >
@@ -333,6 +355,7 @@ export function DataTable<TData, TValue>({
                         className={cn(
                           variant === 'list' ? '' : getCellPadding(),
                           hideRightBorder && variant === 'table' && 'border-r-0',
+                          getSortedColumnClass(cell.column),
                         )}
                         variant={variant}
                       >

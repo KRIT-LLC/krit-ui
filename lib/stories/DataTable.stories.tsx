@@ -83,7 +83,8 @@ const meta: Meta<typeof DataTable> = {
     variant: {
       control: { type: 'select' },
       options: ['table', 'list'],
-      description: 'Вариант стиля таблицы: table - стандартный стиль с границами, list - стиль списка без вертикальных границ и фона строк',
+      description:
+        'Вариант стиля таблицы: table - стандартный стиль с границами, list - стиль списка без вертикальных границ и фона строк',
     },
     hideHeader: {
       control: 'boolean',
@@ -386,6 +387,110 @@ export const ListVariantWithoutHeader: StoryObj<typeof DataTable> = {
       description: {
         story:
           'Вариант списка без заголовков. Подходит для отображения истории операций или логов, где заголовки не нужны.',
+      },
+    },
+  },
+};
+
+export const MultiSortLimit2: StoryObj<typeof DataTable> = {
+  args: {
+    columns: [
+      {
+        accessorKey: 'email',
+        header: ({ column }) => (
+          <SortableHeader column={column} enableMultiSort maxMultiSortColumns={2}>
+            Email
+          </SortableHeader>
+        ),
+        cell: ({ row }) => <TruncatedCell>{row.getValue('email')}</TruncatedCell>,
+      },
+      {
+        accessorKey: 'amount',
+        header: ({ column }) => (
+          <SortableHeader column={column} enableMultiSort maxMultiSortColumns={2}>
+            Amount
+          </SortableHeader>
+        ),
+      },
+      {
+        accessorKey: 'status',
+        header: ({ column }) => (
+          <SortableHeader column={column} enableMultiSort maxMultiSortColumns={2}>
+            Status
+          </SortableHeader>
+        ),
+      },
+      {
+        accessorKey: 'date',
+        header: ({ column }) => (
+          <SortableHeader column={column} enableMultiSort maxMultiSortColumns={2}>
+            Date
+          </SortableHeader>
+        ),
+      },
+    ],
+    data,
+    enableMultiSort: true,
+    maxMultiSortColumns: 2,
+    horizontalPadding: 'medium',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Таблица с множественной сортировкой, лимит 2 колонки. Используйте Alt/Cmd + Click для добавления еще одной колонки в сортировку. Badge показывает порядок сортировки (1, 2). Обычный клик переключает направление сортировки активной колонки.',
+      },
+    },
+  },
+};
+
+export const MultiSortLimit3: StoryObj<typeof DataTable> = {
+  args: {
+    columns: [
+      {
+        accessorKey: 'email',
+        header: ({ column }) => (
+          <SortableHeader column={column} enableMultiSort maxMultiSortColumns={3}>
+            Email
+          </SortableHeader>
+        ),
+        cell: ({ row }) => <TruncatedCell>{row.getValue('email')}</TruncatedCell>,
+      },
+      {
+        accessorKey: 'amount',
+        header: ({ column }) => (
+          <SortableHeader column={column} enableMultiSort maxMultiSortColumns={3}>
+            Amount
+          </SortableHeader>
+        ),
+      },
+      {
+        accessorKey: 'status',
+        header: ({ column }) => (
+          <SortableHeader column={column} enableMultiSort maxMultiSortColumns={3}>
+            Status
+          </SortableHeader>
+        ),
+      },
+      {
+        accessorKey: 'date',
+        header: ({ column }) => (
+          <SortableHeader column={column} enableMultiSort maxMultiSortColumns={3}>
+            Date
+          </SortableHeader>
+        ),
+      },
+    ],
+    data,
+    enableMultiSort: true,
+    maxMultiSortColumns: 3,
+    horizontalPadding: 'medium',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Таблица с множественной сортировкой, лимит 3 колонки (дефолт для продакшена). Используйте Alt/Cmd + Click для добавления колонок в сортировку (до 3). Badge показывает порядок 1, 2, 3.',
       },
     },
   },
