@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { type MouseEvent, useEffect, useState } from 'react';
 import {
   AttachmentItem,
   ContentType,
@@ -25,6 +25,8 @@ import { PreviewFull } from './previewFull';
 import {
   filterValidAttachmentItems,
   getAttachmentContentType,
+  getAttachmentDownloadUrl,
+  getAttachmentPreviewUrl,
   PREVIEW_TYPES,
 } from './previewsShared';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip';
@@ -153,12 +155,16 @@ export const Previews = (props: PreviewsProps) => {
 
   const validData = filterValidAttachmentItems(data);
 
-  const previewableItems = validData.filter(item => PREVIEW_TYPES.includes(getType(item)));
+  const previewableItems = validData.filter(
+    item => PREVIEW_TYPES.includes(getType(item)) && Boolean(getAttachmentPreviewUrl(item)),
+  );
   const [currentPreview, setCurrentPreview] = useState<AttachmentItem>(previewableItems[0]);
 
   useEffect(() => {
     const valid = filterValidAttachmentItems(data);
-    const previewable = valid.filter(item => PREVIEW_TYPES.includes(getType(item)));
+    const previewable = valid.filter(
+      item => PREVIEW_TYPES.includes(getType(item)) && Boolean(getAttachmentPreviewUrl(item)),
+    );
     setCurrentPreview(prev => (previewable.includes(prev) ? prev : previewable[0]));
   }, [data]);
 
@@ -240,34 +246,53 @@ export const Previews = (props: PreviewsProps) => {
       )}
       {validData?.map((item, i) => {
         const fileType = getType(item);
-        const isDownloadable = !PREVIEW_TYPES.includes(fileType);
+        const previewUrl = getAttachmentPreviewUrl(item);
+        const isDownloadable = !PREVIEW_TYPES.includes(fileType) || !previewUrl;
+        const downloadUrl = getAttachmentDownloadUrl(item);
+        const size = item.size ?? item.file?.size;
         const fileName =
           item.fileName ||
-          item.url?.split('/').pop() +
-            `.${item.contentType?.split('/').pop() || (fileType === 'video' ? 'mp4' : fileType === 'audio' ? 'mp3' : fileType === 'word' ? 'docx' : fileType === 'excel' ? 'xlsx' : fileType === 'archive' ? 'zip' : 'pdf')}`;
+          `${downloadUrl?.split('/').pop() ?? 'file'}.${item.contentType?.split('/').pop() || (fileType === 'video' ? 'mp4' : fileType === 'audio' ? 'mp3' : fileType === 'word' ? 'docx' : fileType === 'excel' ? 'xlsx' : fileType === 'archive' ? 'zip' : 'pdf')}`;
+        const handleDownload = async (event: MouseEvent) => {
+          if (!item.onDownload) return;
+
+          event.preventDefault();
+          await item.onDownload();
+        };
 
         const fileContent = (
           <span className='relative'>
-            {fileType === 'image' && (
-              <>
-                <img
-                  src={item.url}
-                  alt=''
+            {fileType === 'image' &&
+              !isDownloadable &&
+              (previewUrl ? (
+                <>
+                  <img
+                    src={previewUrl}
+                    alt=''
+                    className={cn(
+                      'rounded-lg object-cover border border-line-primary',
+                      getSizeClass(),
+                    )}
+                    loading='lazy'
+                    onClick={() => setCurrentPreview(item)}
+                  />
+                  {title && (
+                    <span className='absolute bottom-2 left-2 display-block p-0.5 rounded-xl bg-background-on-image text-xs text-foreground-on-image w-[calc(100%-1rem)] truncate'>
+                      {title}
+                    </span>
+                  )}
+                </>
+              ) : (
+                <div
                   className={cn(
-                    'rounded-lg object-cover border border-line-primary',
+                    'flex flex-col items-center justify-center h-full w-full text-icon-theme rounded-lg border-2 border-line-secondary',
                     getSizeClass(),
                   )}
-                  loading='lazy'
-                  onClick={() => setCurrentPreview(item)}
-                />
-                {title && (
-                  <span className='absolute bottom-2 left-2 display-block p-0.5 rounded-xl bg-background-on-image text-xs text-foreground-on-image w-[calc(100%-1rem)] truncate'>
-                    {title}
-                  </span>
-                )}
-              </>
-            )}
-            {fileType === 'video' && (
+                >
+                  <FileIcon />
+                </div>
+              ))}
+            {fileType === 'video' && !isDownloadable && (
               <div
                 className={cn(
                   'flex flex-col items-center justify-center h-full w-full text-icon-theme rounded-lg border-2 border-line-secondary',
@@ -292,7 +317,7 @@ export const Previews = (props: PreviewsProps) => {
                 )}
               </div>
             )}
-            {fileType === 'audio' && (
+            {fileType === 'audio' && !isDownloadable && (
               <div
                 className={cn(
                   'flex flex-col items-center justify-center h-full w-full text-icon-theme rounded-lg border-2 border-line-secondary',
@@ -317,40 +342,66 @@ export const Previews = (props: PreviewsProps) => {
                 )}
               </div>
             )}
-            {isDownloadable && (
-              <a
-                href={item.url}
-                target='_blank'
-                rel='noopener noreferrer'
-                download={fileName}
-                className={cn(
-                  'flex flex-col items-center justify-center h-full w-full text-icon-theme rounded-lg border-2 border-line-secondary',
-                  getSizeClass(),
-                )}
-              >
-                <FileIcon />
-                {orientation === 'horizontal' && (
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div className='text-sm mt-1 text-foreground-secondary w-full truncate text-center p-0.5'>
-                          {fileName}
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{fileName}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                )}
-              </a>
-            )}
+            {isDownloadable &&
+              (downloadUrl && !item.onDownload ? (
+                <a
+                  href={downloadUrl}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  download={fileName}
+                  className={cn(
+                    'flex flex-col items-center justify-center h-full w-full text-icon-theme rounded-lg border-2 border-line-secondary',
+                    getSizeClass(),
+                  )}
+                >
+                  <FileIcon />
+                  {orientation === 'horizontal' && (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className='text-sm mt-1 text-foreground-secondary w-full truncate text-center p-0.5'>
+                            {fileName}
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{fileName}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
+                </a>
+              ) : (
+                <button
+                  type='button'
+                  onClick={handleDownload}
+                  className={cn(
+                    'flex flex-col items-center justify-center h-full w-full text-icon-theme rounded-lg border-2 border-line-secondary bg-transparent',
+                    getSizeClass(),
+                  )}
+                >
+                  <FileIcon />
+                  {orientation === 'horizontal' && (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className='text-sm mt-1 text-foreground-secondary w-full truncate text-center p-0.5'>
+                            {fileName}
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{fileName}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
+                </button>
+              ))}
           </span>
         );
 
         return (
           <div
-            key={item.fileName}
+            key={`${String(item.id)}-${i}`}
             className={cn(
               'relative select-none',
               !isDownloadable && 'cursor-pointer',
@@ -366,7 +417,7 @@ export const Previews = (props: PreviewsProps) => {
             ) : (
               <PreviewFull
                 type={getType(currentPreview)}
-                src={currentPreview?.url}
+                src={getAttachmentPreviewUrl(currentPreview)}
                 name={currentPreview?.fileName}
                 onPrev={getPrevHandler()}
                 onNext={getNextHandler()}
@@ -400,11 +451,16 @@ export const Previews = (props: PreviewsProps) => {
                   )}
                 </div>
                 <span className='text-sm text-foreground-quaternary'>
-                  {item.file?.size ? bytesToMb(item.file.size) : 0} {t('mb')}
+                  {size ? bytesToMb(size) : 0} {t('mb')}
                 </span>
               </div>
             )}
-            {orientation === 'horizontal' && (onRemove || item.onRemove) && (
+            {item.inProgress && (
+              <div className='absolute inset-0 flex items-center justify-center rounded-lg bg-background-primary/70'>
+                <Loader2 className='h-6 w-6 animate-spin text-icon-theme' />
+              </div>
+            )}
+            {orientation === 'horizontal' && !item.inProgress && (onRemove || item.onRemove) && (
               <div onClick={() => onRemoveAttachment(item, i)}>
                 <CloseIcon className='absolute top-[2px] right-[2px] rounded-full bg-background text-destructive-foreground cursor-pointer' />
               </div>
