@@ -5,6 +5,7 @@ import { cn } from '@/utils';
 import WatchLaterOutlineIcon from '@/assets/watch_later_outline.svg?react';
 import { Input, InputProps } from './input';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
+import { clampTimeByBounds } from './time-picker.lib';
 
 export interface TimePickerProps extends Omit<InputProps, 'onChange' | 'value' | 'type'> {
   value: string;
@@ -33,8 +34,9 @@ export interface TimePickerProps extends Omit<InputProps, 'onChange' | 'value' |
  * />
  */
 const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(
-  ({ value, onChange, onBlur, placeholder, className, ...props }, ref) => {
+  ({ value, onChange, onBlur, placeholder, className, disabled, readOnly, min, max, ...props }, ref) => {
     const [open, setOpen] = React.useState(false);
+    const isInteractive = !disabled && !readOnly;
 
     const maskedRef = useMask({
       mask: 'Hh:Mm',
@@ -79,7 +81,7 @@ const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(
 
       const cleanValue = val.replace(/\D/g, '');
       if (cleanValue.length === 4) {
-        const formatted = formattedTime(cleanValue);
+        const formatted = clampTimeByBounds(formattedTime(cleanValue), { min, max });
         onChange?.(formatted);
       }
     };
@@ -92,7 +94,7 @@ const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(
         return;
       }
       const padded = cleanValue.padEnd(4, '0').slice(0, 4);
-      const formatted = formattedTime(padded);
+      const formatted = clampTimeByBounds(formattedTime(padded), { min, max });
       if (formatted !== inputValue) {
         setInputValue(formatted);
         onChange?.(formatted);
@@ -104,7 +106,14 @@ const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(
     };
 
     const handleTimeSelect = (hours: string, minutes: string) => {
-      const formatted = `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+      if (!isInteractive) {
+        return;
+      }
+
+      const formatted = clampTimeByBounds(
+        `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`,
+        { min, max },
+      );
       setInputValue(formatted);
       onChange?.(formatted);
     };
@@ -113,7 +122,14 @@ const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(
 
     return (
       <div className={cn('relative', className)}>
-        <Popover open={open} onOpenChange={setOpen}>
+        <Popover
+          open={isInteractive ? open : false}
+          onOpenChange={(nextOpen) => {
+            if (isInteractive) {
+              setOpen(nextOpen);
+            }
+          }}
+        >
           <Input
             {...props}
             ref={combinedRef}
@@ -121,11 +137,20 @@ const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(
             onChange={handleInputChange}
             onBlur={handleBlur}
             placeholder={placeholder}
+            disabled={disabled}
+            readOnly={readOnly}
+            min={min}
+            max={max}
             className='pr-10'
             type='text'
           />
           <PopoverTrigger asChild>
-            <div className='absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer z-10'>
+            <div
+              className={cn(
+                'absolute right-3 top-1/2 -translate-y-1/2 z-10',
+                isInteractive ? 'cursor-pointer' : 'cursor-default pointer-events-none',
+              )}
+            >
               <WatchLaterOutlineIcon className='text-icon-fade-contrast min-w-6 h-6' />
             </div>
           </PopoverTrigger>
