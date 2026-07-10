@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import type { AttachmentItem, ContentType } from '@/lib/attachments';
 import { bytesToMb } from '@/lib/file';
+import { Loader2 } from 'lucide-react';
 import { useConfirm } from '@/hooks/useConfirm';
+import { useNotify } from '@/hooks/useNotify';
 import { useTranslation } from '@/hooks/useTranslation';
 import { cn } from '@/utils';
 import { AudioFileIcon, CloseIcon, FileIcon, VideoFileIcon } from '@/assets';
@@ -55,7 +57,9 @@ export const PreviewsCompactList = ({
   title,
 }: PreviewsCompactListProps) => {
   const { confirm } = useConfirm();
+  const { notifyError } = useNotify();
   const { t } = useTranslation();
+  const [downloadingItemIds, setDownloadingItemIds] = useState<string[]>([]);
   const validData = filterValidAttachmentItems(data);
   const previewableItems = validData.filter(
     item =>
@@ -113,6 +117,21 @@ export const PreviewsCompactList = ({
         const previewUrl = getAttachmentPreviewUrl(item);
         const isDownloadable = !PREVIEW_TYPES.includes(fileType) || !previewUrl;
         const downloadUrl = getAttachmentDownloadUrl(item);
+        const itemId = String(item.id ?? i);
+        const isDownloading = downloadingItemIds.includes(itemId);
+        const handleDownload = async () => {
+          if (!item.onDownload || isDownloading) return;
+
+          setDownloadingItemIds(prev => [...prev, itemId]);
+
+          try {
+            await item.onDownload();
+          } catch (error) {
+            notifyError(error instanceof Error ? error.message : undefined);
+          } finally {
+            setDownloadingItemIds(prev => prev.filter(id => id !== itemId));
+          }
+        };
 
         const textBlock = (
           <div className='flex min-w-0 flex-1 flex-col gap-0.5'>
@@ -160,12 +179,17 @@ export const PreviewsCompactList = ({
             <button
               type='button'
               onClick={() => {
-                void item.onDownload?.();
+                void handleDownload();
               }}
+              disabled={isDownloading}
               className={cn(thumbBoxClass(), 'text-icon-fade-contrast')}
               aria-label={fileName}
             >
-              <FileIcon className='size-6 shrink-0' aria-hidden />
+              {isDownloading ? (
+                <Loader2 className='size-5 shrink-0 animate-spin' aria-hidden />
+              ) : (
+                <FileIcon className='size-6 shrink-0' aria-hidden />
+              )}
             </button>
           ) : (
             <a
