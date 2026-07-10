@@ -43,7 +43,7 @@ export const InfiniteScroll = ({
 
       // Create a new IntersectionObserver instance because hasMore or next may be changed.
       observer.current = new IntersectionObserver(
-        (entries) => {
+        entries => {
           if (entries[0].isIntersecting && hasMore) {
             next();
           }
@@ -66,7 +66,7 @@ export const InfiniteScroll = ({
   return (
     <>
       {flattenChildren.map((child, index) => {
-        if (!React.isValidElement(child)) {
+        if (!React.isValidElement<{ ref?: React.Ref<HTMLElement> }>(child)) {
           if (process.env.NODE_ENV === 'development')
             console.warn('You should use a valid element with InfiniteScroll');
           return child;

@@ -1,0 +1,38 @@
+name: React compatibility
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: React ${{ matrix.react }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - react: 18.3.1
+            react_types: 18.3.28
+            react_dom_types: 18.3.7
+          - react: 19.2.7
+            react_types: 19.2.17
+            react_dom_types: 19.2.3
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Install React ${{ matrix.react }}
+        run: >-
+          npm install --force --no-save --package-lock=false --ignore-scripts
+          react@${{ matrix.react }}
+          react-dom@${{ matrix.react }}
+          @types/react@${{ matrix.react_types }}
+          @types/react-dom@${{ matrix.react_dom_types }}
+      - run: npm run build

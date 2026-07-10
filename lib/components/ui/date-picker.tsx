@@ -1,11 +1,10 @@
 import * as React from 'react';
 import {
-  DayPickerMultipleProps,
-  DayPickerRangeProps,
-  DayPickerSingleProps,
-  SelectMultipleEventHandler,
-  SelectRangeEventHandler,
-  SelectSingleEventHandler,
+  type OnSelectHandler,
+  type PropsBase,
+  type PropsMulti,
+  type PropsRange,
+  type PropsSingle,
 } from 'react-day-picker';
 import {
   formatMultipleDatesMask,
@@ -32,11 +31,9 @@ export interface DateRange {
   to?: Date;
 }
 
-export interface DatePickerSingleProps extends DayPickerSingleProps {
+interface DatePickerCommonProps {
   placeholder?: string;
   innerLabel?: string;
-  value?: Date | null;
-  onChange?: SelectSingleEventHandler;
   error?: string | boolean;
   readOnly?: boolean;
   iconClassName?: string;
@@ -44,29 +41,26 @@ export interface DatePickerSingleProps extends DayPickerSingleProps {
   onRemoveClick?: () => void;
 }
 
-export interface DatePickerMultipleProps extends DayPickerMultipleProps {
-  placeholder?: string;
-  innerLabel?: string;
-  value?: Date[];
-  onChange?: SelectMultipleEventHandler;
-  error?: string | boolean;
-  readOnly?: boolean;
-  iconClassName?: string;
-  showReset?: boolean;
-  onRemoveClick?: () => void;
-}
+export type DatePickerSingleProps = PropsBase &
+  PropsSingle &
+  DatePickerCommonProps & {
+    value?: Date | null;
+    onChange?: OnSelectHandler<Date | undefined>;
+  };
 
-interface DatePickerRangeProps extends DayPickerRangeProps {
-  placeholder?: string;
-  innerLabel?: string;
-  value?: DateRange;
-  onChange?: SelectRangeEventHandler;
-  error?: string | boolean;
-  readOnly?: boolean;
-  iconClassName?: string;
-  showReset?: boolean;
-  onRemoveClick?: () => void;
-}
+export type DatePickerMultipleProps = PropsBase &
+  PropsMulti &
+  DatePickerCommonProps & {
+    value?: Date[];
+    onChange?: OnSelectHandler<Date[]>;
+  };
+
+type DatePickerRangeProps = PropsBase &
+  PropsRange &
+  DatePickerCommonProps & {
+    value?: DateRange;
+    onChange?: OnSelectHandler<DateRange | undefined>;
+  };
 
 export type DatePickerProps =
   | DatePickerSingleProps
@@ -226,11 +220,7 @@ export function DatePicker({ className, locale, iconClassName, ...rawProps }: Da
   };
 
   const runBlurLogic = () => {
-    if (
-      !props.onChange ||
-      inputValue.trim() === '' ||
-      inputValue === getMaskPlaceholder()
-    ) {
+    if (!props.onChange || inputValue.trim() === '' || inputValue === getMaskPlaceholder()) {
       setInputValue(getDisplayValue());
       return;
     }
@@ -251,7 +241,7 @@ export function DatePicker({ className, locale, iconClassName, ...rawProps }: Da
             setInputValue(getDisplayValue());
             break;
           }
-          const handler = props.onChange as SelectSingleEventHandler;
+          const handler = props.onChange as OnSelectHandler<Date | undefined>;
           handler(parsed, parsed, {}, syntheticEvent);
         } else {
           setInputValue('');
@@ -261,7 +251,7 @@ export function DatePicker({ className, locale, iconClassName, ...rawProps }: Da
       case 'multiple': {
         const parsed = parseMultipleDatesString(inputValue);
         if (parsed.length > 0) {
-          const handler = props.onChange as SelectMultipleEventHandler;
+          const handler = props.onChange as OnSelectHandler<Date[]>;
           handler(parsed, new Date(), {}, syntheticEvent);
         } else {
           setInputValue('');
@@ -271,7 +261,7 @@ export function DatePicker({ className, locale, iconClassName, ...rawProps }: Da
       case 'range': {
         const parsed = parseRangeString(inputValue);
         if (parsed && parsed.from) {
-          const handler = props.onChange as SelectRangeEventHandler;
+          const handler = props.onChange as OnSelectHandler<DateRange | undefined>;
           const rangeValue: { from: Date; to?: Date } = {
             from: parsed.from,
             to: parsed.to,
@@ -310,17 +300,17 @@ export function DatePicker({ className, locale, iconClassName, ...rawProps }: Da
 
     switch (props.mode) {
       case 'single': {
-        const handler = props.onChange as SelectSingleEventHandler;
+        const handler = props.onChange as OnSelectHandler<Date | undefined>;
         handler(undefined, new Date(), {}, e);
         break;
       }
       case 'multiple': {
-        const handler = props.onChange as SelectMultipleEventHandler;
+        const handler = props.onChange as OnSelectHandler<Date[]>;
         handler([], new Date(), {}, e);
         break;
       }
       case 'range': {
-        const handler = props.onChange as SelectRangeEventHandler;
+        const handler = props.onChange as OnSelectHandler<DateRange | undefined>;
         handler({ from: undefined, to: undefined }, new Date(), {}, e);
         break;
       }
@@ -329,7 +319,9 @@ export function DatePicker({ className, locale, iconClassName, ...rawProps }: Da
 
   // Нормализация выбора одной даты
   // Предотвращает сброс выбора при повторном клике на ту же дату
-  const createSingleHandler = (onChange?: SelectSingleEventHandler): SelectSingleEventHandler => {
+  const createSingleHandler = (
+    onChange?: OnSelectHandler<Date | undefined>,
+  ): OnSelectHandler<Date | undefined> => {
     return (selectedDate, selectedDay, activeModifiers, e) => {
       if (!onChange) return;
 
@@ -365,7 +357,9 @@ export function DatePicker({ className, locale, iconClassName, ...rawProps }: Da
   };
 
   // Нормализация выбора диапазона дат
-  const createRangeHandler = (onChange?: SelectRangeEventHandler): SelectRangeEventHandler => {
+  const createRangeHandler = (
+    onChange?: OnSelectHandler<DateRange | undefined>,
+  ): OnSelectHandler<DateRange | undefined> => {
     return (_, selectedDay, activeModifiers, e) => {
       if (!onChange || !selectedDay) return;
 
@@ -426,8 +420,7 @@ export function DatePicker({ className, locale, iconClassName, ...rawProps }: Da
   const maskPlaceholder = getMaskPlaceholder();
   const defaultPlaceholder = placeholder || t('selectDate');
 
-  const placeholderText =
-    !hasValue() && !isInputMode ? (innerLabel ? '' : defaultPlaceholder) : '';
+  const placeholderText = !hasValue() && !isInputMode ? (innerLabel ? '' : defaultPlaceholder) : '';
 
   return (
     <Popover open={isPopoverOpen} onOpenChange={handlePopoverOpenChange}>
