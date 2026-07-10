@@ -118,7 +118,7 @@ export const filesToAttachments = async (files: File[]) => {
       file,
       contentType: file.type,
       fileName: file.name,
-      url: await getFileThumbnail(file),
+      url: (await getFileThumbnail(file)) || URL.createObjectURL(file),
     });
   }
   return attachments;

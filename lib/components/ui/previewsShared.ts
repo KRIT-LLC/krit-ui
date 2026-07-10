@@ -22,5 +22,15 @@ export const getAttachmentContentType = (attachment?: AttachmentItem): ContentTy
   return getContentTypeFromMime(attachment.contentType) || 'image';
 };
 
+export const getAttachmentPreviewUrl = (attachment?: AttachmentItem): string | undefined =>
+  attachment?.previewUrl || attachment?.url;
+
+export const getAttachmentDownloadUrl = (attachment?: AttachmentItem): string | undefined =>
+  attachment?.downloadUrl || attachment?.url;
+
 export const filterValidAttachmentItems = (data: AttachmentItem[] | undefined): AttachmentItem[] =>
-  (data ?? []).filter((item) => item?.url && item?.contentType);
+  (data ?? []).filter(
+    item =>
+      item?.contentType &&
+      (item.url || item.previewUrl || item.downloadUrl || item.file || item.onDownload),
+  );

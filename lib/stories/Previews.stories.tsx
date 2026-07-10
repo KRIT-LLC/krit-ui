@@ -241,6 +241,61 @@ export const MixedFileTypes: Story = {
   },
 };
 
+// Пример ленивой загрузки и состояния обработки
+export const LazyDownloadAndPending: Story = {
+  args: {
+    data: [
+      {
+        id: 'contract',
+        fileName: 'contract.pdf',
+        contentType: 'application/pdf',
+        size: 2_359_296,
+        onDownload: async () => {
+          await new Promise(resolve => setTimeout(resolve, 300));
+          console.log('Lazy download: contract.pdf');
+        },
+      },
+      {
+        id: 'archive',
+        fileName: 'documents.zip',
+        contentType: 'application/zip',
+        size: 18_874_368,
+        onDownload: async () => {
+          await new Promise(resolve => setTimeout(resolve, 300));
+          console.log('Lazy download: documents.zip');
+        },
+      },
+      {
+        id: 'processing',
+        fileName: 'uploading.xlsx',
+        contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        size: 524_288,
+        inProgress: true,
+        onDownload: async () => {
+          console.log('File is still uploading');
+        },
+      },
+      {
+        id: 'preview',
+        fileName: 'equipment-photo.jpg',
+        contentType: 'image/jpeg',
+        previewUrl: 'https://via.placeholder.com/300',
+        downloadUrl: 'https://via.placeholder.com/300',
+        size: 327_680,
+      },
+    ],
+    orientation: 'horizontal',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Файлы могут отображаться по метаданным без заранее скачанного `url`: размер берётся из `size`, скачивание запускается через `onDownload`, а `inProgress` показывает обработку.',
+      },
+    },
+  },
+};
+
 // Интерактивный пример
 export const Interactive: Story = {
   args: {
