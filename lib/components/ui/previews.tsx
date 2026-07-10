@@ -15,6 +15,7 @@ import {
 import { bytesToMb } from '@/lib/file';
 import { Loader2 } from 'lucide-react';
 import { useConfirm } from '@/hooks/useConfirm';
+import { useNotify } from '@/hooks/useNotify';
 import { usePreviewsFilePicker } from '@/hooks/usePreviewsFilePicker';
 import { useTranslation } from '@/hooks/useTranslation';
 import { cn } from '@/utils';
@@ -129,7 +130,9 @@ export const Previews = (props: PreviewsProps) => {
     handleAllFilesLimit,
   } = props;
   const { confirm } = useConfirm();
+  const { notifyError } = useNotify();
   const { t } = useTranslation();
+  const [downloadingItemIds, setDownloadingItemIds] = useState<string[]>([]);
 
   const {
     inputRef,
@@ -253,11 +256,21 @@ export const Previews = (props: PreviewsProps) => {
         const fileName =
           item.fileName ||
           `${downloadUrl?.split('/').pop() ?? 'file'}.${item.contentType?.split('/').pop() || (fileType === 'video' ? 'mp4' : fileType === 'audio' ? 'mp3' : fileType === 'word' ? 'docx' : fileType === 'excel' ? 'xlsx' : fileType === 'archive' ? 'zip' : 'pdf')}`;
+        const itemId = String(item.id ?? i);
+        const isDownloading = downloadingItemIds.includes(itemId);
         const handleDownload = async (event: MouseEvent) => {
-          if (!item.onDownload) return;
+          if (!item.onDownload || isDownloading) return;
 
           event.preventDefault();
-          await item.onDownload();
+          setDownloadingItemIds(prev => [...prev, itemId]);
+
+          try {
+            await item.onDownload();
+          } catch (error) {
+            notifyError(error instanceof Error ? error.message : undefined);
+          } finally {
+            setDownloadingItemIds(prev => prev.filter(id => id !== itemId));
+          }
         };
 
         const fileContent = (
@@ -374,12 +387,13 @@ export const Previews = (props: PreviewsProps) => {
                 <button
                   type='button'
                   onClick={handleDownload}
+                  disabled={isDownloading}
                   className={cn(
                     'flex flex-col items-center justify-center h-full w-full text-icon-theme rounded-lg border-2 border-line-secondary bg-transparent',
                     getSizeClass(),
                   )}
                 >
-                  <FileIcon />
+                  {isDownloading ? <Loader2 className='h-6 w-6 animate-spin' /> : <FileIcon />}
                   {orientation === 'horizontal' && (
                     <TooltipProvider>
                       <Tooltip>
