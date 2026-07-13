@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Column as TanColumn,
   ColumnDef,
   ColumnFiltersState,
   ExpandedState,
@@ -145,12 +144,6 @@ export function DataTable<TData, TValue>({
 
   const { columnSizing, onColumnSizingChange } = useColumnSizing(columnSizingStorageKey);
 
-  const getSortedColumnClass = (column: TanColumn<TData, unknown>) => {
-    const isSorted = column.getIsSorted();
-    if (!isSorted) return '';
-    return 'bg-background-tertiary';
-  };
-
   const table = useReactTable({
     getRowId,
     data,
@@ -272,7 +265,6 @@ export function DataTable<TData, TValue>({
                         'relative',
                         variant === 'list' ? '' : getCellPadding(),
                         hideRightBorder && variant === 'table' && 'border-r-0',
-                        getSortedColumnClass(header.column),
                       )}
                       variant={variant}
                     >
@@ -318,7 +310,6 @@ export function DataTable<TData, TValue>({
                           className={cn(
                             variant === 'list' ? '' : getCellPadding(),
                             hideRightBorder && variant === 'table' && 'border-r-0',
-                            getSortedColumnClass(header.column),
                           )}
                           variant={variant}
                         >
@@ -355,7 +346,6 @@ export function DataTable<TData, TValue>({
                         className={cn(
                           variant === 'list' ? '' : getCellPadding(),
                           hideRightBorder && variant === 'table' && 'border-r-0',
-                          getSortedColumnClass(cell.column),
                         )}
                         variant={variant}
                       >
