@@ -4,11 +4,15 @@ export const attachmentItemSchema = z
   .object({
     id: z.number().or(z.string()),
     contentType: z.string(),
-    url: z.string(),
+    url: z.string().optional(),
     file: z.instanceof(File).optional(),
     fileName: z.string().optional(),
+    size: z.number().optional(),
     isMain: z.boolean().optional(),
     inProgress: z.boolean().optional(),
+    downloadUrl: z.string().optional(),
+    previewUrl: z.string().optional(),
+    onDownload: z.function().optional(),
     onRemove: z.function().optional(),
   })
   .or(
@@ -18,8 +22,12 @@ export const attachmentItemSchema = z
       url: z.string().optional(),
       file: z.instanceof(File),
       fileName: z.string().optional(),
+      size: z.number().optional(),
       isMain: z.boolean().optional(),
       inProgress: z.boolean().optional(),
+      downloadUrl: z.string().optional(),
+      previewUrl: z.string().optional(),
+      onDownload: z.function().optional(),
       onRemove: z.function().optional(),
     }),
   );
