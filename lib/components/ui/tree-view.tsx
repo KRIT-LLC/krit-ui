@@ -44,6 +44,8 @@ export interface TreeViewConfig<T extends TreeNode> {
   isNodeExpanded: (node: T) => boolean;
   isNodeSelected: (node: T, selected: unknown) => boolean;
   getNodeHeadingText: (node: T) => string | number | undefined;
+  /** Фактическая высота строки для направляющих дерева. */
+  getNodeRowHeight?: (node: T) => number | string | undefined;
   /** Контент перед иконкой раскрытия в колонке названия (например чекбокс). */
   getNodeHeadingPrefix?: (node: T) => ReactNode;
   getNodeFooterText: (node: T) => string | undefined;
@@ -65,6 +67,8 @@ export interface TreeViewConfig<T extends TreeNode> {
   treeLineAnchorOffset?: number;
   /** Вертикальная позиция соединительной линии в строке (по умолчанию середина строки). */
   treeLineAnchorTop?: number | string;
+  /** Вертикальные отступы ячеек данных. По умолчанию зависят от density. */
+  dataCellVerticalPadding?: 'default' | 'none';
 }
 
 /**
@@ -184,9 +188,10 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
     }
   };
 
-  const getRowContentClassName = () =>
+  const getRowContentClassName = (stretchToRowHeight: boolean) =>
     cn(
       'relative flex min-w-0 flex-1',
+      stretchToRowHeight && 'box-border h-full self-stretch',
       isCompact ? 'items-center py-[3px]' : 'items-stretch py-2',
     );
 
@@ -206,6 +211,14 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
       striped && rowIndex % 2 === 1 && 'bg-background-secondary',
       isSelected && 'bg-background-primary-selected',
     );
+
+  const getDataCellPaddingClassName = () => {
+    if (config.dataCellVerticalPadding === 'none') {
+      return isCompact ? 'py-0' : 'px-2 py-0';
+    }
+
+    return isCompact ? 'py-[3px]' : 'p-2';
+  };
 
   const getTreeGuideWidth = () => config.treeGuideColumnWidth ?? 24;
   const getTreeLineAnchorOffset = () =>
@@ -266,9 +279,18 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
     guides: boolean[],
     isLastChild: boolean,
     skipGuides: boolean[],
-  ) =>
-    Array.from({ length: level }).map((_, i) => (
-      <div key={i} className='relative flex-shrink-0' style={getTreeGuideColumnStyle()}>
+    stretchToRowHeight: boolean,
+  ) => {
+    const anchorTop = getTreeLineAnchorTop();
+
+    return Array.from({ length: level }).map((_, i) => (
+      <div
+        key={i}
+        className={cn(
+          'relative flex-shrink-0',
+          stretchToRowHeight && 'h-full self-stretch',
+        )}
+        style={getTreeGuideColumnStyle()}>
         {guides[i] && i !== level - 1 && !skipGuides[i] && (
           <div className='absolute left-1/2 top-0 bottom-0 w-[1px] -translate-x-1/2 bg-line-contrast' />
         )}
@@ -276,12 +298,12 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
           <>
             <div
               className='absolute left-1/2 top-0 w-[1px] -translate-x-1/2 bg-line-contrast'
-              style={{ height: getTreeLineAnchorTop() }}
+              style={{ height: anchorTop }}
             />
             <div
               className='absolute h-[1px] bg-line-contrast'
               style={{
-                top: getTreeLineAnchorTop(),
+                top: anchorTop,
                 left: '50%',
                 width: `calc(50% + ${getTreeLineAnchorOffset()}px)`,
               }}
@@ -289,13 +311,14 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
             {!isLastChild && (
               <div
                 className='absolute left-1/2 bottom-0 w-[1px] -translate-x-1/2 bg-line-contrast'
-                style={{ top: getTreeLineAnchorTop() }}
+                style={{ top: anchorTop }}
               />
             )}
           </>
         )}
       </div>
     ));
+  };
 
   const renderTreeHeadingControls = (
     node: T,
@@ -461,29 +484,50 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
     footerText: string | undefined,
     children: T[] | undefined,
     cellValues: ReactNode[],
-  ) => (
-    <td
-      className={cn('border-r border-line-primary p-0', {
-        'border-r-0': cellValues.length === 0,
-      })}
-      style={getColumnWidth(0)}>
-      <div className={cn('flex items-stretch', getFirstColumnPadding())}>
-        {renderTreeGuideColumns(level, guides, isLastChild, skipGuides)}
-        <div className={getRowContentClassName()}>
-          {renderTreeHeadingControls(
-            node,
-            hasNested,
-            isExpanded,
-            shouldShowCursor,
-            headingText,
-            headingMaxLength,
-            footerText,
-            children,
+  ) => {
+    const nodeRowHeight = config.getNodeRowHeight?.(node);
+    const stretchToRowHeight = nodeRowHeight != null;
+
+    return (
+      <td
+        className={cn(
+          'border-r border-line-primary p-0',
+          stretchToRowHeight && 'h-full align-top',
+          {
+            'border-r-0': cellValues.length === 0,
+          },
+        )}
+        style={getColumnWidth(0)}>
+        <div
+          className={cn(
+            'flex items-stretch',
+            stretchToRowHeight && 'h-full min-h-full',
+            getFirstColumnPadding(),
           )}
+          style={stretchToRowHeight ? { height: nodeRowHeight } : undefined}>
+          {renderTreeGuideColumns(
+            level,
+            guides,
+            isLastChild,
+            skipGuides,
+            stretchToRowHeight,
+          )}
+          <div className={getRowContentClassName(stretchToRowHeight)}>
+            {renderTreeHeadingControls(
+              node,
+              hasNested,
+              isExpanded,
+              shouldShowCursor,
+              headingText,
+              headingMaxLength,
+              footerText,
+              children,
+            )}
+          </div>
         </div>
-      </div>
-    </td>
-  );
+      </td>
+    );
+  };
 
   const renderDataCells = (cellValues: ReactNode[]) =>
     cellValues.map((value, cellIndex) => (
@@ -491,7 +535,7 @@ export const TreeView = <T extends TreeNode>(props: TreeViewProps<T>) => {
         key={cellIndex}
         className={cn(
           'border-r border-line-primary align-middle text-foreground-primary',
-          isCompact ? 'py-[3px]' : 'p-2',
+          getDataCellPaddingClassName(),
           {
             'text-left': getColumnAlignment(cellIndex + 1) === 'left',
             'text-center': getColumnAlignment(cellIndex + 1) === 'center',
