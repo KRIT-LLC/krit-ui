@@ -34,19 +34,17 @@ export interface TimePickerProps extends Omit<InputProps, 'onChange' | 'value' |
  * />
  */
 const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(
-  ({ value, onChange, onBlur, placeholder, className, disabled, readOnly, min, max, ...props }, ref) => {
+  (
+    { value, onChange, onBlur, placeholder = '--:--', className, disabled, readOnly, min, max, ...props },
+    ref,
+  ) => {
     const [open, setOpen] = React.useState(false);
     const isInteractive = !disabled && !readOnly;
 
     const maskedRef = useMask({
-      mask: 'Hh:Mm',
-      replacement: {
-        H: /[0-2]/,
-        h: /[0-9]/,
-        M: /[0-5]/,
-        m: /[0-9]/,
-      },
-      showMask: false,
+      mask: '--:--',
+      replacement: { '-': /\d/ },
+      showMask: true,
     });
 
     const combinedRef = useCombinedRefs(ref, maskedRef);
