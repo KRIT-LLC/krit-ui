@@ -162,6 +162,7 @@ export function DataTable<TData, TValue>({
       ...(columnSizingStorageKey !== undefined ? { columnSizing } : {}),
     },
     manualSorting,
+    enableMultiSort,
     enableRowSelection,
     enableMultiRowSelection,
     enableColumnResizing: columnSizingStorageKey !== undefined,

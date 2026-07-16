@@ -397,8 +397,13 @@ export const MultiSortLimit2: StoryObj<typeof DataTable> = {
     columns: [
       {
         accessorKey: 'email',
-        header: ({ column }) => (
-          <SortableHeader column={column} enableMultiSort maxMultiSortColumns={2}>
+        header: ({ column, table }) => (
+          <SortableHeader
+            column={column}
+            enableMultiSort
+            maxMultiSortColumns={2}
+            sortingCount={table.getState().sorting.length}
+          >
             Email
           </SortableHeader>
         ),
@@ -406,24 +411,39 @@ export const MultiSortLimit2: StoryObj<typeof DataTable> = {
       },
       {
         accessorKey: 'amount',
-        header: ({ column }) => (
-          <SortableHeader column={column} enableMultiSort maxMultiSortColumns={2}>
+        header: ({ column, table }) => (
+          <SortableHeader
+            column={column}
+            enableMultiSort
+            maxMultiSortColumns={2}
+            sortingCount={table.getState().sorting.length}
+          >
             Amount
           </SortableHeader>
         ),
       },
       {
         accessorKey: 'status',
-        header: ({ column }) => (
-          <SortableHeader column={column} enableMultiSort maxMultiSortColumns={2}>
+        header: ({ column, table }) => (
+          <SortableHeader
+            column={column}
+            enableMultiSort
+            maxMultiSortColumns={2}
+            sortingCount={table.getState().sorting.length}
+          >
             Status
           </SortableHeader>
         ),
       },
       {
         accessorKey: 'date',
-        header: ({ column }) => (
-          <SortableHeader column={column} enableMultiSort maxMultiSortColumns={2}>
+        header: ({ column, table }) => (
+          <SortableHeader
+            column={column}
+            enableMultiSort
+            maxMultiSortColumns={2}
+            sortingCount={table.getState().sorting.length}
+          >
             Date
           </SortableHeader>
         ),
@@ -438,7 +458,7 @@ export const MultiSortLimit2: StoryObj<typeof DataTable> = {
     docs: {
       description: {
         story:
-          'Таблица с множественной сортировкой, лимит 2 колонки. Используйте Alt/Cmd + Click для добавления еще одной колонки в сортировку. Badge показывает порядок сортировки (1, 2). Обычный клик переключает направление сортировки активной колонки.',
+          'Таблица с множественной сортировкой, лимит 2 колонки. Обычный клик добавляет колонку в сортировку или переключает направление активной колонки. Badge показывает порядок сортировки (1, 2).',
       },
     },
   },
@@ -449,8 +469,13 @@ export const MultiSortLimit3: StoryObj<typeof DataTable> = {
     columns: [
       {
         accessorKey: 'email',
-        header: ({ column }) => (
-          <SortableHeader column={column} enableMultiSort maxMultiSortColumns={3}>
+        header: ({ column, table }) => (
+          <SortableHeader
+            column={column}
+            enableMultiSort
+            maxMultiSortColumns={3}
+            sortingCount={table.getState().sorting.length}
+          >
             Email
           </SortableHeader>
         ),
@@ -458,24 +483,39 @@ export const MultiSortLimit3: StoryObj<typeof DataTable> = {
       },
       {
         accessorKey: 'amount',
-        header: ({ column }) => (
-          <SortableHeader column={column} enableMultiSort maxMultiSortColumns={3}>
+        header: ({ column, table }) => (
+          <SortableHeader
+            column={column}
+            enableMultiSort
+            maxMultiSortColumns={3}
+            sortingCount={table.getState().sorting.length}
+          >
             Amount
           </SortableHeader>
         ),
       },
       {
         accessorKey: 'status',
-        header: ({ column }) => (
-          <SortableHeader column={column} enableMultiSort maxMultiSortColumns={3}>
+        header: ({ column, table }) => (
+          <SortableHeader
+            column={column}
+            enableMultiSort
+            maxMultiSortColumns={3}
+            sortingCount={table.getState().sorting.length}
+          >
             Status
           </SortableHeader>
         ),
       },
       {
         accessorKey: 'date',
-        header: ({ column }) => (
-          <SortableHeader column={column} enableMultiSort maxMultiSortColumns={3}>
+        header: ({ column, table }) => (
+          <SortableHeader
+            column={column}
+            enableMultiSort
+            maxMultiSortColumns={3}
+            sortingCount={table.getState().sorting.length}
+          >
             Date
           </SortableHeader>
         ),
@@ -490,7 +530,7 @@ export const MultiSortLimit3: StoryObj<typeof DataTable> = {
     docs: {
       description: {
         story:
-          'Таблица с множественной сортировкой, лимит 3 колонки (дефолт для продакшена). Используйте Alt/Cmd + Click для добавления колонок в сортировку (до 3). Badge показывает порядок 1, 2, 3.',
+          'Таблица с множественной сортировкой, лимит 3 колонки (дефолт для продакшена). Обычный клик добавляет колонку в сортировку или переключает направление активной колонки. Badge показывает порядок 1, 2, 3.',
       },
     },
   },
