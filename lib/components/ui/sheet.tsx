@@ -3,6 +3,7 @@ import * as SheetPrimitive from '@radix-ui/react-dialog';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { X } from 'lucide-react';
 import { cn } from '@/utils';
+import { createDialogOutsideInteractionHandlers } from './radix-dialog-dismiss.lib';
 
 /**
  * Root component for Sheet. Manages the open/close state.
@@ -33,22 +34,6 @@ const SheetClose = SheetPrimitive.Close;
  * Used internally by SheetContent.
  */
 const SheetPortal = SheetPrimitive.Portal;
-
-const DISMISSABLE_OUTSIDE_INTERACTION_SELECTORS = [
-  '[data-krit-ui-ignore-dialog-dismiss]',
-  '[data-krit-ui-toast]',
-  '[data-krit-ui-toast-viewport]',
-  '[data-sonner-toast]',
-  '[data-sonner-toaster]',
-].join(',');
-
-const shouldIgnoreOutsideInteraction = (target: EventTarget | null) =>
-  target instanceof Element && Boolean(target.closest(DISMISSABLE_OUTSIDE_INTERACTION_SELECTORS));
-
-type OutsideInteractionEvent = Event & { detail?: { originalEvent?: Event } };
-
-const getOutsideInteractionTarget = (event: OutsideInteractionEvent) =>
-  event.detail?.originalEvent?.target ?? event.target;
 
 /**
  * Overlay component that renders a backdrop behind the sheet.
@@ -122,25 +107,11 @@ const SheetContent = React.forwardRef<
   SheetContentProps
 >(
   ({ side = 'right', className, children, onPointerDownOutside, onInteractOutside, ...props }, ref) => {
-    const handlePointerDownOutside: SheetContentProps['onPointerDownOutside'] = event => {
-      onPointerDownOutside?.(event);
-      if (
-        !event.defaultPrevented &&
-        shouldIgnoreOutsideInteraction(getOutsideInteractionTarget(event as OutsideInteractionEvent))
-      ) {
-        event.preventDefault();
-      }
-    };
-
-    const handleInteractOutside: SheetContentProps['onInteractOutside'] = event => {
-      onInteractOutside?.(event);
-      if (
-        !event.defaultPrevented &&
-        shouldIgnoreOutsideInteraction(getOutsideInteractionTarget(event as OutsideInteractionEvent))
-      ) {
-        event.preventDefault();
-      }
-    };
+    const { onPointerDownOutside: handlePointerDownOutside, onInteractOutside: handleInteractOutside } =
+      createDialogOutsideInteractionHandlers({
+        onPointerDownOutside,
+        onInteractOutside,
+      });
 
     return (
       <SheetPortal>

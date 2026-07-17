@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { X } from 'lucide-react';
 import { cn } from '@/utils';
+import { createDialogOutsideInteractionHandlers } from './radix-dialog-dismiss.lib';
 
 const Dialog = DialogPrimitive.Root;
 
@@ -10,22 +11,6 @@ const DialogTrigger = DialogPrimitive.Trigger;
 const DialogPortal = DialogPrimitive.Portal;
 
 const DialogClose = DialogPrimitive.Close;
-
-const DISMISSABLE_OUTSIDE_INTERACTION_SELECTORS = [
-  '[data-krit-ui-ignore-dialog-dismiss]',
-  '[data-krit-ui-toast]',
-  '[data-krit-ui-toast-viewport]',
-  '[data-sonner-toast]',
-  '[data-sonner-toaster]',
-].join(',');
-
-const shouldIgnoreOutsideInteraction = (target: EventTarget | null) =>
-  target instanceof Element && Boolean(target.closest(DISMISSABLE_OUTSIDE_INTERACTION_SELECTORS));
-
-type OutsideInteractionEvent = Event & { detail?: { originalEvent?: Event } };
-
-const getOutsideInteractionTarget = (event: OutsideInteractionEvent) =>
-  event.detail?.originalEvent?.target ?? event.target;
 
 const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
@@ -81,29 +66,11 @@ const DialogContent = React.forwardRef<
     },
     ref,
   ) => {
-    const handlePointerDownOutside: React.ComponentPropsWithoutRef<
-      typeof DialogPrimitive.Content
-    >['onPointerDownOutside'] = event => {
-      onPointerDownOutside?.(event);
-      if (
-        !event.defaultPrevented &&
-        shouldIgnoreOutsideInteraction(getOutsideInteractionTarget(event as OutsideInteractionEvent))
-      ) {
-        event.preventDefault();
-      }
-    };
-
-    const handleInteractOutside: React.ComponentPropsWithoutRef<
-      typeof DialogPrimitive.Content
-    >['onInteractOutside'] = event => {
-      onInteractOutside?.(event);
-      if (
-        !event.defaultPrevented &&
-        shouldIgnoreOutsideInteraction(getOutsideInteractionTarget(event as OutsideInteractionEvent))
-      ) {
-        event.preventDefault();
-      }
-    };
+    const { onPointerDownOutside: handlePointerDownOutside, onInteractOutside: handleInteractOutside } =
+      createDialogOutsideInteractionHandlers({
+        onPointerDownOutside,
+        onInteractOutside,
+      });
 
     // Прокидываем scrollableSection в DialogSection
     const enhancedChildren = React.Children.map(children, child => {
