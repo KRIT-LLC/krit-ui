@@ -11,6 +11,22 @@ const DialogPortal = DialogPrimitive.Portal;
 
 const DialogClose = DialogPrimitive.Close;
 
+const DISMISSABLE_OUTSIDE_INTERACTION_SELECTORS = [
+  '[data-krit-ui-ignore-dialog-dismiss]',
+  '[data-krit-ui-toast]',
+  '[data-krit-ui-toast-viewport]',
+  '[data-sonner-toast]',
+  '[data-sonner-toaster]',
+].join(',');
+
+const shouldIgnoreOutsideInteraction = (target: EventTarget | null) =>
+  target instanceof Element && Boolean(target.closest(DISMISSABLE_OUTSIDE_INTERACTION_SELECTORS));
+
+type OutsideInteractionEvent = Event & { detail?: { originalEvent?: Event } };
+
+const getOutsideInteractionTarget = (event: OutsideInteractionEvent) =>
+  event.detail?.originalEvent?.target ?? event.target;
+
 const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
@@ -52,52 +68,91 @@ const DialogContent = React.forwardRef<
     aside?: boolean;
     scrollableSection?: boolean;
   }
->(({ className, children, aside, scrollableSection, ...props }, ref) => {
-  // Прокидываем scrollableSection в DialogSection
-  const enhancedChildren = React.Children.map(children, child => {
-    if (
-      React.isValidElement(child) &&
-      // @ts-expect-error: Тип ReactElement не совпадает из-за кастомного пропа scrollableSection
-      (child.type.displayName === 'DialogSection' || child.type.name === 'DialogSection')
-    ) {
-      // Явно указываем тип пропсов для DialogSection
-      return React.cloneElement(child as React.ReactElement<DialogSectionProps>, {
-        scrollableSection,
-      });
-    }
-    return child;
-  });
+>(
+  (
+    {
+      className,
+      children,
+      aside,
+      scrollableSection,
+      onPointerDownOutside,
+      onInteractOutside,
+      ...props
+    },
+    ref,
+  ) => {
+    const handlePointerDownOutside: React.ComponentPropsWithoutRef<
+      typeof DialogPrimitive.Content
+    >['onPointerDownOutside'] = event => {
+      onPointerDownOutside?.(event);
+      if (
+        !event.defaultPrevented &&
+        shouldIgnoreOutsideInteraction(getOutsideInteractionTarget(event as OutsideInteractionEvent))
+      ) {
+        event.preventDefault();
+      }
+    };
 
-  return (
-    <DialogPortal>
-      <DialogOverlay className='bg-background-overlay/80' />
-      <DialogPrimitive.Content
-        className={cn(
-          'fixed z-50 duration-200 focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]',
-          !aside && 'max-h-[90vh] left-[50%] translate-x-[-50%] top-[8%] max-w-fit w-full',
-          aside && 'right-[0] top-0 translate-x-0, h-[100vh]',
-        )}
-        aria-describedby={undefined}
-        {...props}
-      >
-        <div
-          ref={ref}
+    const handleInteractOutside: React.ComponentPropsWithoutRef<
+      typeof DialogPrimitive.Content
+    >['onInteractOutside'] = event => {
+      onInteractOutside?.(event);
+      if (
+        !event.defaultPrevented &&
+        shouldIgnoreOutsideInteraction(getOutsideInteractionTarget(event as OutsideInteractionEvent))
+      ) {
+        event.preventDefault();
+      }
+    };
+
+    // Прокидываем scrollableSection в DialogSection
+    const enhancedChildren = React.Children.map(children, child => {
+      if (
+        React.isValidElement(child) &&
+        // @ts-expect-error: Тип ReactElement не совпадает из-за кастомного пропа scrollableSection
+        (child.type.displayName === 'DialogSection' || child.type.name === 'DialogSection')
+      ) {
+        // Явно указываем тип пропсов для DialogSection
+        return React.cloneElement(child as React.ReactElement<DialogSectionProps>, {
+          scrollableSection,
+        });
+      }
+      return child;
+    });
+
+    return (
+      <DialogPortal>
+        <DialogOverlay className='bg-background-overlay/80' />
+        <DialogPrimitive.Content
           className={cn(
-            'flex flex-col gap-[1px] bg-line-primary shadow-lg min-w-[460px] max-w-[80vw]',
-            !aside && 'max-h-[90vh] rounded-lg',
-            aside && 'h-[100vh]',
-            scrollableSection && 'overflow-hidden',
-            !scrollableSection &&
-              'scroll-smooth overflow-y-auto overflow-x-hidden dialog-scrollbar',
-            className,
+            'fixed z-50 duration-200 focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]',
+            !aside && 'max-h-[90vh] left-[50%] translate-x-[-50%] top-[8%] max-w-fit w-full',
+            aside && 'right-[0] top-0 translate-x-0, h-[100vh]',
           )}
+          aria-describedby={undefined}
+          onPointerDownOutside={handlePointerDownOutside}
+          onInteractOutside={handleInteractOutside}
+          {...props}
         >
-          {enhancedChildren}
-        </div>
-      </DialogPrimitive.Content>
-    </DialogPortal>
-  );
-});
+          <div
+            ref={ref}
+            className={cn(
+              'flex flex-col gap-[1px] bg-line-primary shadow-lg min-w-[460px] max-w-[80vw]',
+              !aside && 'max-h-[90vh] rounded-lg',
+              aside && 'h-[100vh]',
+              scrollableSection && 'overflow-hidden',
+              !scrollableSection &&
+                'scroll-smooth overflow-y-auto overflow-x-hidden dialog-scrollbar',
+              className,
+            )}
+          >
+            {enhancedChildren}
+          </div>
+        </DialogPrimitive.Content>
+      </DialogPortal>
+    );
+  },
+);
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 /**
  * Шапка диалогового окна

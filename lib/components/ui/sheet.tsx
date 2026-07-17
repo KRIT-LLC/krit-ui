@@ -34,6 +34,22 @@ const SheetClose = SheetPrimitive.Close;
  */
 const SheetPortal = SheetPrimitive.Portal;
 
+const DISMISSABLE_OUTSIDE_INTERACTION_SELECTORS = [
+  '[data-krit-ui-ignore-dialog-dismiss]',
+  '[data-krit-ui-toast]',
+  '[data-krit-ui-toast-viewport]',
+  '[data-sonner-toast]',
+  '[data-sonner-toaster]',
+].join(',');
+
+const shouldIgnoreOutsideInteraction = (target: EventTarget | null) =>
+  target instanceof Element && Boolean(target.closest(DISMISSABLE_OUTSIDE_INTERACTION_SELECTORS));
+
+type OutsideInteractionEvent = Event & { detail?: { originalEvent?: Event } };
+
+const getOutsideInteractionTarget = (event: OutsideInteractionEvent) =>
+  event.detail?.originalEvent?.target ?? event.target;
+
 /**
  * Overlay component that renders a backdrop behind the sheet.
  * Automatically closes the sheet when clicked.
@@ -104,26 +120,56 @@ interface SheetContentProps
 const SheetContent = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Content>,
   SheetContentProps
->(({ side = 'right', className, children, ...props }, ref) => (
-  <SheetPortal>
-    <SheetOverlay />
-    <SheetPrimitive.Content ref={ref} className={cn(sheetVariants({ side }), className)} {...props}>
-      {children}
-      <SheetPrimitive.Close
-        className={cn(
-          'absolute top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-background-contrast text-foreground-on-contrast shadow-md transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none',
-          side === 'right' && '-left-12',
-          side === 'left' && '-right-12',
-          side === 'top' && 'left-1/2 -translate-x-1/2 -bottom-6',
-          side === 'bottom' && 'left-1/2 -translate-x-1/2 -top-6',
-        )}
-      >
-        <X className='h-5 w-5' />
-        <span className='sr-only'>Close</span>
-      </SheetPrimitive.Close>
-    </SheetPrimitive.Content>
-  </SheetPortal>
-));
+>(
+  ({ side = 'right', className, children, onPointerDownOutside, onInteractOutside, ...props }, ref) => {
+    const handlePointerDownOutside: SheetContentProps['onPointerDownOutside'] = event => {
+      onPointerDownOutside?.(event);
+      if (
+        !event.defaultPrevented &&
+        shouldIgnoreOutsideInteraction(getOutsideInteractionTarget(event as OutsideInteractionEvent))
+      ) {
+        event.preventDefault();
+      }
+    };
+
+    const handleInteractOutside: SheetContentProps['onInteractOutside'] = event => {
+      onInteractOutside?.(event);
+      if (
+        !event.defaultPrevented &&
+        shouldIgnoreOutsideInteraction(getOutsideInteractionTarget(event as OutsideInteractionEvent))
+      ) {
+        event.preventDefault();
+      }
+    };
+
+    return (
+      <SheetPortal>
+        <SheetOverlay />
+        <SheetPrimitive.Content
+          ref={ref}
+          className={cn(sheetVariants({ side }), className)}
+          onPointerDownOutside={handlePointerDownOutside}
+          onInteractOutside={handleInteractOutside}
+          {...props}
+        >
+          {children}
+          <SheetPrimitive.Close
+            className={cn(
+              'absolute top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-background-contrast text-foreground-on-contrast shadow-md transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none',
+              side === 'right' && '-left-12',
+              side === 'left' && '-right-12',
+              side === 'top' && 'left-1/2 -translate-x-1/2 -bottom-6',
+              side === 'bottom' && 'left-1/2 -translate-x-1/2 -top-6',
+            )}
+          >
+            <X className='h-5 w-5' />
+            <span className='sr-only'>Close</span>
+          </SheetPrimitive.Close>
+        </SheetPrimitive.Content>
+      </SheetPortal>
+    );
+  },
+);
 SheetContent.displayName = SheetPrimitive.Content.displayName;
 
 /**
