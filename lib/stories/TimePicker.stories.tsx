@@ -27,6 +27,10 @@ const meta: Meta<typeof TimePicker> = {
       control: 'boolean',
       description: 'Отключение поля ввода',
     },
+    showMask: {
+      control: 'boolean',
+      description: 'Показывать маску времени в пустом поле',
+    },
     onChange: {
       action: 'changed',
       description: 'Callback при изменении значения',
@@ -65,6 +69,21 @@ export const Default: Story = {
     docs: {
       description: {
         story: 'Базовый компонент выбора времени с placeholder.',
+      },
+    },
+  },
+};
+
+export const WithoutVisibleMask: Story = {
+  render: args => <TimePickerWithState {...args} />,
+  args: {
+    showMask: false,
+    placeholder: 'Выберите время',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Компонент с отключенной видимой маской и обычным placeholder.',
       },
     },
   },

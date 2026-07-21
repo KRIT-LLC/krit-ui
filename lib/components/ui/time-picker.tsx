@@ -10,7 +10,11 @@ import { clampTimeByBounds } from './time-picker.lib';
 export interface TimePickerProps extends Omit<InputProps, 'onChange' | 'value' | 'type'> {
   value: string;
   onChange: (value: string) => void;
+  /** Показывать маску времени в пустом поле. */
+  showMask?: boolean;
 }
+
+const TIME_MASK = '--:--';
 
 /**
  * Компонент выбора времени с маской ввода и выпадающим списком для удобного выбора.
@@ -34,19 +38,29 @@ export interface TimePickerProps extends Omit<InputProps, 'onChange' | 'value' |
  * />
  */
 const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(
-  ({ value, onChange, onBlur, placeholder, className, disabled, readOnly, min, max, ...props }, ref) => {
+  (
+    {
+      value,
+      onChange,
+      onBlur,
+      placeholder,
+      className,
+      disabled,
+      readOnly,
+      min,
+      max,
+      showMask = true,
+      ...props
+    },
+    ref,
+  ) => {
     const [open, setOpen] = React.useState(false);
     const isInteractive = !disabled && !readOnly;
 
     const maskedRef = useMask({
-      mask: 'Hh:Mm',
-      replacement: {
-        H: /[0-2]/,
-        h: /[0-9]/,
-        M: /[0-5]/,
-        m: /[0-9]/,
-      },
-      showMask: false,
+      mask: TIME_MASK,
+      replacement: { '-': /\d/ },
+      showMask,
     });
 
     const combinedRef = useCombinedRefs(ref, maskedRef);
@@ -136,7 +150,7 @@ const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(
             value={inputValue}
             onChange={handleInputChange}
             onBlur={handleBlur}
-            placeholder={placeholder}
+            placeholder={placeholder ?? (showMask ? TIME_MASK : undefined)}
             disabled={disabled}
             readOnly={readOnly}
             min={min}
