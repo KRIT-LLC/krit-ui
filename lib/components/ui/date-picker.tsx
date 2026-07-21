@@ -429,7 +429,7 @@ export function DatePicker({ className, locale, iconClassName, ...rawProps }: Da
           variant={'fade-contrast-outlined'}
           size={'sm'}
           className={cn(
-            'justify-start text-left font-normal px-3 text-sm focus-visible:outline-none focus-visible:border-line-focused data-[state=open]:border-line-focused w-full',
+            'justify-start text-left font-normal px-3 text-sm focus-visible:outline-none focus-visible:border-line-focused data-[state=open]:border-line-focused w-full min-w-0 overflow-hidden',
             !hasValue() && !isInputMode && 'text-foreground-secondary',
             props.error ? 'border-line-error focus-visible:border-line-error' : '',
             className,
@@ -443,7 +443,7 @@ export function DatePicker({ className, locale, iconClassName, ...rawProps }: Da
           }}
         >
           <div
-            className='flex items-center flex-shrink-0'
+            className='flex min-w-0 flex-1 items-center overflow-hidden'
             onClick={e => {
               e.stopPropagation();
               if (!props.readOnly) {
@@ -457,7 +457,7 @@ export function DatePicker({ className, locale, iconClassName, ...rawProps }: Da
                 {innerLabel}:
               </span>
             )}
-            <div className="inline-grid [grid-template-areas:'stack'] items-center min-w-[20px] w-fit">
+            <div className="inline-grid [grid-template-areas:'stack'] min-w-[20px] flex-1 items-center overflow-hidden">
               {/* Скрытые элементы для вычисления ширины (берется максимальная) */}
               {/* 1. Маска задает базовую ширину */}
               {(isInputMode || hasValue()) && (
@@ -477,13 +477,6 @@ export function DatePicker({ className, locale, iconClassName, ...rawProps }: Da
                   {defaultPlaceholder}
                 </span>
               )}
-              {/* 3. Текущее значение */}
-              <span
-                aria-hidden='true'
-                className='[grid-area:stack] invisible whitespace-pre px-0 py-0 text-sm font-normal tracking-[0.1px] leading-5 pointer-events-none'
-              >
-                {valueText || ' '}
-              </span>
 
               <Input
                 ref={inputRef}
@@ -493,7 +486,7 @@ export function DatePicker({ className, locale, iconClassName, ...rawProps }: Da
                 onFocus={handleInputFocus}
                 onBlur={handleInputBlur}
                 placeholder={placeholderText}
-                className='[grid-area:stack] w-[0px] min-w-full h-auto border-none !p-0 !bg-transparent'
+                className='[grid-area:stack] min-w-0 h-auto border-none !p-0 !bg-transparent truncate'
                 readOnly={props.readOnly}
               />
             </div>

@@ -3,6 +3,7 @@ import * as SheetPrimitive from '@radix-ui/react-dialog';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { X } from 'lucide-react';
 import { cn } from '@/utils';
+import { createDialogOutsideInteractionHandlers } from './radix-dialog-dismiss.lib';
 
 /**
  * Root component for Sheet. Manages the open/close state.
@@ -104,26 +105,42 @@ interface SheetContentProps
 const SheetContent = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Content>,
   SheetContentProps
->(({ side = 'right', className, children, ...props }, ref) => (
-  <SheetPortal>
-    <SheetOverlay />
-    <SheetPrimitive.Content ref={ref} className={cn(sheetVariants({ side }), className)} {...props}>
-      {children}
-      <SheetPrimitive.Close
-        className={cn(
-          'absolute top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-background-contrast text-foreground-on-contrast shadow-md transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none',
-          side === 'right' && '-left-12',
-          side === 'left' && '-right-12',
-          side === 'top' && 'left-1/2 -translate-x-1/2 -bottom-6',
-          side === 'bottom' && 'left-1/2 -translate-x-1/2 -top-6',
-        )}
-      >
-        <X className='h-5 w-5' />
-        <span className='sr-only'>Close</span>
-      </SheetPrimitive.Close>
-    </SheetPrimitive.Content>
-  </SheetPortal>
-));
+>(
+  ({ side = 'right', className, children, onPointerDownOutside, onInteractOutside, ...props }, ref) => {
+    const { onPointerDownOutside: handlePointerDownOutside, onInteractOutside: handleInteractOutside } =
+      createDialogOutsideInteractionHandlers({
+        onPointerDownOutside,
+        onInteractOutside,
+      });
+
+    return (
+      <SheetPortal>
+        <SheetOverlay />
+        <SheetPrimitive.Content
+          ref={ref}
+          className={cn(sheetVariants({ side }), className)}
+          onPointerDownOutside={handlePointerDownOutside}
+          onInteractOutside={handleInteractOutside}
+          {...props}
+        >
+          {children}
+          <SheetPrimitive.Close
+            className={cn(
+              'absolute top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-background-contrast text-foreground-on-contrast shadow-md transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none',
+              side === 'right' && '-left-12',
+              side === 'left' && '-right-12',
+              side === 'top' && 'left-1/2 -translate-x-1/2 -bottom-6',
+              side === 'bottom' && 'left-1/2 -translate-x-1/2 -top-6',
+            )}
+          >
+            <X className='h-5 w-5' />
+            <span className='sr-only'>Close</span>
+          </SheetPrimitive.Close>
+        </SheetPrimitive.Content>
+      </SheetPortal>
+    );
+  },
+);
 SheetContent.displayName = SheetPrimitive.Content.displayName;
 
 /**

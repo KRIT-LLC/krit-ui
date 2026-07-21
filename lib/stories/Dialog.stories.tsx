@@ -9,6 +9,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { Toaster } from '@/components/ui/toaster';
+import { useToast } from '@/hooks/useToast';
 
 const meta: Meta<typeof Dialog> = {
   title: 'Components/UI/Dialog',
@@ -26,6 +28,41 @@ const meta: Meta<typeof Dialog> = {
 export default meta;
 
 type Story = StoryObj<typeof Dialog>;
+
+const DialogWithToastDemo = () => {
+  const { toast } = useToast();
+
+  return (
+    <>
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button variant='theme-filled'>Open Dialog With Toast</Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Dialog With Toast</DialogTitle>
+          </DialogHeader>
+          <DialogSection className='space-y-4'>
+            <p>Close the toast notification. The dialog should stay open.</p>
+            <Button
+              variant='theme-filled'
+              onClick={() => {
+                toast({
+                  variant: 'success',
+                  title: 'Saved',
+                  description: 'Notification can be closed without dismissing the dialog.',
+                });
+              }}
+            >
+              Show Toast
+            </Button>
+          </DialogSection>
+        </DialogContent>
+      </Dialog>
+      <Toaster />
+    </>
+  );
+};
 
 export const Basic: Story = {
   render: () => (
@@ -94,4 +131,8 @@ export const WithScrollableSection: Story = {
       </DialogContent>
     </Dialog>
   ),
+};
+
+export const WithToast: Story = {
+  render: () => <DialogWithToastDemo />,
 };
