@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useMemo } from 'react';
+import { isValidElement, ReactNode, useEffect, useMemo } from 'react';
 import { Column, Table } from '@tanstack/react-table';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Checkbox } from './checkbox';
@@ -23,7 +23,7 @@ const getOptionValue = <T,>(option: Option<T>) => {
 
 const getOptionLabel = <T,>(option: Option<T>) => {
   if (option && typeof option === 'object' && 'label' in option) {
-    if (option.label && typeof option.label === 'object' && 'props' in option.label) {
+    if (isValidElement<{ children?: ReactNode }>(option.label)) {
       return { text: option.labelText ?? option.label.props.children, raw: option.label };
     }
     return { text: option.labelText || option.label, raw: option.label };
@@ -68,7 +68,8 @@ export const SelectHeaderFilter = <T,>({
 
   const filterOption = (option: Options<T>[number]) => {
     if (typeof option === 'object' && option && 'label' in option) {
-      return getOptionLabel(option)?.text?.toLowerCase().includes(search.toLowerCase());
+      const label = getOptionLabel(option).text;
+      return typeof label === 'string' ? label.toLowerCase().includes(search.toLowerCase()) : true;
     } else if (typeof option === 'string') {
       return option.toLowerCase().includes(search.toLowerCase());
     } else {

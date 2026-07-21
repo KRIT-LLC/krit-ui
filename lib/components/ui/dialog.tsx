@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { X } from 'lucide-react';
 import { cn } from '@/utils';
+import { createDialogOutsideInteractionHandlers } from './radix-dialog-dismiss.lib';
 
 const Dialog = DialogPrimitive.Root;
 
@@ -52,52 +53,73 @@ const DialogContent = React.forwardRef<
     aside?: boolean;
     scrollableSection?: boolean;
   }
->(({ className, children, aside, scrollableSection, ...props }, ref) => {
-  // Прокидываем scrollableSection в DialogSection
-  const enhancedChildren = React.Children.map(children, child => {
-    if (
-      React.isValidElement(child) &&
-      // @ts-expect-error: Тип ReactElement не совпадает из-за кастомного пропа scrollableSection
-      (child.type.displayName === 'DialogSection' || child.type.name === 'DialogSection')
-    ) {
-      // Явно указываем тип пропсов для DialogSection
-      return React.cloneElement(child as React.ReactElement<DialogSectionProps>, {
-        scrollableSection,
+>(
+  (
+    {
+      className,
+      children,
+      aside,
+      scrollableSection,
+      onPointerDownOutside,
+      onInteractOutside,
+      ...props
+    },
+    ref,
+  ) => {
+    const { onPointerDownOutside: handlePointerDownOutside, onInteractOutside: handleInteractOutside } =
+      createDialogOutsideInteractionHandlers({
+        onPointerDownOutside,
+        onInteractOutside,
       });
-    }
-    return child;
-  });
 
-  return (
-    <DialogPortal>
-      <DialogOverlay className='bg-background-overlay/80' />
-      <DialogPrimitive.Content
-        className={cn(
-          'fixed z-50 duration-200 focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]',
-          !aside && 'max-h-[90vh] left-[50%] translate-x-[-50%] top-[8%] max-w-fit w-full',
-          aside && 'right-[0] top-0 translate-x-0, h-[100vh]',
-        )}
-        aria-describedby={undefined}
-        {...props}
-      >
-        <div
-          ref={ref}
+    // Прокидываем scrollableSection в DialogSection
+    const enhancedChildren = React.Children.map(children, child => {
+      if (
+        React.isValidElement(child) &&
+        // @ts-expect-error: Тип ReactElement не совпадает из-за кастомного пропа scrollableSection
+        (child.type.displayName === 'DialogSection' || child.type.name === 'DialogSection')
+      ) {
+        // Явно указываем тип пропсов для DialogSection
+        return React.cloneElement(child as React.ReactElement<DialogSectionProps>, {
+          scrollableSection,
+        });
+      }
+      return child;
+    });
+
+    return (
+      <DialogPortal>
+        <DialogOverlay className='bg-background-overlay/80' />
+        <DialogPrimitive.Content
           className={cn(
-            'flex flex-col gap-[1px] bg-line-primary shadow-lg min-w-[460px] max-w-[80vw]',
-            !aside && 'max-h-[90vh] rounded-lg',
-            aside && 'h-[100vh]',
-            scrollableSection && 'overflow-hidden',
-            !scrollableSection &&
-              'scroll-smooth overflow-y-auto overflow-x-hidden dialog-scrollbar',
-            className,
+            'fixed z-50 duration-200 focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]',
+            !aside && 'max-h-[90vh] left-[50%] translate-x-[-50%] top-[8%] max-w-fit w-full',
+            aside && 'right-[0] top-0 translate-x-0, h-[100vh]',
           )}
+          aria-describedby={undefined}
+          onPointerDownOutside={handlePointerDownOutside}
+          onInteractOutside={handleInteractOutside}
+          {...props}
         >
-          {enhancedChildren}
-        </div>
-      </DialogPrimitive.Content>
-    </DialogPortal>
-  );
-});
+          <div
+            ref={ref}
+            className={cn(
+              'flex flex-col gap-[1px] bg-line-primary shadow-lg min-w-[460px] max-w-[80vw]',
+              !aside && 'max-h-[90vh] rounded-lg',
+              aside && 'h-[100vh]',
+              scrollableSection && 'overflow-hidden',
+              !scrollableSection &&
+                'scroll-smooth overflow-y-auto overflow-x-hidden dialog-scrollbar',
+              className,
+            )}
+          >
+            {enhancedChildren}
+          </div>
+        </DialogPrimitive.Content>
+      </DialogPortal>
+    );
+  },
+);
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 /**
  * Шапка диалогового окна

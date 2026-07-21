@@ -51,9 +51,9 @@ export const Localized: Story = {
   args: {
     locale: ru,
     weekStartsOn: 1,
-    captionLayout: 'dropdown-buttons',
-    fromYear: 2010,
-    toYear: 2025,
+    captionLayout: 'dropdown',
+    startMonth: new Date(2010, 0),
+    endMonth: new Date(2025, 11),
   },
 };
 

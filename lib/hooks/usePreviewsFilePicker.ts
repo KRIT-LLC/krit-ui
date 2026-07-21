@@ -1,12 +1,11 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { filterValidAttachmentItems, getContentTypeFromMime } from '@/components/ui/previewsShared';
 import {
   acceptMap,
   type AttachmentItem,
   type ContentType,
   defaultAccepts,
-  MAX_AUDIO_SIZE_MB,
   MAX_ARCHIVE_SIZE_MB,
+  MAX_AUDIO_SIZE_MB,
   MAX_EXCEL_SIZE_MB,
   MAX_IMAGE_SIZE_MB,
   MAX_PDF_SIZE_MB,
@@ -14,7 +13,8 @@ import {
   MAX_VIDEO_SIZE_MB,
   MAX_WORD_SIZE_MB,
 } from '@/lib/attachments';
-import { compressFile, mbToBytes, MB_IN_BYTES } from '@/lib/file';
+import { compressFile, MB_IN_BYTES, mbToBytes } from '@/lib/file';
+import { filterValidAttachmentItems, getContentTypeFromMime } from '@/components/ui/previewsShared';
 import { useNotify } from '@/hooks/useNotify';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -56,7 +56,7 @@ const defaultMaxSizes: Required<PreviewsFilePickerMaxSizes> = {
 };
 
 export interface UsePreviewsFilePickerResult {
-  inputRef: React.RefObject<HTMLInputElement>;
+  inputRef: React.MutableRefObject<HTMLInputElement | null>;
   openPicker: () => void;
   processing: boolean;
   /** true, если нельзя открыть диалог (лимит файлов или идёт обработка) */
@@ -166,7 +166,7 @@ export const usePreviewsFilePicker = (
       }
 
       const filesWithOkSize = filesArray.filter(isSizeOk);
-      const currentFiles = valid.filter((item) => !!item.file).map((item) => item.file!);
+      const currentFiles = valid.filter(item => !!item.file).map(item => item.file!);
       const totalSizeMb =
         [...currentFiles, ...filesWithOkSize].reduce((acc, file) => acc + file.size, 0) /
         MB_IN_BYTES;
@@ -200,7 +200,10 @@ export const usePreviewsFilePicker = (
     if (!pickerDisabled) inputRef.current?.click();
   }, [pickerDisabled]);
 
-  const acceptAttr = accepts.map((type) => acceptMap.get(type)).filter(Boolean).join(',');
+  const acceptAttr = accepts
+    .map(type => acceptMap.get(type))
+    .filter(Boolean)
+    .join(',');
 
   return {
     inputRef,
